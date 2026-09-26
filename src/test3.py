@@ -241,6 +241,7 @@ def add_geometry(recs, zf):
 
 
 def summarize(recs):
+    recs = [r for r in recs if not r.get("edge")]
     col = [r for r in recs if r["status"] == "collided"]
     bad = [r["gap"] for r in col if r["ratio"] < 1 - 1e-9]
     st = {k: sum(1 for r in recs if r["status"] == k) for k in ("collided", "preempted", "absorbed", "no_bracket")}
@@ -253,15 +254,23 @@ def summarize(recs):
 def cmd_tc(a, pilot=False):
     t0 = time.time()
     n = a.nzeros
-    zm = zeros_z(n + 2)
+    ex = getattr(a, "extra", 0)
+    zm = zeros_z(n + 2 + ex)
     zf = [float(x) for x in zm]
-    gaps = list(range(0, n - 1))  # gaps between zero j and j+1, j = 1..n-1 (needs zeros up to n+2)
-    recs = run_gaps(zf[: n + 2], gaps, a.workers, a.tmin)
+    gaps = list(range(0, n - 1 + ex))  # gaps between zero j and j+1, j = 1..n-1 (+ ex edge gaps for counting)
+    recs = run_gaps(zf[: n + 2 + ex], gaps, a.workers, a.tmin)
+    for r in recs:
+        r["edge"] = r["gap"] >= n
     add_geometry(recs, zf)
+    e0 = HeatFlow(30.0, DIGITS, tmin=a.tmin)
+    ts = np.linspace(a.tmin, 0.0, 201)
+    h0 = [float(e0.H(0.0, float(t))) for t in ts]
+    sym = dict(t_min=a.tmin, min_H_t0=min(h0), all_positive=bool(min(h0) > 0), n_t=len(ts))
     order_events(recs)
     summ = summarize(recs)
     os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
-    json.dump(dict(summary=summ, gaps=recs, zeros=zf, seconds=time.time() - t0), open(a.out, "w"), indent=1)
+    json.dump(dict(summary=summ, sym_gap_H_t0=sym, n=n, gaps=recs, zeros=zf, seconds=time.time() - t0), open(a.out, "w"), indent=1)
+    print(f"H_t(0) > 0 on [{a.tmin}, 0] ({sym['n_t']} points): {sym['all_positive']}, min {sym['min_H_t0']:.4e}")
     print(f"tc n={n}: {summ['counts']}; ratio t_c/t_c0 in [{summ['ratio_min']}, {summ['ratio_max']}]; "
           f"violations {summ['invariant_violations']}; max stab dt {summ['max_stab_dt']}; "
           f"sign_flip all {summ['all_sign_flip']}; {time.time() - t0:.1f}s")
@@ -305,19 +314,90 @@ def cmd_pilot(a):
     return 0
 
 
+
+# ---------------------------------------------------------------- independent zero count
+def count_window(args):
+    t, X, step = args
+    eng = _G["eng"]
+    xs = np.arange(step / 2, X, step)
+    prev = float(eng.H(0.0, t)) > 0
+    n = 0
+    for x in xs:
+        cur = float(eng.H(float(x), t)) > 0
+        n += cur != prev
+        prev = cur
+    return t, n
+
+
+def cmd_count(a):
+    """Zero count of H_t on the comoving window (0, X_e(t)): X_e tracked extremum of an edge gap e above
+    the analysed zeros. Prediction: e - 2 * #{accepted collisions with both zeros <= e and t_c > t}."""
+    t0 = time.time()
+    d = json.load(open(a.tc))
+    recs, zf, n = d["gaps"], d["zeros"], d["n"]
+    valid = {}
+    for r in recs:
+        if r["edge"]:
+            valid[r["gap"]] = r["tc"] if "tc" in r else r.get("t_absorbed_upto", 0.0)
+    e = min(valid, key=lambda k: valid[k])
+    v = valid[e]
+    acc = sorted([r for r in recs if r["status"] == "collided" and r["gap"] + 1 <= e], key=lambda r: -r["tc"])
+    tcs = [r["tc"] for r in acc]
+    grid = [0.0] + [0.5 * (tcs[i] + tcs[i + 1]) for i in range(len(tcs) - 1)] + [tcs[-1] - 0.5]
+    grid = [t for t in grid if t > v + 0.05] if v < 0 else [0.0]
+    zmax = zf[e] + 2
+    eng = HeatFlow(zmax, DIGITS, tmin=a.tmin)
+    _G["eng"] = eng
+    ai, bi = zf[e - 1], zf[e]
+    xe = None
+    tcur, X = 0.0, []
+    for t in grid:
+        while tcur > t + 1e-12:
+            tcur = max(t, tcur - 0.25)
+            xe = find_xstar(eng, tcur, ai, bi, xe)
+        if xe is None:
+            xe = find_xstar(eng, 0.0, ai, bi, None)
+        X.append(float(xe))
+    jobs = [(t, x, a.step) for t, x in zip(grid, X)]
+    with Pool(a.workers, initializer=_init, initargs=(zmax, a.tmin)) as p:
+        res = p.map(count_window, jobs, chunksize=1)
+    rows = []
+    for (t, nn), x in zip(res, X):
+        pred = e - 2 * sum(1 for tc in tcs if tc > t)
+        rows.append(dict(t=t, X=x, counted=nn, predicted=pred, diff=nn - pred))
+    counts = [r["counted"] for r in rows]
+    mono = all(counts[i + 1] <= counts[i] for i in range(len(counts) - 1))
+    first_bad = next((r for r in rows if r["diff"] != 0), None)
+    out = dict(edge_gap=e, edge_valid_until=v, n_points=len(rows), monotone_nonincreasing=mono,
+               all_match=first_bad is None, first_mismatch=first_bad, rows=rows, seconds=time.time() - t0)
+    json.dump(out, open(a.out, "w"), indent=1)
+    print(f"count: edge gap {e} valid down to t={v:.3f}; {len(rows)} times; count never increases: {mono}; "
+          f"all equal prediction: {first_bad is None}; {time.time() - t0:.0f}s")
+    for r in rows[:6] + ([first_bad] if first_bad else []):
+        print(f"  t {r['t']:9.4f} X {r['X']:8.2f} counted {r['counted']} predicted {r['predicted']} diff {r['diff']}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("validate"); v.add_argument("--out", required=True)
+    c = sub.add_parser("count")
+    c.add_argument("--tc", required=True); c.add_argument("--out", required=True)
+    c.add_argument("--workers", type=int, default=6); c.add_argument("--tmin", type=float, default=-100.0)
+    c.add_argument("--step", type=float, default=0.1)
     for name in ("pilot", "tc"):
         s = sub.add_parser(name)
         s.add_argument("--nzeros", type=int, default=10 if name == "pilot" else 100)
         s.add_argument("--workers", type=int, default=6)
         s.add_argument("--tmin", type=float, default=-100.0)
+        s.add_argument("--extra", type=int, default=0 if name == "pilot" else 12)
         s.add_argument("--out", required=True)
     a = ap.parse_args()
     if a.cmd == "validate":
         return cmd_validate(a)
+    if a.cmd == "count":
+        return cmd_count(a)
     if a.cmd == "pilot":
         return cmd_pilot(a)
     cmd_tc(a)

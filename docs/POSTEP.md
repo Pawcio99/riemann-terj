@@ -31,3 +31,9 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - Błędy naprawione w trakcie: stałe okno skanu (zera dryfują w prawo dla t<0), filtr H·H''<0 (po t_c ekstremum jest minimum |H|), odwrócony znak testu zmiany znaku.
 - Pilot `python -m src.test3 pilot --nzeros 10 --out results/test3/tc_pilot.json`: zderzenia przerw 2, 4, 7, 9, t_c/t_c0 ∈ [1,20; 1,57] (bez naruszeń niezmiennika ≥1), stabilność 1e-15; 5 przerw „absorbed”, każda sąsiaduje ze zderzoną.
 - Oczekuje na zgodę: `tc --nzeros 100` (oszacowanie ~7 min szeregowo, ~1–3 min na 6 procesach). Proponuję /compact.
+
+## Test 3, faza A: przebieg 100 zer (2026-09-26)
+- `python -m src.test3 tc --nzeros 100 --extra 12 --workers 6 --out results/test3/tc.json` (222 s): 35 zderzeń, 64 „absorbed”, 0 „preempted”; t_c/t_c0 ∈ [1,077; 2,30] (mediana 1,33, bez naruszeń ≥1); stabilność ≤ 2e-13; korelacja ratio z Δz 0,57.
+- H_t(0) > 0 na [−100, 0] (201 punktów, min 0,0336); przerwa (−z1, z1) nie zderza się (dowód: dodatnie składniki Φ, 2πn²e^{4u}>3).
+- Kontrola liczby zer `python -m src.test3 count --tc results/test3/tc.json --out results/test3/count.json` (659 s): liczba zer w oknie (0, X_e(t)) nie rośnie i spada dokładnie o 2 przy 33 kolejnych zderzeniach do t = −2,38; potem niedobór −2 (t ≈ −2,5), −4 (−5,7), −10 (−9,9) względem przewidywania z pokolenia 1 — zderzenia kolejnych pokoleń lub błędnie sklasyfikowane „absorbed”; do rozstrzygnięcia.
+- Z 64 „absorbed” 53 sąsiaduje ze zderzoną przerwą (pilot sugerował 100%).
