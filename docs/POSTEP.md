@@ -82,3 +82,8 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - Plan: docs/PLAN_TEST3_B.md (model zerowy GUE/CUE pominięty z uzasadnieniem). Kod: src/test3_geom.py; `python -m src.test3_geom --out results/test3/geom.json` (4 s), rysunek results/test3/fig_geom.png, ziarno bootstrapu 20260926.
 - [FAKT NUMERYCZNY] 42 zderzenia pokolenia 1: T < 0 i t_c/t_c⁰ ≥ 1 w 42/42. Predyktor stałego T (x = −TΔ/4): dla x < 1 (36 par) R² 0,978, LOO 0,028, β = 0,68 [0,65; 0,74] zamiast 1; dla 6 par x ≥ 1 (przewiduje brak zderzenia). Reszta bez dopasowania jest monotoniczną funkcją δ (−0,03 … −0,41).
 - neighbor_preempted dosłownie: 0 z 42 zderzonych (z konstrukcji), 4 z 4 preempted; uogólnienie (zero sąsiada uczestniczy w przyjętym zderzeniu z mniejszym |t_c|): 21 z 42 zderzonych, w tym wszystkie 6 par x ≥ 1. Zbiór ostrożny (n = 21): R² 0,991, LOO 0,013, β = 0,78 [0,74; 0,84]; selekcja faworyzuje małe |t_c|.
+
+## Test 3, test reszty arytmetycznej (2026-09-26)
+- Kod src/test3_arith.py (`corr`, `test`), wyniki results/test3/arith_corr.json, arith_test.json; opis w results/test3/REPORT_B.md. Naruszenia prawa Grama dla n ≤ 200: 126, 134, 195 (zweryfikowane liczbowo).
+- [FAKT NUMERYCZNY] Geometria w kandydatach: ln|ζ′| 97,5% wariancji (LOO 97,0%), margines Grama 85,3%, faza Gramowska 11,4% (LOO ujemne). Trend w x (izotoniczny/splajn) usuwa >99% wariancji, ale ślad ln d_L w resztach pozostaje (Spearman −0,47, p ≈ 0,004).
+- Wynik negatywny: żaden z 3 kandydatów istotny po Bonferronim (α = 0,0167); najmniejsze p = 0,046 (nominalnie, splajn: faza Gramowska i margines Grama); moc: |ρ| ≥ 0,51 przy n = 36. Isotoniczny trend w zbiorze ostrożnym (n = 21) jest praktycznie interpolacją (sd reszt 0,0002), więc bez wartości.

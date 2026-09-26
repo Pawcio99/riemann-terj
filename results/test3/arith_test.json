@@ -1,0 +1,184 @@
+{
+ "seed": 20260926,
+ "n_perm": 20000,
+ "alpha_bonferroni": 0.016666666666666666,
+ "sets": {
+  "primary_36": {
+   "n": 36,
+   "min_detectable_abs_rho_80pct": 0.510381742754699,
+   "detrend": {
+    "isotonic": {
+     "resid_sd": 0.013782206204238851,
+     "resid_range": [
+      -0.036036054555739216,
+      0.0631311248832988
+     ],
+     "leftover_geometry_trace": {
+      "ln_delta": {
+       "rho": -0.15896466319962005,
+       "p": 0.3544281884560662
+      },
+      "ln_dL": {
+       "rho": -0.47459431996848594,
+       "p": 0.0034496883982290086
+      },
+      "ln_dR": {
+       "rho": 0.10693463781240264,
+       "p": 0.5347652043640314
+      }
+     },
+     "candidates": {
+      "c1": {
+       "rho_partial": -0.11958282077946104,
+       "p_perm": 0.4874256287185641,
+       "rho_raw": -0.3386263530726084,
+       "significant_bonferroni": false
+      },
+      "c2": {
+       "rho_partial": 0.2262299998880669,
+       "p_perm": 0.1807409629518524,
+       "rho_raw": 0.08135081317448913,
+       "significant_bonferroni": false
+      },
+      "c3": {
+       "rho_partial": -0.26819897064239695,
+       "p_perm": 0.10979451027448628,
+       "rho_raw": -0.25181382452598045,
+       "significant_bonferroni": false
+      }
+     }
+    },
+    "spline": {
+     "resid_sd": 0.009777628116851523,
+     "resid_range": [
+      -0.025581507775779166,
+      0.03267555592055915
+     ],
+     "leftover_geometry_trace": {
+      "ln_delta": {
+       "rho": -0.22239382239382238,
+       "p": 0.19234681419157404
+      },
+      "ln_dL": {
+       "rho": -0.46537966537966546,
+       "p": 0.004234995344020437
+      },
+      "ln_dR": {
+       "rho": -0.011583011583011582,
+       "p": 0.9465438786013733
+      }
+     },
+     "candidates": {
+      "c1": {
+       "rho_partial": -0.009266409266409266,
+       "p_perm": 0.9562521873906304,
+       "rho_raw": -0.41235521235521244,
+       "significant_bonferroni": false
+      },
+      "c2": {
+       "rho_partial": 0.33281853281853285,
+       "p_perm": 0.04589770511474426,
+       "rho_raw": 0.1287001287001287,
+       "significant_bonferroni": false
+      },
+      "c3": {
+       "rho_partial": -0.33256113256113257,
+       "p_perm": 0.046197690115494225,
+       "rho_raw": -0.32767052767052773,
+       "significant_bonferroni": false
+      }
+     }
+    }
+   }
+  },
+  "cautious_21": {
+   "n": 21,
+   "min_detectable_abs_rho_80pct": 0.6426284500672951,
+   "detrend": {
+    "isotonic": {
+     "resid_sd": 0.00020788541201031965,
+     "resid_range": [
+      -0.0006570791571874346,
+      0.0006570791571873791
+     ],
+     "leftover_geometry_trace": {
+      "ln_delta": {
+       "rho": -0.12690395430571016,
+       "p": 0.5835810455675361
+      },
+      "ln_dL": {
+       "rho": -0.3371478189017375,
+       "p": 0.13502916666866088
+      },
+      "ln_dR": {
+       "rho": 0.1060689767331309,
+       "p": 0.6472396897507854
+      }
+     },
+     "candidates": {
+      "c1": {
+       "rho_partial": 0.020834977572579284,
+       "p_perm": 0.9372031398430078,
+       "rho_raw": -0.24433746426024794,
+       "significant_bonferroni": false
+      },
+      "c2": {
+       "rho_partial": -0.0284113330535172,
+       "p_perm": 0.9027548622568872,
+       "rho_raw": -0.06629311045820681,
+       "significant_bonferroni": false
+      },
+      "c3": {
+       "rho_partial": 0.26517244183282723,
+       "p_perm": 0.25348732563371834,
+       "rho_raw": -0.1439507541378205,
+       "significant_bonferroni": false
+      }
+     }
+    },
+    "spline": {
+     "resid_sd": 0.0059260815928873275,
+     "resid_range": [
+      -0.013842522290626658,
+      0.011471757350655476
+     ],
+     "leftover_geometry_trace": {
+      "ln_delta": {
+       "rho": -0.22337662337662337,
+       "p": 0.330387908876124
+      },
+      "ln_dL": {
+       "rho": -0.4090909090909091,
+       "p": 0.06555816920931516
+      },
+      "ln_dR": {
+       "rho": -0.10519480519480517,
+       "p": 0.6499672847296488
+      }
+     },
+     "candidates": {
+      "c1": {
+       "rho_partial": 0.1077922077922078,
+       "p_perm": 0.6386680665966702,
+       "rho_raw": -0.425974025974026,
+       "significant_bonferroni": false
+      },
+      "c2": {
+       "rho_partial": 0.22467532467532467,
+       "p_perm": 0.32528373581320935,
+       "rho_raw": 0.016883116883116882,
+       "significant_bonferroni": false
+      },
+      "c3": {
+       "rho_partial": -0.0961038961038961,
+       "p_perm": 0.6762661866906655,
+       "rho_raw": -0.33766233766233766,
+       "significant_bonferroni": false
+      }
+     }
+    }
+   }
+  }
+ },
+ "note": "p is two-sided permutation p; primary = isotonic"
+}
