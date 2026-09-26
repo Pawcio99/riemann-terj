@@ -341,8 +341,14 @@ def cmd_count(a):
             valid[r["gap"]] = r["tc"] if "tc" in r else r.get("t_absorbed_upto", 0.0)
     e = min(valid, key=lambda k: valid[k])
     v = valid[e]
-    acc = sorted([r for r in recs if r["status"] == "collided" and r["gap"] + 1 <= e], key=lambda r: -r["tc"])
-    tcs = [r["tc"] for r in acc]
+    if "events" in d:  # all generations (src.test3_gen)
+        evs = [(x["zi"], x["zj"], x["tc"]) for x in d["events"]]
+    else:
+        evs = [(r["gap"], r["gap"] + 1, r["tc"]) for r in recs if r["status"] == "collided"]
+    strad = [tc for zi, zj, tc in evs if zi <= e < zj]  # collision straddling the window edge: stop checking
+    if strad:
+        v = max(v, max(strad))
+    tcs = sorted([tc for zi, zj, tc in evs if zj <= e], reverse=True)
     grid = [0.0] + [0.5 * (tcs[i] + tcs[i + 1]) for i in range(len(tcs) - 1)] + [tcs[-1] - 0.5]
     grid = [t for t in grid if t > v + 0.05] if v < 0 else [0.0]
     zmax = zf[e] + 2

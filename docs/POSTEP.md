@@ -37,3 +37,19 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - H_t(0) > 0 na [−100, 0] (201 punktów, min 0,0336); przerwa (−z1, z1) nie zderza się (dowód: dodatnie składniki Φ, 2πn²e^{4u}>3).
 - Kontrola liczby zer `python -m src.test3 count --tc results/test3/tc.json --out results/test3/count.json` (659 s): liczba zer w oknie (0, X_e(t)) nie rośnie i spada dokładnie o 2 przy 33 kolejnych zderzeniach do t = −2,38; potem niedobór −2 (t ≈ −2,5), −4 (−5,7), −10 (−9,9) względem przewidywania z pokolenia 1 — zderzenia kolejnych pokoleń lub błędnie sklasyfikowane „absorbed”; do rozstrzygnięcia.
 - Z 64 „absorbed” 53 sąsiaduje ze zderzoną przerwą (pilot sugerował 100%).
+
+## Test 3, faza A2: zderzenia kolejnych pokoleń (2026-09-26, implementacja + pilot)
+- Nowe: src/test3_gen.py (symulacja zdarzeń: para sąsiadnich zer rzeczywistych zderza się, gdy najwyższy garb sH między nimi dochodzi do 0; nowe pary (L,R) po każdym przyjętym zderzeniu, numer pokolenia = 1 + max pokolenia usuniętych zer między nimi; krok t adaptacyjny). `src.test3 count` czyta teraz zdarzenia wszystkich pokoleń i kończy kontrolę przy zderzeniu przez brzeg okna.
+- Pilot `python -m src.test3_gen --nzeros 10 --extra 8 --workers 6 --out results/test3/gen_pilot.json` (102 s): regresja gen-1 względem tc.json: max |Δt_c| 7e-14; przerwa 11 zmienia status „absorbed” → zderzenie t_c = −27,9 (stare „absorbed” było fałszywe); brak naruszeń ≥1. Pary pokolenia 2 (np. z1–z6 po zderzeniach 2–3, 4–5): 0 zderzeń do t = −100 (3× no_bracket, 2× absorbed przy −15 i −31).
+- `count` na pilocie: liczba zer zgodna z przewidywaniem do t = −28,4 (12→2, −2 na zderzenie).
+- Do zrobienia po zgodzie: pełny przebieg `python -m src.test3_gen --nzeros 100 --extra 12 --workers 6 --out results/test3/gen.json` i `count` na nim; jego wynik rozstrzygnie niedobory −2/−4/−10 z tc.json.
+
+## Test 3, faza A2: statusy i start pełnego przebiegu (2026-09-26)
+- Statusy: „absorbed” tylko z przyczyną w dzienniku (zderzenie zera pary z innym sąsiadem, t_c ≥ utrata garbu − 0,05; przyczyna ma pierwszeństwo także przed „censored”, bo garb żyje dalej jako punkt krytyczny); bez przyczyny „lost” i powtórzenie z dt/4, dt/16; wyjście poniżej tmin = „censored” (t_c < −100), nie brak zderzenia. Pilot: 9 zderzeń, 15 absorbed (wszystkie z przyczyną), 0 lost, 1 censored.
+- Start (tło): `python -m src.test3_gen --nzeros 100 --extra 12 --workers 6 --out results/test3/gen.json` (log logs/test3_gen.log), potem automatycznie `python -m src.test3 count --tc results/test3/gen.json --out results/test3/count_gen.json` (log logs/test3_count_gen.log). Oczekiwane ok. 35–55 min.
+
+## Test 3, faza A: wynik pełnego przebiegu (2026-09-26)
+- `python -m src.test3_gen --nzeros 100 --extra 12 --workers 6 --out results/test3/gen.json` (1569 s) i `python -m src.test3 count --tc results/test3/gen.json --out results/test3/count_gen.json`. Zderzeń 53 (pokolenie 1: 48, pokolenie 2: 5; przy obu zerach ≤ 100: 46 = 42 + 4), pokolenie 3: 0. Statusy 155 par: 53 collided, 6 preempted, 92 absorbed (wszystkie z przyczyną), 1 lost (113–114, brzeg górny), 3 censored (1–6, 21–42, 77–90).
+- Pokolenie 1 w zakresie (42 zderzenia): t_c/t_c0 min 1,077, mediana 1,386, q10 1,114, q90 3,17, max 16,07 (przerwa 55, t_c = −76,6); brak naruszeń ≥1; stabilność ≤ 2,5e-13, zmiana znaku wszędzie. Regresja względem tc.json: max |Δt_c| 2,3e-13 (41 wspólnych); 7 dawnych „absorbed” to zderzenia (m.in. przerwa 11: t_c = −27,89, ratio 4,62), 5 to preempted.
+- Kontrola liczby zer: 50 punktów zgodnych z predykcją, liczba nie rośnie, ale ważna tylko do t = −48,78 (zderzenie przez brzeg okna); zderzenie 55–56 przy −76,6 pozostaje nieweryfikowane liczbą zer.
+- Luka: `spawn` po cichu pomijał pary bez seedów; sąsiednie pary przeżywających zer (6,21), (42,77), (90,99), (99,114) nie mają rekordu (przeżywa 8 z 114 zer: 1, 6, 21, 42, 77, 90, 99, 114). Do naprawy przed rozszerzeniem zakresu.

@@ -1,0 +1,53 @@
+{
+ "edge_gap": 12,
+ "edge_valid_until": -31.0825,
+ "n_points": 6,
+ "monotone_nonincreasing": true,
+ "all_match": true,
+ "first_mismatch": null,
+ "rows": [
+  {
+   "t": 0.0,
+   "X": 114.5258682226782,
+   "counted": 12,
+   "predicted": 12,
+   "diff": 0
+  },
+  {
+   "t": -2.9163507983636325,
+   "X": 117.20237816184445,
+   "counted": 10,
+   "predicted": 10,
+   "diff": 0
+  },
+  {
+   "t": -3.994306091820203,
+   "X": 118.27816720999024,
+   "counted": 8,
+   "predicted": 8,
+   "diff": 0
+  },
+  {
+   "t": -8.26416639476481,
+   "X": 122.75380412232784,
+   "counted": 6,
+   "predicted": 6,
+   "diff": 0
+  },
+  {
+   "t": -20.19449510302468,
+   "X": 131.33480972212797,
+   "counted": 4,
+   "predicted": 4,
+   "diff": 0
+  },
+  {
+   "t": -28.394477076405412,
+   "X": 135.3875893764771,
+   "counted": 2,
+   "predicted": 2,
+   "diff": 0
+  }
+ ],
+ "seconds": 15.232052326202393
+}
