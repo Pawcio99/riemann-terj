@@ -58,3 +58,22 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - Zmiana w src/test3_gen.py: para bez seedu z sąsiadów nie jest już pomijana; zera L i R śledzone Newtonem od t = 0 do t_start (krok ≤ 0,1), garb szukany skanem H_x między nimi; niepowodzenie = status `no_seed` w JSON. Wynik zapisuje ścieżki garbów, listę przeżywających zer i `missing_survivor_pairs`; opcja `--force-track` ignoruje seedy (walidacja).
 - Pilot `python -m src.test3_gen --nzeros 10 --extra 8 --workers 6 --out results/test3/gen_pilot.json` (115 s) i z `--force-track` (`gen_pilot_ft.json`, 120 s): 25 par, statusy i t_c identyczne (różnica 0), przeżywają zera 1 i 6, brak brakujących par, 0 `no_seed`. Pilot nie zawiera pary, która wcześniej byłaby pominięta, więc fallback jest sprawdzony tylko na startach par, nie na pominiętych (6,21), (42,77), (90,99), (99,114) — te pojawią się w pełnym przebiegu.
 - Poprawka po pilocie: start pary z seedów wybierał garb sąsiedniej pary zamiast najwyższego garbu całego przedziału (okno skanu zbyt wąskie, np. para 11–16: 125,01 zamiast 117,05, H 2,2e-19 vs 1,9e-18). Teraz okno 0,8·rozpiętość + 1 wokół środka seedów; start z seedów i ze śledzenia zer zgodne co do 0,0 dla wszystkich 6 par pokolenia 2, te same zdarzenia. Wynik gen.json (1569 s) użył starego wyboru startu, więc jest zastąpiony przez punkt 2.
+
+## Test 3, faza A: punkt 2, start (2026-09-26)
+- Nowe: `python -m src.test3 count --dividers` (okno (0, X), X = garb żyjącej pary; predykcja p − 2·#zderzeń z t_c > t i oboma zerami < p; na pilocie zgodne w 9/9 punktach), src/test3_gridcheck.py (powtórka par z gęstością siatki ×2 i ×4).
+- Start w tle: gen2.json (log logs/test3_gen2.log), potem gridcheck.json dla par 6–21, 42–77, 90–99, 99–114 (log logs/test3_gridcheck.log), potem count2.json (log logs/test3_count2.log). Oczekiwane 35–45 min + ok. 10 min + ok. 10 min.
+
+## Test 3, faza A: punkt 2, wynik gen2 i błąd pary (42,77) (2026-09-26)
+- gen2.json: 53 zderzenia, statusy 165 par (53 collided, 6 preempted, 99 absorbed, 1 lost, 6 censored, 1 no_seed); count2 (dividery) zgodny w 43/43 punktach do t = −77,13, zdarzenie 55–56 potwierdzone (1 punkt poniżej −76,6 z p ≥ 57). gridcheck (×2, ×4) dla (6,21), (90,99), (99,114): |Δ start| ≤ 2,4e-7, wynik identyczny; fallback bez seedów użyty dla (6,21) i (90,99).
+- (42,77) nie ma rekordu. Przyczyna: klucz pamięci `spawned` = (i, j, t_c) bez sąsiadów L, R; zdarzenie 55–56 w pierwszej fali dostało L=50, R=67 (stąd jedyny `no_seed`: para (50,67)), a po odkryciu zderzeń 47–50 itd. jego sąsiedzi to 42 i 77, ale wpis już istniał. Naprawa: klucz z L, R, walidacja pary (i,j) == (L,R) w greedy i filtrze; opcja `--resume`. t_c⁰(42,77) = −2295 (nie −1160; to (21,42)).
+- Start: `python -m src.test3_gen --nzeros 100 --extra 12 --workers 6 --resume results/test3/gen2.json --out results/test3/gen3.json` (log logs/test3_gen3.log; log pisze dopiero po fali).
+
+## Test 3, faza A: podsumowanie (2026-09-26)
+- gen3.json (wznowienie z gen2, 128 s): 166 par (113 gen-1 + 53 spawnowanych): 53 collided, 6 preempted, 99 absorbed (wszystkie z przyczyną), 7 censored, 1 lost (113–114, brzeg), 0 no_seed; brak brakujących par przeżywających zer (1, 6, 21, 42, 77, 90, 99, 114). Zdarzenia: 48 (gen 1) + 5 (gen 2), 46 przy obu zerach ≤ 100.
+- count3 (dividery, p = 99): 43/43 punktów zgodnych do t = −77,13, zdarzenie 55–56 potwierdzone (1 punkt); gridcheck ×2, ×4 dla (6,21), (90,99), (99,114), (42,77): |Δ start| ≤ 3,5e-7, wyniki identyczne.
+- censored (t_c⁰): (42,77) −2295, (21,42) −1161, (6,21) −872, (99,114) −343, (77,90) −283, (1,6) −275, (90,99) −107. Rozszerzenie do −400 nie ma sensu dla trzech pierwszych; do decyzji.
+- Regresja względem tc.json: 12 zmian absorbed → collided/preempted (7 + 5) to poprawka błędu starego skryptu (zbyt grube kroki t, garb uciekał z okna), nie zmiana nazw; potwierdza ją kontrola liczby zer (7 nowych zderzeń w predykcji).
+
+## Test 3, faza A: zamknięcie (2026-09-26)
+- Faza A zamknięta bez punktu 3 (uzasadnienie w docs/PLAN_TEST3_A.md). Raport: results/test3/REPORT_A.md; liczby: `python -m src.test3_summary --out results/test3/summary_A.json` (src/test3_summary.py).
+- Doprecyzowanie: 12 zmian statusu względem tc.json (7 collided + 5 preempted, z czego 11 w zakresie) to poprawka merytoryczna, nie zmiana nazw; zgodność preempted z partnerem pokolenia 2 jest bitowo dokładna (śledzony ten sam garb), więc to słabe potwierdzenie.

@@ -384,6 +384,70 @@ def cmd_count(a):
     return 0
 
 
+def count_div(args):
+    return count_window(args)
+
+
+def cmd_count_div(a):
+    """Zero count on windows (0, X) with X a hump of a *living* pair (p, q) of neighbouring real zeros.
+    Living at t: path of the pair record covers t and neither p nor q took part in a collision with t_c > t.
+    Prediction: p - 2 * #{collisions with t_c > t and both zeros < p} (p = 1-based number of the lower zero)."""
+    t0 = time.time()
+    d = json.load(open(a.tc))
+    recs = [r for r in d["gaps"] + d["spawned"] if r.get("path")]
+    ev = sorted([(x["zi"], x["zj"], x["tc"]) for x in d["events"]], key=lambda e: -e[2])
+    tcs = [e[2] for e in ev]
+    grid = [0.0] + [0.5 * (tcs[i] + tcs[i + 1]) for i in range(len(tcs) - 1) if tcs[i] - tcs[i + 1] > 0.03]
+    grid.append(tcs[-1] - 0.5)
+    grid = [t for t in grid if t > a.tmin]
+    plan = []
+    for t in grid:
+        used = {z for zi, zj, tc in ev if tc > t for z in (zi, zj)}
+        alive = []
+        for r in recs:
+            p, q = r["i"] + 1, r["j"] + 1
+            pa = r["path"]
+            if p in used or q in used or not (pa[0][0] + 1e-9 >= t >= pa[-1][0] - 1e-9):
+                continue
+            ts_ = [u[0] for u in pa][::-1]
+            xs_ = [u[1] for u in pa][::-1]
+            alive.append((p, q, float(np.interp(t, ts_, xs_))))
+        hi = sorted([x for x in alive if x[0] >= a.pcover])
+        mid = sorted([x for x in alive if a.pmin <= x[0] < a.pcover])
+        pick = hi[0] if hi else (mid[0] if mid else (max(alive) if alive else None))
+        plan.append((t, pick, bool(hi)))
+    jobs = [(t, pk[2], a.step) for t, pk, _ in plan if pk]
+    zmax = max(j[1] for j in jobs) + 2
+    _G["eng"] = HeatFlow(zmax, DIGITS, tmin=a.tmin)
+    with Pool(a.workers, initializer=_init, initargs=(zmax, a.tmin)) as pool:
+        res = dict(pool.map(count_window, jobs, chunksize=1))
+    rows = []
+    for t, pk, full in plan:
+        if pk is None:
+            rows.append(dict(t=t, note="no living divider"))
+            continue
+        p, q, X = pk
+        pred = p - 2 * sum(1 for zi, zj, tc in ev if tc > t and zj < p)
+        unver = sum(1 for zi, zj, tc in ev if tc > t and zj > p)
+        rows.append(dict(t=t, p=p, q=q, X=X, counted=res[t], predicted=pred, diff=res[t] - pred,
+                         covers_all_above=full, unverified_events=unver))
+    chk = [r for r in rows if "diff" in r]
+    bad = [r for r in chk if r["diff"] != 0]
+    ev5556 = [r for r in chk if r["t"] < -76.6 and r["p"] >= 57]
+    out = dict(n_points=len(rows), n_no_divider=len(rows) - len(chk), all_match=not bad, mismatches=bad,
+               t_min_checked=min(r["t"] for r in chk), points_below_m76_6_p_ge_57=len(ev5556),
+               match_below_76_6=all(r["diff"] == 0 for r in ev5556) if ev5556 else None, rows=rows,
+               seconds=time.time() - t0)
+    json.dump(out, open(a.out, "w"), indent=1)
+    print(f"count(dividers): {len(rows)} times, checked {len(chk)}, no divider {len(rows) - len(chk)}; "
+          f"all equal prediction: {not bad}; lowest t checked {out['t_min_checked']:.2f}; "
+          f"points below -76.6 with p>=57: {len(ev5556)} match: {out['match_below_76_6']}; {time.time() - t0:.0f}s")
+    for r in (bad[:5] or chk[-4:]):
+        print(f"  t {r['t']:9.3f} p {r['p']} q {r['q']} X {r['X']:8.2f} counted {r['counted']} predicted {r['predicted']} "
+              f"diff {r['diff']} unverified {r['unverified_events']}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -392,6 +456,8 @@ def main():
     c.add_argument("--tc", required=True); c.add_argument("--out", required=True)
     c.add_argument("--workers", type=int, default=6); c.add_argument("--tmin", type=float, default=-100.0)
     c.add_argument("--step", type=float, default=0.1)
+    c.add_argument("--dividers", action="store_true", help="window edge = hump of any living pair (gen.json with paths)")
+    c.add_argument("--pcover", type=int, default=99); c.add_argument("--pmin", type=int, default=57)
     for name in ("pilot", "tc"):
         s = sub.add_parser(name)
         s.add_argument("--nzeros", type=int, default=10 if name == "pilot" else 100)
@@ -403,7 +469,7 @@ def main():
     if a.cmd == "validate":
         return cmd_validate(a)
     if a.cmd == "count":
-        return cmd_count(a)
+        return cmd_count_div(a) if a.dividers else cmd_count(a)
     if a.cmd == "pilot":
         return cmd_pilot(a)
     cmd_tc(a)

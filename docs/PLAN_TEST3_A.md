@@ -58,3 +58,6 @@ Kontrola spójności: ż = H''/H' liczone w zerach przy t = 0 porównuję z obci
 - `validate` spełnia wszystkie kryteria (ξ, 50 zer z tolerancją 1e−8, liczba zmian znaku).
 - Na pilocie: t_c jest stabilne przy 2×dps i h/2 z dokładnością do 1e−10. Znak g faktycznie zmienia się w t_c, co sprawdzam g(t_c ± 1e−6). Dla przerw wyraźnie izolowanych stosunek t_c/t_c⁰ jest bliski 1, a odchylenia są zgodne co do kierunku z asymetrią sąsiadów. To jest hipoteza, którą sprawdzam, a nie kryterium.
 - Dla jednej przerwy wynik trapezów porównuję z pełnym `mp.quad`.
+
+## Dopisek (2026-09-26): punkt 3 pominięty
+Rozszerzenia zakresu do t = −400 dla najniższych szerokich par pokolenia ≥ 2 nie wykonano. Uzasadnienie: mediana ilorazu t_c/t_c⁰ dla zderzeń pokolenia 1 wynosi 1,4 (kwantyl 90%: 3,2), a t_c⁰ trzech najszerszych par cenzurowanych, (42,77), (21,42) i (6,21), leży poniżej −870, więc żadna z nich nie zderzyłaby się przed −400; dla (1,6) i (90,99) szanse byłyby co najwyżej umiarkowane, a zyskiem byłyby dwa punkty w zakresie t, w którym przybliżenie pary izolowanej nie ma sensu. Faza A zamknięta wynikiem results/test3/REPORT_A.md; liczby zbiera `python -m src.test3_summary --out results/test3/summary_A.json`.

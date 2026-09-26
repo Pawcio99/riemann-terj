@@ -88,10 +88,11 @@ def pair_tc(job):
     n0, t0 = eng.nev, time.time()
     a, b, ts, tmin = job["a"], job["b"], job["t_start"], job["tmin"]
     dts = job.get("dts", 1.0)
+    gf = job.get("grid_factor", 1)
     dt_max, dt_min = DT_MAX * dts, DT_MIN * dts
     span = b - a
     w = max(1.5, (0.6 if job["inter"] else 0.35) * span)
-    ngrid = max(24, int(2 * w / 0.6))
+    ngrid = int(gf * max(24, int(2 * w / 0.6)))
     rec = dict(i=job["i"], j=job["j"], a=a, b=b, gen=job["gen"], parent=job["parent"], t_start=ts,
                inter=job["inter"], tc0=-(span ** 2) / 8)
     try:
@@ -104,7 +105,7 @@ def pair_tc(job):
                 rec["zeros_at_start"] = [aa, bb]
             mid = 0.5 * (aa + bb)
             s = 1.0 if float(eng.H(mid, ts)) > 0 else -1.0
-            x, g, sl = hump(eng, ts, mid, 0.5 * (bb - aa), s, max(24, int((bb - aa) / 0.3)))
+            x, g, sl = hump(eng, ts, mid, 0.5 * (bb - aa), s, int(gf * max(24, int((bb - aa) / 0.3))))
         else:
             s = 1.0 if float(eng.H(job["seeds"][0], ts)) > 0 else -1.0
             best = None
@@ -120,7 +121,7 @@ def pair_tc(job):
             # neighbour humps are only seeds: take the highest hump of the whole interval, as the tracker does
             ws = 0.8 * span + 1.0
             xc = float(np.mean(job["seeds"]))
-            x, g, sl = hump(eng, ts, xc, ws, s, max(24, int(2 * ws / 0.3)))
+            x, g, sl = hump(eng, ts, xc, ws, s, int(gf * max(24, int(2 * ws / 0.3))))
     except Absorbed:
         rec.update(status="no_seed", nev=eng.nev - n0, seconds=time.time() - t0, path=[], dts=dts, _job=job)
         return rec
@@ -188,9 +189,11 @@ def greedy(cands, n_zeros):
     """Event order by decreasing t_c. Returns (accepted events, preempted keys)."""
     real = list(range(n_zeros))
     used, acc, accset, pre = set(), [], {}, []
+    accLR = {}
     for r in sorted([c for c in cands if c["status"] == "candidate"], key=lambda c: -c["tc"]):
         if r["parent"] is not None and not (tuple(r["parent"]) in accset
-                                            and abs(accset[tuple(r["parent"])] - r["t_start"]) < 1e-9):
+                                            and abs(accset[tuple(r["parent"])] - r["t_start"]) < 1e-9
+                                            and accLR[tuple(r["parent"])] == (r["i"], r["j"])):
             continue
         i, j = r["i"], r["j"]
         if i in used or j in used:
@@ -204,6 +207,7 @@ def greedy(cands, n_zeros):
         real.remove(j)
         acc.append(dict(i=i, j=j, tc=r["tc"], gen=r["gen"], L=L, R=R, parent=r["parent"]))
         accset[(i, j)] = r["tc"]
+        accLR[(i, j)] = (L, R)
     return acc, pre
 
 
@@ -229,24 +233,26 @@ def cause_of(rec, acc):
     return None
 
 
-def simulate(zf, workers, tmin, log=print, a_force_track=False):
+def simulate(zf, workers, tmin, log=print, a_force_track=False, gen1=None, spawned=None):
     N = len(zf)
     zmax = zf[-1] + 2
     jobs = [dict(i=i, j=i + 1, a=zf[i], b=zf[i + 1], t_start=0.0, seeds=None, inter=0, gen=1, parent=None,
                  tmin=tmin) for i in range(N - 1)]
-    gen1 = run_jobs(jobs, workers, zmax, tmin)
-    spawned = {}
+    if gen1 is None:
+        gen1 = run_jobs(jobs, workers, zmax, tmin)
+    spawned = {} if spawned is None else spawned
     wave = 0
     while True:
         cands = gen1 + [r for r in spawned.values() if r is not None]
         acc, pre = greedy(cands, N)
-        accd = {(e["i"], e["j"]): e["tc"] for e in acc}
-        valid = [r for r in cands if r["parent"] is None or (tuple(r["parent"]) in accd
-                                                             and abs(accd[tuple(r["parent"])] - r["t_start"]) < 1e-9)]
+        accd = {(e["i"], e["j"]): (e["tc"], e["L"], e["R"]) for e in acc}
+        valid = [r for r in cands if r["parent"] is None or (
+            tuple(r["parent"]) in accd and abs(accd[tuple(r["parent"])][0] - r["t_start"]) < 1e-9
+            and accd[tuple(r["parent"])][1:] == (r["i"], r["j"]))]
         lookup = {}
         for r in valid:
             lookup[(r["i"], r["j"])] = r
-        todo = [e for e in acc if (e["i"], e["j"], round(e["tc"], 10)) not in spawned]
+        todo = [e for e in acc if (e["i"], e["j"], round(e["tc"], 10), e["L"], e["R"]) not in spawned]
         if not todo:
             # status reconciliation (Rolle): a vanished gap needs a cause event, otherwise retry with dt/4
             lost = [r for r in valid if r["status"] in ("absorbed", "lost") and cause_of(r, acc) is None
@@ -268,7 +274,7 @@ def simulate(zf, workers, tmin, log=print, a_force_track=False):
             rgen[e["i"]] = rgen[e["j"]] = e["gen"]
         jobs = []
         for e in todo:
-            key = (e["i"], e["j"], round(e["tc"], 10))
+            key = (e["i"], e["j"], round(e["tc"], 10), e["L"], e["R"])
             L, R = e["L"], e["R"]
             if L is None or R is None:
                 spawned[key] = None
@@ -284,7 +290,7 @@ def simulate(zf, workers, tmin, log=print, a_force_track=False):
         real_jobs = jobs
         res = run_jobs(real_jobs, workers, zmax, tmin)
         for j, r in zip(real_jobs, res):
-            spawned[(j["parent"][0], j["parent"][1], round(j["t_start"], 10))] = r
+            spawned[(j["parent"][0], j["parent"][1], round(j["t_start"], 10), j["i"], j["j"])] = r
         wave += 1
         log(f"wave {wave}: {len(real_jobs)} new pairs, accepted events so far {len(acc)}")
     return gen1, spawned, acc, pre
@@ -298,16 +304,28 @@ def main():
     ap.add_argument("--tmin", type=float, default=-100.0)
     ap.add_argument("--ref", default="results/test3/tc.json", help="gen-1 results for regression")
     ap.add_argument("--force-track", action="store_true", help="validation: ignore neighbour seeds, track zeros")
+    ap.add_argument("--resume", default=None, help="finished gen json to continue from (adds missing spawns)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     t0 = time.time()
     n = a.nzeros
     zf = [float(x) for x in zeros_z(n + 2 + a.extra)]
+    g0 = s0 = None
+    if a.resume:  # continue from a finished run (statuses back to raw tracker outcomes)
+        old = json.load(open(a.resume))
+        raw = {"collided": "candidate", "preempted": "candidate"}
+        def load(r):
+            r["_job"] = r.pop("job")
+            r["status"] = raw.get(r["status"], r["status"])
+            return r
+        g0 = [load(r) for r in old["gaps"]]
+        s0 = {(r["parent"][0], r["parent"][1], round(r["t_start"], 10), r["i"], r["j"]): load(r) for r in old["spawned"]}
     gen1, spawned, acc, pre = simulate(zf, a.workers, a.tmin, log=lambda m: print(m, flush=True),
-                                       a_force_track=a.force_track)
-    accd = {(e["i"], e["j"]): e["tc"] for e in acc}
+                                       a_force_track=a.force_track, gen1=g0, spawned=s0)
+    accd = {(e["i"], e["j"]): (e["tc"], e["L"], e["R"]) for e in acc}
     sp = [r for r in spawned.values() if r is not None and tuple(r["parent"]) in accd
-          and abs(accd[tuple(r["parent"])] - r["t_start"]) < 1e-9]
+          and abs(accd[tuple(r["parent"])][0] - r["t_start"]) < 1e-9
+          and accd[tuple(r["parent"])][1:] == (r["i"], r["j"])]
     cands = gen1 + sp
     accset = set(accd)
     preset = set(pre)
@@ -323,7 +341,7 @@ def main():
                 r["status"] = "lost"
         elif r["status"] == "candidate":
             r["status"] = "collided" if (r["i"], r["j"]) in accset else "preempted"
-        r.pop("_job", None)
+        r["job"] = r.pop("_job", None)
     incons = []
     ev = [dict(zi=e["i"] + 1, zj=e["j"] + 1, tc=e["tc"], gen=e["gen"], parent=e["parent"]) for e in acc]
     ngen = {}

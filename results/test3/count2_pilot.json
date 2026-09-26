@@ -1,0 +1,111 @@
+{
+ "n_points": 9,
+ "n_no_divider": 0,
+ "all_match": true,
+ "mismatches": [],
+ "t_min_checked": -28.394477076405412,
+ "points_below_m76_6_p_ge_57": 0,
+ "match_below_76_6": null,
+ "rows": [
+  {
+   "t": 0.0,
+   "p": 9,
+   "q": 10,
+   "X": 97.245065,
+   "counted": 9,
+   "predicted": 9,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 0
+  },
+  {
+   "t": -1.5815894992223223,
+   "p": 9,
+   "q": 10,
+   "X": 98.96628759875328,
+   "counted": 9,
+   "predicted": 9,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 2
+  },
+  {
+   "t": -2.318476398753683,
+   "p": 11,
+   "q": 12,
+   "X": 109.50946611086097,
+   "counted": 9,
+   "predicted": 9,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 2
+  },
+  {
+   "t": -3.35691812414478,
+   "p": 11,
+   "q": 12,
+   "X": 110.20265728841636,
+   "counted": 9,
+   "predicted": 9,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 3
+  },
+  {
+   "t": -3.994306091820203,
+   "p": 11,
+   "q": 12,
+   "X": 110.62501967833624,
+   "counted": 7,
+   "predicted": 7,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 3
+  },
+  {
+   "t": -5.673917386160701,
+   "p": 11,
+   "q": 12,
+   "X": 111.72915619386383,
+   "counted": 5,
+   "predicted": 5,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 3
+  },
+  {
+   "t": -9.904264121039835,
+   "p": 11,
+   "q": 12,
+   "X": 114.55267648176735,
+   "counted": 5,
+   "predicted": 5,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 4
+  },
+  {
+   "t": -20.19449510302468,
+   "p": 11,
+   "q": 12,
+   "X": 122.75145504675785,
+   "counted": 3,
+   "predicted": 3,
+   "diff": 0,
+   "covers_all_above": true,
+   "unverified_events": 4
+  },
+  {
+   "t": -28.394477076405412,
+   "p": 1,
+   "q": 6,
+   "X": 48.82673598907376,
+   "counted": 1,
+   "predicted": 1,
+   "diff": 0,
+   "covers_all_above": false,
+   "unverified_events": 9
+  }
+ ],
+ "seconds": 11.18272614479065
+}
