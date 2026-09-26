@@ -56,6 +56,33 @@ def hump(eng, t, x0, w, s, ngrid):
     return r, s * float(h0), -s * float(h2)
 
 
+def track_zero(eng, x0, t_end, dt0=0.1, dt_min=0.0125):
+    """Follow a real zero of H_t from t = 0 (x0) down to t_end by Newton with linear predictor; None if lost."""
+    t, x, xp, tp = 0.0, float(x0), None, None
+    dt = dt0
+    while t > t_end + 1e-12:
+        dtn = min(dt, t - t_end)
+        tn = t - dtn
+        pred = x if xp is None else x + (x - xp) * (dtn / (tp - t))
+        y, ok = mp.mpf(pred), False
+        for _ in range(12):
+            h0, h1, _ = eng.derivs(y, tn)
+            step = h0 / h1
+            y -= step
+            if abs(step) < 1e-13:
+                ok = True
+                break
+        y = float(y)
+        if ok and abs(y - pred) < 0.05 + 0.3 * dtn:
+            xp, tp, x, t = x, t, y, tn
+            dt = min(dt0, dt * 1.5)
+        elif dtn <= dt_min + 1e-12:
+            return None
+        else:
+            dt = max(dt_min, dtn / 2)
+    return x
+
+
 def pair_tc(job):
     eng = _G["eng"]
     n0, t0 = eng.nev, time.time()
@@ -69,8 +96,15 @@ def pair_tc(job):
                inter=job["inter"], tc0=-(span ** 2) / 8)
     try:
         if job["seeds"] is None:
-            s = 1.0 if float(eng.H(0.5 * (a + b), ts)) > 0 else -1.0
-            x, g, sl = hump(eng, ts, 0.5 * (a + b), 0.5 * span, s, 24)
+            aa, bb = a, b
+            if ts < 0:  # no seed from neighbours: follow both zeros from t = 0 to t_start, scan between them
+                aa, bb = track_zero(eng, a, ts), track_zero(eng, b, ts)
+                if aa is None or bb is None or bb <= aa:
+                    raise Absorbed
+                rec["zeros_at_start"] = [aa, bb]
+            mid = 0.5 * (aa + bb)
+            s = 1.0 if float(eng.H(mid, ts)) > 0 else -1.0
+            x, g, sl = hump(eng, ts, mid, 0.5 * (bb - aa), s, max(24, int((bb - aa) / 0.3)))
         else:
             s = 1.0 if float(eng.H(job["seeds"][0], ts)) > 0 else -1.0
             best = None
@@ -83,7 +117,10 @@ def pair_tc(job):
                     best = c
             if best is None:
                 raise Absorbed
-            x, g, sl = best
+            # neighbour humps are only seeds: take the highest hump of the whole interval, as the tracker does
+            ws = 0.8 * span + 1.0
+            xc = float(np.mean(job["seeds"]))
+            x, g, sl = hump(eng, ts, xc, ws, s, max(24, int(2 * ws / 0.3)))
     except Absorbed:
         rec.update(status="no_seed", nev=eng.nev - n0, seconds=time.time() - t0, path=[], dts=dts, _job=job)
         return rec
@@ -192,7 +229,7 @@ def cause_of(rec, acc):
     return None
 
 
-def simulate(zf, workers, tmin, log=print):
+def simulate(zf, workers, tmin, log=print, a_force_track=False):
     N = len(zf)
     zmax = zf[-1] + 2
     jobs = [dict(i=i, j=i + 1, a=zf[i], b=zf[i + 1], t_start=0.0, seeds=None, inter=0, gen=1, parent=None,
@@ -238,12 +275,12 @@ def simulate(zf, workers, tmin, log=print):
                 continue
             seeds = [x for x in (seed_at(lookup.get((L, e["i"])), e["tc"]), seed_at(lookup.get((e["j"], R)), e["tc"]))
                      if x is not None]
-            if not seeds:
-                spawned[key] = None
-                continue
+            if a_force_track:
+                seeds = []
             between = list(range(L + 1, R))
-            jobs.append(dict(i=L, j=R, a=zf[L], b=zf[R], t_start=e["tc"], seeds=seeds, inter=len(between),
-                             gen=1 + max(rgen.get(k, 0) for k in between), parent=[e["i"], e["j"]], tmin=tmin))
+            jobs.append(dict(i=L, j=R, a=zf[L], b=zf[R], t_start=e["tc"], seeds=seeds or None, inter=len(between),
+                             gen=1 + max(rgen.get(k, 0) for k in between), parent=[e["i"], e["j"]], tmin=tmin,
+                             tracked=not seeds))
         real_jobs = jobs
         res = run_jobs(real_jobs, workers, zmax, tmin)
         for j, r in zip(real_jobs, res):
@@ -260,12 +297,14 @@ def main():
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--tmin", type=float, default=-100.0)
     ap.add_argument("--ref", default="results/test3/tc.json", help="gen-1 results for regression")
+    ap.add_argument("--force-track", action="store_true", help="validation: ignore neighbour seeds, track zeros")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     t0 = time.time()
     n = a.nzeros
     zf = [float(x) for x in zeros_z(n + 2 + a.extra)]
-    gen1, spawned, acc, pre = simulate(zf, a.workers, a.tmin, log=lambda m: print(m, flush=True))
+    gen1, spawned, acc, pre = simulate(zf, a.workers, a.tmin, log=lambda m: print(m, flush=True),
+                                       a_force_track=a.force_track)
     accd = {(e["i"], e["j"]): e["tc"] for e in acc}
     sp = [r for r in spawned.values() if r is not None and tuple(r["parent"]) in accd
           and abs(accd[tuple(r["parent"])] - r["t_start"]) < 1e-9]
@@ -308,13 +347,19 @@ def main():
     stat = {k: sum(1 for r in cands if r["status"] == k)
             for k in ("collided", "preempted", "absorbed", "lost", "censored", "no_seed")}
     for r in cands:
-        r.pop("path", None)
+        r["path"] = [[round(t, 6), round(x, 6)] for t, x in r.get("path", [])]
+    used = {k for e in acc for k in (e["i"], e["j"])}
+    surv = [k for k in range(len(zf)) if k not in used]
+    have = {(r["i"], r["j"]) for r in cands}
+    missing = [[x + 1, y + 1] for x, y in zip(surv, surv[1:]) if (x, y) not in have]
+    nospawn = [[e["i"] + 1, e["j"] + 1] for e in acc if (e["L"] is None or e["R"] is None)]
     out = dict(n=n, extra=a.extra, zeros=zf, events=ev, events_per_generation=ngen, pair_status=stat,
-               gen1_ratio_violations=viol, censored_inconsistent=incons, regression_vs_gen1=reg, gaps=gen1, spawned=sp,
+               gen1_ratio_violations=viol, survivors=[k + 1 for k in surv], missing_survivor_pairs=missing,
+               events_without_spawn_edge=nospawn, censored_inconsistent=incons, regression_vs_gen1=reg, gaps=gen1, spawned=sp,
                seconds=time.time() - t0)
     os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
     json.dump(out, open(a.out, "w"))
-    print(f"gen n={n}: events per generation {ngen}; pair status {stat}; gen1 ratio violations {viol}; censored inconsistent {incons}; "
+    print(f"gen n={n}: events per generation {ngen}; pair status {stat}; survivors {[k + 1 for k in surv]} missing pairs {missing}; gen1 ratio violations {viol}; censored inconsistent {incons}; "
           f"{time.time() - t0:.0f}s")
     print(f"regression vs {a.ref}: {json.dumps(reg)[:400]}")
     for e in sorted(ev, key=lambda e: e["gen"])[-8:]:
