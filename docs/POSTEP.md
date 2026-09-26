@@ -25,3 +25,9 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - [FAKT NUMERYCZNY] N̂/N_eff maleje z 2,26 (10³) do 1,00 (10²²) wraz z 1/ρ̄; z-score wariancji względem CUE(N_eff) od +11 do −1; wartości kontrolne z czatu odtworzone tylko dla bloków ≥ 10⁸.
 - N ≥ 8 nieodróżnialne od ∞ przy 10⁴ odstępach (SD wariancji 0,0022–0,0027); N̂ > 128 raportowane jako dolna granica. p_GOF ≤ 0,0033 dla 10³–10⁵: sam dobór N nie tłumaczy odrzucenia KS z Testu 1.
 - [HIPOTEZA] rozbieżność znika dla T → ∞ (wyraz wolny Δu −0,008 ± 0,019); pojedyncza prosta N̂ = βL nie jest interpretowana. Poprawki po przeglądzie: p_GOF w fits.json przeliczone przy N̂ (`python -m src.test2_summary`); różnica z-score względem czatu wyjaśniona innym SD wariancji; arXiv:1608.04638 = Bornemann, Forrester, Mays, N ≈ 11,3 z podpisu rys. 3 (porównanie wariancji nadal DO WERYFIKACJI). Plan fazy A Testu 3 zatwierdzony (bez uruchamiania). Proponuję /clear przed implementacją.
+
+## Test 3, faza A: implementacja (2026-09-26)
+- Nowe: src/heatflow.py (H_t trapezami w mpmath, dps adaptacyjne), src/test3.py (validate | pilot | tc). `python -m src.test3 validate --out results/test3/validate.json`: H_0 vs ξ/8 błąd 2,9e-25, |z_n−2γ_n| < 1e-8, 50 zmian znaku, zgodność z mp.quad 4e-40 — PASS.
+- Błędy naprawione w trakcie: stałe okno skanu (zera dryfują w prawo dla t<0), filtr H·H''<0 (po t_c ekstremum jest minimum |H|), odwrócony znak testu zmiany znaku.
+- Pilot `python -m src.test3 pilot --nzeros 10 --out results/test3/tc_pilot.json`: zderzenia przerw 2, 4, 7, 9, t_c/t_c0 ∈ [1,20; 1,57] (bez naruszeń niezmiennika ≥1), stabilność 1e-15; 5 przerw „absorbed”, każda sąsiaduje ze zderzoną.
+- Oczekuje na zgodę: `tc --nzeros 100` (oszacowanie ~7 min szeregowo, ~1–3 min na 6 procesach). Proponuję /compact.
