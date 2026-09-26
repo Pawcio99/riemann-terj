@@ -35,6 +35,8 @@ Interpretacja w raporcie: [ANALOGIA TERJ] — liczba efektywnych stopni swobody 
 
 ## Test 3: przepływ de Bruijna–Newmana i „najsłabsze relacje”
 
+Status (2026-09-26): faza A wykonana, wraz z analizą geometrii t_c i testem reszty arytmetycznej (opisy: results/test3/REPORT_A.md i results/test3/REPORT_B.md; plany: docs/PLAN_TEST3_A.md i docs/PLAN_TEST3_B.md; podsumowanie: wpis „Test 3: podsumowanie” w docs/POSTEP.md). Wynik testu arytmetycznego jest negatywny. Punkt rozszerzenia zakresu do t = −400 pominięto (uzasadnienie w docs/PLAN_TEST3_A.md). Faza B (para Lehmera, przybliżenie efektywne Polymath) pozostaje nierozpoczęta.
+
 Definicje [TWIERDZENIE]: Φ(u) = Σ_{n≥1} (2π²n⁴e^{9u} − 3πn²e^{5u}) exp(−πn²e^{4u}), H_t(z) = ∫_0^∞ e^{tu²} Φ(u) cos(zu) du. H_0(z) = ξ(1/2 + iz/2)/8, więc zera H_0 to z = 2γ_n. Λ to najmniejsze t, przy którym wszystkie zera H_t są rzeczywiste; RH ⇔ Λ ≤ 0. Wiadomo, że Λ ≥ 0 (Rodgers–Tao 2018) i Λ ≤ 0,2 (Platt–Trudgian 2021). Przy t < 0 bliskie pary zer zderzają się i schodzą z osi rzeczywistej. Dynamika zer rzeczywistych: dz_j/dt = 2 Σ_{k≠j} 1/(z_j − z_k) przy sumowaniu symetrycznym; używaj jej tylko jako kontroli spójności torów.
 
 Faza A (niskie wysokości). Zaimplementuj H_t kwadraturą mpmath z wysoką precyzją. Wynik jest wykładniczo mały względem całki z modułu (rzędu e^{−πz/8}), więc precyzję dobieraj adaptacyjnie i sprawdzaj stabilność przy podwojeniu dps. Walidacja: zera H_0 pokrywają się z 2γ_n dla n ≤ 50 z dokładnością 1e−8. Potem dla pierwszych około 100 zer śledź zera jako funkcję t < 0 (siatka t, zmiany znaku H_t(x) dla rzeczywistego x) i wyznacz czasy zderzeń t_c sąsiednich par. Czasy zderzeń dla niskich zer mogą być rzędu dziesiątek jednostek ujemnych; najpierw zbadaj zakres t na małej próbce.
