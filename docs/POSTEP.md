@@ -17,3 +17,11 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - Komenda: `python -m src.test1 --out results/test1.json --nrep 200 --nm 1000` (log: logs/test1.log, ~kilkanaście minut).
 - [FAKT NUMERYCZNY] Wykładnik odpychania a: |z| ≤ 2,3 względem CUE(N_eff) we wszystkich 9 blokach, znak dodatni (bardziej GUE, nie GOE); iloraz wiarygodności GOE→GUE nieistotny (p_LR 0,19–1,0); oba rozwinięcia zgodne. Kryterium 3σ na ≥3 wysokościach niespełnione: brak anomalii.
 - Zastrzeżenie: dla n ≤ 10^8 (N_eff < 4) test KS odrzuca CUE(N_eff) (p_KS ≈ 0,005), więc model zerowy z asymptotycznym N_eff jest tam nieadekwatny (nie jest to dowód domieszki GOE); od 10^12 (N_eff ≥ 5,6) p_KS 0,25–0,88.
+- Artefakty Testu 1 uzupełnione (bez przeliczania): results/test1/summary.json, fig_a_vs_T.png, REPORT.md; komenda `python -m src.test1_summary`. Wynik negatywny: max |z| = 2,27, 0 przypadków >3σ.
+- Odrzucenie KS przy N_eff < 4 wiązane z CUE rozmiaru 2–3, nie z GOE [HIPOTEZA]; rozstrzygnie Test 2. Proponuję /clear przed Testem 2.
+
+## Test 2 (2026-09-26)
+- Tablica CUE(N), N=2…40 + kotwice do 128, interpolacja splajnem w u=1/N²; N̂ = min KS z bootstrapem blokowym; komendy: `python -m src.test2 {table,check,calib,fit} --out results/test2/...` i `python -m src.test2_summary` (~30 min).
+- [FAKT NUMERYCZNY] N̂/N_eff maleje z 2,26 (10³) do 1,00 (10²²) wraz z 1/ρ̄; z-score wariancji względem CUE(N_eff) od +11 do −1; wartości kontrolne z czatu odtworzone tylko dla bloków ≥ 10⁸.
+- N ≥ 8 nieodróżnialne od ∞ przy 10⁴ odstępach (SD wariancji 0,0022–0,0027); N̂ > 128 raportowane jako dolna granica. p_GOF ≤ 0,0033 dla 10³–10⁵: sam dobór N nie tłumaczy odrzucenia KS z Testu 1.
+- [HIPOTEZA] rozbieżność znika dla T → ∞ (wyraz wolny Δu −0,008 ± 0,019); pojedyncza prosta N̂ = βL nie jest interpretowana. Poprawki po przeglądzie: p_GOF w fits.json przeliczone przy N̂ (`python -m src.test2_summary`); różnica z-score względem czatu wyjaśniona innym SD wariancji; arXiv:1608.04638 = Bornemann, Forrester, Mays, N ≈ 11,3 z podpisu rys. 3 (porównanie wariancji nadal DO WERYFIKACJI). Plan fazy A Testu 3 zatwierdzony (bez uruchamiania). Proponuję /clear przed implementacją.
