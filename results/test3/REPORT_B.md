@@ -49,3 +49,15 @@ Wynik komendą `python -m src.test3_fluctdiss --out results/test3/fluctdiss.json
 [HIPOTEZA] Sprawdzono, czy efekt jest niezależny od już opisanej w tym raporcie zależności reszty od znormalizowanej odległości δ (Spearman −0,944, sekcja "Wyniki liczbowe"). |T| samo silnie koreluje z δ (Spearman 0,600, p = 0,0001) i z x (Spearman 0,673). Korelacja cząstkowa |T|–|reszta| z kontrolą δ spada z 0,578 do 0,044 — praktycznie zero.
 
 **Status**: hipoteza fluktuacyjno-dyssypacyjna jest odrzucona, w kierunku przeciwnym do przewidywanego. Surowa korelacja jest istotna statystycznie, ale ma znak przeciwny, a po kontroli już znanego confoundera (δ) zależność |T|–reszta znika niemal całkowicie. To nie jest ani potwierdzenie, ani neutralny brak efektu — to odrzucenie kierunku hipotezy z wyjaśnieniem przyczyny w postaci już znanej zmiennej ukrytej (δ), a nie nowego mechanizmu fizycznego.
+
+## N_eff (Test 2) a |T| i jakość dopasowania — reanaliza eksploracyjna
+
+Wynik komendą `python -m src.test3_neff_check --out results/test3/neff_check.json`, czysta reanaliza `results/test3/geom.json` bez ponownego liczenia H_t. Pytanie postawione po fakcie (nie w pierwotnym planie Testu 3), więc traktuj wynik jako eksploracyjny, nie potwierdzający.
+
+[HIPOTEZA, do sprawdzenia] N_eff = ln(γ/2π)/√(12Λ) (Test 1–2, Bogomolny i in. 2006) rośnie z wysokością γ. Pytanie: czy w obrębie tych samych 36 par (γ_mid od 23,0 do 231,6) N_eff wiąże się z |T| albo z jakością dopasowania modelu stałego T (|reszta|)?
+
+[FAKT NUMERYCZNY] N_eff w tej próbie mieści się w przedziale [0,299; 0,830] — rozpiętość 64% górnej wartości, a więc nie jest niemal stałe, wbrew wstępnemu oczekiwaniu wypowiedzianemu przed policzeniem. Korelacja Spearmana N_eff–|T|: ρ = 0,518, p = 0,0012. N_eff nie koreluje istotnie z δ (ρ = −0,202, p = 0,237), więc — inaczej niż w przypadku |T| powyżej — to nie jest artefakt tego samego confoundera: korelacja cząstkowa N_eff–|T| po kontroli δ rośnie do 0,815.
+
+[FAKT NUMERYCZNY] Korelacja Spearmana N_eff–|reszta| (jakość dopasowania modelu stałego T) jest nieistotna: ρ = −0,162, p = 0,344; po kontroli δ spada do 0,087. N_eff wiąże się więc z siłą pola pływowego |T| w tej próbie, ale nie z tym, jak dobrze model stałego T przewiduje t_c.
+
+**Status**: eksploracyjne, niepotwierdzające hipotezy o związku N_eff z jakością dopasowania (brak istotności), przy jednoczesnym nieoczekiwanym, istotnym i niekonfundowanym związku N_eff z |T|. Próba (n = 36, γ do 232) leży w wąskim, niskim krańcu skali z Testu 2 (N_eff < 4 wszędzie), więc wniosku nie da się uogólnić na wysokie γ bez policzenia H_t tam, co obecny silnik (precyzja rosnąca liniowo z wysokością) czyni na tym sprzęcie niewykonalnym — zob. `docs/POSTEP.md`.
