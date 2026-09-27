@@ -20,7 +20,7 @@ Drugi rejestr, dziennik badawczy, jest czymś innym: numerycznym testem konkretn
 | Przewidywanie TERJ | Test | Status |
 |---|---|---|
 | Poziomy energetyczne zer dzety odpowiadają widmu układu chaotycznego (macierze losowe) | Test 1 | `[FAKT NUMERYCZNY]` potwierdzone, zgodne z Bogomolny i in. 2006 |
-| Efektywna liczba stopni swobody rośnie z wysokością zer | Test 2 | `[FAKT NUMERYCZNY]` potwierdzone w granicach rozdzielczości danych |
+| Efektywna liczba stopni swobody rośnie z wysokością zer | Test 2 | `[FAKT NUMERYCZNY]` wynik ograniczony rozdzielczością danych, bez rozstrzygnięcia między potwierdzeniem a obaleniem wzrostu logarytmicznego |
 | W statystyce zer pozostaje domieszka symetrii odwrócenia czasu na dużych wysokościach | Test 1 | `[HIPOTEZA]` odrzucona — brak śladu ponad model zerowy |
 | Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1) | Test 3, faza A | `[FAKT NUMERYCZNY]` potwierdzone dla 42 z 42 sprawdzonych par |
 | Reszta niewyjaśniona geometrią lokalną niesie ślad arytmetyczny (ζ′, faza Grama) | Test 3, analiza reszt | `[HIPOTEZA]` bez potwierdzenia w tej próbie; moc testu ograniczona |
