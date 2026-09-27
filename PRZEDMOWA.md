@@ -22,7 +22,7 @@ Drugi rejestr, dziennik badawczy, jest czymś innym: numerycznym testem konkretn
 | Poziomy energetyczne zer dzety odpowiadają widmu układu chaotycznego (macierze losowe) | Test 1 | `[FAKT NUMERYCZNY]` zgodne z CUE(N_eff) (Bogomolny i in. 2006) od wysokości 10¹² (p_KS 0,22–0,88); dla bloków 10³–10⁸ (N_eff < 4) CUE(N_eff) jest odrzucone testem KS, a w trzech najniższych blokach także CUE(N) ze swobodnym N (Test 2); hipoteza, że to artefakt małego N, nie została potwierdzona, a Test 1 nie wykazał domieszki GOE |
 | Efektywna liczba stopni swobody rośnie z wysokością zer | Test 2 | `[FAKT NUMERYCZNY]` wynik ograniczony rozdzielczością danych, bez rozstrzygnięcia między potwierdzeniem a obaleniem wzrostu logarytmicznego |
 | W statystyce zer pozostaje domieszka symetrii odwrócenia czasu na dużych wysokościach | Test 1 | `[HIPOTEZA]` odrzucona — brak śladu ponad model zerowy |
-| Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1) | Test 3, faza A | `[FAKT NUMERYCZNY]` potwierdzone dla 42 z 42 sprawdzonych par |
+| Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1) | Test 3, faza A | `[FAKT NUMERYCZNY]` brak naruszeń dla 42 z 42 sprawdzonych par |
 | Reszta niewyjaśniona geometrią lokalną niesie ślad arytmetyczny (ζ′, faza Grama) | Test 3, analiza reszt | `[HIPOTEZA]` bez potwierdzenia w tej próbie; moc testu ograniczona |
 
 Każdy nowy test w repozytorium riemann-terj dopisuje tu wiersz, niezależnie od tego, czy wynik wesprze TERJ, czy go osłabi. Reguła jest prosta: żadna hipoteza nie zostaje bez statusu dłużej, niż trzeba na policzenie.
