@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>riemann-terj — numeryczny test przewidywań TERJ</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1f2328; --muted:#5b636b; --link:#1f5fa8; --line:#dcd8cf; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#16181b; --fg:#e6e3dc; --muted:#a0a6ad; --link:#7db3f0; --line:#33373c; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font:18px/1.6 Georgia, "Times New Roman", serif; }
+  main { max-width:44rem; margin:0 auto; padding:2.5rem 1rem 3rem; }
+  h1 { font-size:2rem; margin:0 0 1rem; }
+  h2 { font-size:1.25rem; margin:2rem 0 .5rem; padding-bottom:.25rem; border-bottom:1px solid var(--line); }
+  a { color:var(--link); }
+  .tabela { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; font-size:.9rem; }
+  th, td { border:1px solid var(--line); padding:.4rem .6rem; text-align:left; vertical-align:top; }
+  th { background:rgba(127,127,127,.12); }
+  code { font-size:.85em; }
+  pre { overflow-x:auto; padding:.75rem; border:1px solid var(--line); font-size:.85rem; }
+  .werdykt { color:var(--muted); font-size:.95rem; margin:.25rem 0 .75rem; }
+  footer { margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>riemann-terj — numeryczny test przewidywań TERJ</h1>
+<p>Ta strona przedstawia niezależne, numeryczne badanie przewidywań ramy TERJ na zerach funkcji dzeta Riemanna. Esej TERJ jest filozoficzną syntezą i nie rości sobie praw dowodu; to repozytorium odpowiada na te same pytania w innym rejestrze — jako test konkretnych, możliwych do obalenia przewidywań, prowadzony z pełną gotowością na wynik negatywny. Żadne zdanie merytoryczne nie stoi bez znacznika mówiącego, ile jest warte, a wyniki negatywne dokumentuje się tak samo starannie jak pozytywne. Szczegóły w <a href="PRZEDMOWA.md">przedmowie</a>.</p>
+
+<h2>Znaczniki wiarygodności</h2>
+<div class="tabela"><table>
+<thead><tr><th>Znacznik</th><th>Znaczenie</th></tr></thead>
+<tbody>
+<tr><td><code>[TWIERDZENIE]</code></td><td>wynik dowiedziony w literaturze matematycznej lub fizycznej, cytowany ze źródła</td></tr>
+<tr><td><code>[FAKT NUMERYCZNY]</code></td><td>własny, odtwarzalny wynik obliczeniowy — z komendą, która go odtwarza</td></tr>
+<tr><td><code>[HIPOTEZA]</code></td><td>zdanie testowalne; status podany wprost, także gdy wynik jest negatywny</td></tr>
+<tr><td><code>[ANALOGIA TERJ]</code></td><td>odczytanie pojęciowe łączące wynik z ramą TERJ — interpretacja, nie dowód</td></tr>
+</tbody>
+</table></div>
+
+<h2>Stan przewidywań</h2>
+<div class="tabela"><table>
+<thead><tr><th>Przewidywanie TERJ</th><th>Test</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Poziomy energetyczne zer dzety odpowiadają widmu układu chaotycznego (macierze losowe)</td><td>Test 1</td><td><code>[FAKT NUMERYCZNY]</code> zgodne z CUE(N_eff) (Bogomolny i in. 2006) od wysokości 10¹² (p_KS 0,22–0,88); dla bloków 10³–10⁸ (N_eff &lt; 4) CUE(N_eff) jest odrzucone testem KS, a w trzech najniższych blokach także CUE(N) ze swobodnym N (Test 2); hipoteza, że to artefakt małego N, nie została potwierdzona, a Test 1 nie wykazał domieszki GOE</td></tr>
+<tr><td>Efektywna liczba stopni swobody rośnie z wysokością zer</td><td>Test 2</td><td><code>[FAKT NUMERYCZNY]</code> wynik ograniczony rozdzielczością danych, bez rozstrzygnięcia między potwierdzeniem a obaleniem wzrostu logarytmicznego</td></tr>
+<tr><td>W statystyce zer pozostaje domieszka symetrii odwrócenia czasu na dużych wysokościach</td><td>Test 1</td><td><code>[HIPOTEZA]</code> odrzucona — brak śladu ponad model zerowy</td></tr>
+<tr><td>Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1)</td><td>Test 3, faza A</td><td><code>[FAKT NUMERYCZNY]</code> potwierdzone dla 42 z 42 sprawdzonych par</td></tr>
+<tr><td>Reszta niewyjaśniona geometrią lokalną niesie ślad arytmetyczny (ζ′, faza Grama)</td><td>Test 3, analiza reszt</td><td><code>[HIPOTEZA]</code> bez potwierdzenia w tej próbie; moc testu ograniczona</td></tr>
+</tbody>
+</table></div>
+
+<h2>Wyniki testów</h2>
+<p>Poniższe zdania i liczby są cytowane dosłownie z raportów w <code>results/</code>; pełny kontekst, metody i ograniczenia są w samych raportach.</p>
+
+<section>
+<h2>Test 1 — domieszka symetrii odwrócenia czasu w statystyce zer ζ</h2>
+<p class="werdykt"><strong>Wynik negatywny.</strong> Źródło: <a href="results/test1/REPORT.md">results/test1/REPORT.md</a></p>
+<p><code>[HIPOTEZA]</code> Statystyka zer funkcji ζ na rosnących wysokościach zawiera składnik klasy GOE (symetria odwrócenia czasu) ponad znane poprawki skończonej wysokości; oczekiwanie standardowe brzmi: brak takiej domieszki. Analizowano dziewięć bloków po 9 999 odstępów, zaczynających się od zera o numerze 10^3, 10^4, 10^5, 10^6, 10^7 i 10^8 (obliczone przez <code>src.zeros</code>) oraz od 10^12, 10^21 i 10^22 (tabele Odlyzki przekonwertowane przez <code>src.odlyzko</code>).</p>
+<p><code>[FAKT NUMERYCZNY]</code> We wszystkich dziewięciu blokach i dla obu rozwinięć widma (gęstościowego i lokalnego) odchylenie |z| nie przekracza 2,27, a nie ma ani jednego przypadku powyżej 3σ. Domieszka GOE obniżałaby a w stronę 2, więc kierunek odchyleń jest przeciwny do sygnału poszukiwanego.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Skończone α nie jest istotnie lepsze od czystego modelu unitarnego w żadnym bloku: najmniejsza p-wartość ilorazu wiarygodności wynosi 0,19, a mieści się w przedziale od 0,19 do 1,0 dla obu rozwinięć. <code>[FAKT NUMERYCZNY]</code> Wynik jest zatem negatywny: nie znaleziono śladu domieszki symetrii odwrócenia czasu w zakresie wysokości do 10^21.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Test Kołmogorowa–Smirnowa całego rozkładu odstępów odrzuca CUE(N_eff) dla bloków od n = 10^3 do n = 10^8 (N_eff &lt; 4): p_KS wynosi 0,005 (co odpowiada dolnej granicy 1/201 przy 200 replikach, więc jest to w istocie nierówność p_KS ≤ 0,005) dla bloków od 10^3 do 10^7 (w obu rozwinięciach) oraz dla rozwinięcia lokalnego bloku 10^8, a 0,010 dla rozwinięcia gęstościowego bloku 10^8. Od n = 10^12 (N_eff = 5,63) p_KS mieści się w przedziale 0,22–0,88, zatem model zerowy nie jest odrzucany.</p>
+<p>Czułość na małą domieszkę GOE jest ograniczona liczbą odstępów: przy około 10^4 odstępów niepewność a przy modelu zerowym wynosi około 0,25, więc przejście GOE→GUE ze skromnym α pozostaje nierozróżnialne od czystego GUE. <code>[ANALOGIA TERJ]</code> Nie stanowi to argumentu ani za RH, ani przeciw niej.</p>
+</section>
+
+<section>
+<h2>Test 2 — efektywny wymiar N̂ modelu CUE(N) dopasowany do odstępów zer</h2>
+<p class="werdykt"><strong>Wynik ograniczony rozdzielczością danych.</strong> Źródło: <a href="results/test2/REPORT.md">results/test2/REPORT.md</a></p>
+<p>Pytanie brzmi, jakiego rozmiaru N potrzebuje model CUE(N), żeby odtworzyć rozkład odstępów zer na wysokości T, i jak N̂ ma się do N_eff = ln(T/2π)/√(12Λ), Λ = 1,57314 (Bogomolny i in. 2006, arXiv math/0602270, wzór 19; sprawdzony w Teście 1).</p>
+<p><code>[FAKT NUMERYCZNY]</code> Dla bloków 10³…10⁸ dopasowane N̂ (unfolding „dens”) wynosi odpowiednio 3,60; 4,85; 3,90; 4,45; 4,45 i 7,15, czyli 1,5–2,3 razy więcej niż N_eff = 1,59; 1,77; 2,17; 2,64; 3,13; 3,62. Dla 10¹², 10²¹ i 10²² N̂ wynosi 5,70 z przedziałem 68% [5,45; &gt;128], 10,70 [6,40; 47,4] oraz &gt;128 [5,35; &gt;128], a ilorazy N̂/N_eff to 1,66; 1,07 i 1,00, z niepewnością obejmującą jedność.</p>
+<p>Każdą wartość N̂ powyżej około 8 należy czytać jako dolną granicę, a nie jako pomiar.</p>
+<p>Nawet z N swobodnie regulowanym model CUE(N) nie opisuje więc całego kształtu rozkładu w trzech najniższych blokach, co oznacza, że rozbieżność względem N_eff nie sprowadza się do złego doboru rozmiaru; hipoteza z raportu Testu 1, że odrzucenie wynika wyłącznie z całkowitego lub obciętego N, nie została potwierdzona.</p>
+<p><code>[ANALOGIA TERJ]</code> Jest to wynik ograniczony rozdzielczością, a nie potwierdzenie ani obalenie logarytmicznego wzrostu; nie stanowi argumentu ani za RH, ani przeciw niej.</p>
+</section>
+
+<section>
+<h2>Test 3, faza A — przepływ ciepła i czasy zderzeń zer</h2>
+<p class="werdykt"><strong>Brak naruszeń niezmiennika t_c/t_c⁰ ≥ 1.</strong> Źródło: <a href="results/test3/REPORT_A.md">results/test3/REPORT_A.md</a></p>
+<p><code>[FAKT NUMERYCZNY]</code> Statusy rozkładają się na 53 pary zderzone, 6 wyprzedzonych (preempted), 99 pochłoniętych (absorbed, wszystkie z zapisaną przyczyną), 7 cenzurowanych i 1 zgubioną (lost); statusu braku seedu nie ma żadna para. <code>[FAKT NUMERYCZNY]</code> Zderzeń jest 53, w tym 48 pokolenia pierwszego i 5 pokolenia drugiego, a pokolenia trzeciego nie ma; w zakresie analizy (oba zera o numerach do 100) leży 46 zderzeń, czyli 42 pokolenia pierwszego i 4 pokolenia drugiego.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Dla 42 zderzeń pokolenia pierwszego w zakresie iloraz t_c/t_c⁰ przyjmuje wartości od 1,077 do 16,07, z medianą 1,386, kwantylem 10% równym 1,114 i kwantylem 90% równym 3,173. <code>[FAKT NUMERYCZNY]</code> Wszystkie te ilorazy są nie mniejsze niż 1, zgodnie z niezmiennikiem, że pozostałe zera działają pływowo i rozciągają przerwę, więc t_c ≤ t_c⁰; naruszeń nie stwierdzono.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Nie jest to zmiana nazewnictwa, lecz zmiana merytoryczna: liczba zderzeń pokolenia pierwszego w zakresie rośnie z 35 do 42. <code>[FAKT NUMERYCZNY]</code> Dane preempted mają więc słabsze potwierdzenie niż zderzenia pokolenia pierwszego, i w analizie geometrii należy je oznaczać osobno.</p>
+<p><code>[HIPOTEZA]</code> Wartość t_c z fazy A dotyczy więc dokładnie zderzeń pokolenia pierwszego i drugiego w przedziale t ∈ (−100, 0].</p>
+</section>
+
+<section>
+<h2>Test 3, faza B — geometria czasów zderzeń i reszta arytmetyczna</h2>
+<p class="werdykt"><strong>Wynik negatywny dla reszty arytmetycznej.</strong> Źródło: <a href="results/test3/REPORT_B.md">results/test3/REPORT_B.md</a></p>
+<p>Cel wynika z docs/TESTY.md: sprawdzić, jak iloraz t_c/t_c⁰ zależy od znormalizowanej odległości pary i od odległości do najbliższych sąsiadów, zanim zapytamy, czy coś arytmetycznego wyjaśnia resztę zmienności.</p>
+<p><code>[FAKT NUMERYCZNY]</code> We wszystkich 42 parach T jest ujemne i iloraz t_c/t_c⁰ jest nie mniejszy niż 1, co zgadza się z mechanizmem ściskania pary przez zewnętrznych sąsiadów. <code>[FAKT NUMERYCZNY]</code> Dla 36 par z x &lt; 1 dopasowanie ln(iloraz obserwowany) = α + β ln(iloraz przewidywany) z dokładnym T daje α = 0,024, β = 0,678 (95% przedział bootstrapu 0,652–0,744), R² = 0,978 i błąd walidacji jeden-poza-próbą 0,028; funkcja straty Hubera daje β = 0,676. Zakładane β = 1 jest więc odrzucone: model stałego pola pływowego zawyża iloraz, a przewidywanie bez żadnych parametrów ma średnią resztę −0,109 i pierwiastek błędu średniokwadratowego 0,139.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Dla sześciu zderzeń, w parach 11, 29, 38, 55, 73 i 95, wielkość x wynosi 1,08–2,55, czyli model stałego T przewiduje brak zderzenia, choć ono zachodzi (iloraz obserwowany 2,76–16,07; przerwa 55 ma x = 2,55 i iloraz 16,07). <code>[FAKT NUMERYCZNY]</code> Selekcja jest tu wbudowana: takie oznaczenie jest z definicji mniej prawdopodobne dla par zderzających się szybko (mediana |t_c| wynosi 0,97 w zbiorze ostrożnym i 3,11 w reszcie, iloraz mieści się w 1,08–1,58 wobec 1,16–16,07), więc wysokie R² w zbiorze ostrożnym jest po części skutkiem wąskiego zakresu i nie stanowi niezależnego potwierdzenia modelu.</p>
+<p><code>[FAKT NUMERYCZNY]</code> Progiem po poprawce Bonferroniego na trzy testy jest α = 0,0167, więc żaden wynik nie jest istotny; dwa p = 0,046 to poziomy nominalne, których nie wolno czytać bez poprawki. Wynik jest negatywny: po usunięciu geometrii i elastycznego trendu w x żaden z trzech kandydatów arytmetycznych nie wyjaśnia reszty zmienności t_c w tej próbie. <code>[HIPOTEZA]</code> Przyczyną nieistotności może być zarówno brak efektu, jak i mała moc oraz ta sama geometria zawarta w kandydatach, więc wynik nie dowodzi braku związku z arytmetyką.</p>
+</section>
+
+<section>
+<h2>Jak to sprawdzić</h2>
+<p>Szybki start z <code>README.md</code>:</p>
+<pre>python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+python tests/baseline_check.py</pre>
+<p>Komendy odtwarzające liczby poszczególnych testów podają raporty w <code>results/</code>.</p>
+</section>
+
+<footer>
+<p><a href="PRZEDMOWA.md">PRZEDMOWA.md</a> · Kod na licencji MIT (<a href="LICENSE">LICENSE</a>) · <a href="https://pawcio99.github.io/">Hub TERJ</a></p>
+</footer>
+</main>
+</body>
+</html>
