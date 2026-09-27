@@ -4,125 +4,272 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>riemann-terj — numeryczny test przewidywań TERJ</title>
+<script>document.documentElement.className='js';</script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&family=Syncopate:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#fbfaf7; --fg:#1f2328; --muted:#5b636b; --link:#1f5fa8; --line:#dcd8cf; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#16181b; --fg:#e6e3dc; --muted:#a0a6ad; --link:#7db3f0; --line:#33373c; }
-  }
-  body { margin:0; background:var(--bg); color:var(--fg); font:18px/1.6 Georgia, "Times New Roman", serif; }
-  main { max-width:44rem; margin:0 auto; padding:2.5rem 1rem 3rem; }
-  h1 { font-size:2rem; margin:0 0 1rem; }
-  h2 { font-size:1.25rem; margin:2rem 0 .5rem; padding-bottom:.25rem; border-bottom:1px solid var(--line); }
-  a { color:var(--link); }
-  .tabela { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; font-size:.9rem; }
-  th, td { border:1px solid var(--line); padding:.4rem .6rem; text-align:left; vertical-align:top; }
-  th { background:rgba(127,127,127,.12); }
-  code { font-size:.85em; }
-  pre { overflow-x:auto; padding:.75rem; border:1px solid var(--line); font-size:.85rem; }
-  .werdykt { color:var(--muted); font-size:.95rem; margin:.25rem 0 .75rem; }
-  footer { margin-top:3rem; padding-top:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+:root {
+  --bg:#05080f; --bg2:#070c18; --surface:#0d1525; --panel:#111e38;
+  --border:rgba(255,255,255,0.06);
+  --amber:#ffb43c; --amber-dim:#b07a1a;
+  --teal:#2ee8c8; --teal-dim:#0d6b5a; --teal-glow:rgba(46,232,200,0.08);
+  --cyan:#60d4f8; --violet:#b088f8; --rose:#f86060;
+  --text:#d0ddf0; --text-mid:#8fa3c8; --text-mute:#5d7196;
+  --font-body:'Cormorant Garamond',Georgia,serif; --font-ui:'Josefin Sans',sans-serif;
+  --font-title:'Syncopate',sans-serif; --font-mono:'Space Mono',monospace;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:17px; }
+body { background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.9; overflow-x:hidden; }
+a { color:var(--cyan); }
+code { font-family:var(--font-mono); font-size:.8em; color:var(--text); }
+
+#progress { position:fixed; top:0; left:0; height:2px; width:0%; background:linear-gradient(90deg,var(--teal-dim),var(--teal),var(--amber)); z-index:9999; }
+#cosmos { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; background:rgba(5,8,15,.88); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); height:48px; padding:0 1rem; font-family:var(--font-ui); font-size:.55rem; letter-spacing:.2em; text-transform:uppercase; overflow-x:auto; }
+.nav-brand { color:var(--amber); margin-right:auto; padding-right:1rem; font-family:var(--font-title); font-size:.58rem; letter-spacing:.26em; white-space:nowrap; }
+nav a { color:var(--text-mid); text-decoration:none; padding:0 .8rem; height:48px; display:flex; align-items:center; border-right:1px solid var(--border); white-space:nowrap; transition:color .2s,background .2s; }
+nav a:hover, nav a.active { color:var(--teal); background:var(--teal-glow); }
+
+#hero { position:relative; z-index:1; min-height:64vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:6rem 1.5rem 3rem; }
+.hero-content { max-width:820px; }
+.hero-title { font-family:var(--font-title); font-size:clamp(1.4rem,4.5vw,3rem); font-weight:700; color:#fff; line-height:1.2; margin-bottom:1.4rem; text-shadow:0 0 100px rgba(46,232,200,.15); }
+.hero-sub { font-style:italic; font-size:1.12rem; color:var(--text-mid); max-width:640px; margin:0 auto; line-height:1.8; }
+
+main { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:0 1.6rem 6rem; }
+.chapter { margin-top:4rem; scroll-margin-top:60px; }
+.js .chapter { opacity:0; transform:translateY(24px); transition:opacity .75s ease,transform .75s ease; }
+.js .chapter.visible { opacity:1; transform:none; }
+
+.sec-title { font-family:var(--font-ui); font-weight:400; font-size:.75rem; letter-spacing:.2em; color:var(--amber); margin:0 0 1.2rem; padding-left:1rem; border-left:2px solid var(--amber-dim); line-height:1.5; text-transform:uppercase; }
+p { margin-bottom:1.4rem; }
+.ch-meta { display:flex; align-items:center; gap:.9rem; margin-bottom:.7rem; flex-wrap:wrap; }
+.ch-num { font-family:var(--font-mono); font-size:.6rem; letter-spacing:.2em; color:var(--teal); border:1px solid rgba(46,232,200,.3); padding:.18rem .7rem; border-radius:2px; white-space:nowrap; }
+.ch-title { font-family:var(--font-title); font-weight:700; font-size:clamp(1rem,2.6vw,1.5rem); color:#e8f0ff; line-height:1.3; margin-bottom:1.1rem; }
+.ch-title::first-letter { text-transform:uppercase; }
+
+/* plakietki znaczników */
+[class^="tag-"] { display:inline-block; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.06em; line-height:1.5; padding:.05rem .55rem; border-radius:999px; border:1px solid currentColor; white-space:nowrap; vertical-align:baseline; background:rgba(255,255,255,.03); }
+.tag-twierdzenie { color:var(--cyan); }
+.tag-fakt { color:var(--teal); }
+.tag-hipoteza { color:var(--amber); }
+.tag-analogia { color:var(--violet); }
+
+/* banner wyniku — jednakowa wielkość dla każdego wyniku */
+.banner { font-family:var(--font-ui); font-size:.95rem; letter-spacing:.06em; padding:.9rem 1.2rem; margin:0 0 1.6rem; border-radius:6px; border:1px solid currentColor; border-left-width:6px; background:rgba(255,255,255,.04); font-weight:400; }
+.b-twierdzenie { color:var(--cyan); } .b-fakt { color:var(--teal); } .b-hipoteza { color:var(--amber); } .b-analogia { color:var(--violet); }
+
+/* tabele */
+.tabela { overflow-x:auto; margin:1rem 0 1.5rem; }
+table.tbl { border-collapse:collapse; width:100%; font-size:.95rem; line-height:1.55; }
+.tbl th, .tbl td { border:1px solid rgba(255,255,255,.12); padding:.6rem .8rem; text-align:left; vertical-align:top; }
+.tbl th { font-family:var(--font-ui); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--amber); background:rgba(255,180,60,.06); font-weight:400; }
+.tbl td { background:rgba(13,21,37,.6); }
+
+.snote { background:rgba(46,232,200,.04); border:1px solid rgba(46,232,200,.15); padding:1rem 1.4rem; margin:1.2rem 0; border-radius:4px; }
+.snote p { font-size:.95rem; color:var(--text-mid); margin:0; }
+.fbox { background:rgba(12,20,42,.9); border:1px solid rgba(255,180,60,.2); border-radius:8px; padding:1rem 1.2rem; margin:1.4rem 0; overflow-x:auto; }
+.fbox pre { font-family:var(--font-mono); font-size:.8rem; color:var(--amber); line-height:1.7; }
+
+.fn-section { margin-top:1.6rem; padding-top:1rem; border-top:1px solid rgba(46,232,200,.15); }
+.fn-label { font-family:var(--font-mono); font-size:.55rem; letter-spacing:.25em; color:var(--teal); text-transform:uppercase; display:block; margin-bottom:.6rem; }
+.ext-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin:.4rem 0; }
+.ext-card { display:block; text-decoration:none; background:rgba(46,232,200,.05); border:1px solid rgba(46,232,200,.15); border-radius:10px; padding:.9rem 1.2rem; transition:all .2s; }
+.ext-card:hover { background:rgba(46,232,200,.1); border-color:rgba(46,232,200,.35); transform:translateY(-2px); }
+.ext-lbl { font-family:var(--font-mono); font-size:.53rem; letter-spacing:.2em; color:var(--teal); text-transform:uppercase; display:block; margin-bottom:.3rem; }
+.ext-title { font-family:var(--font-mono); font-size:.78rem; color:var(--cyan); word-break:break-all; }
+
+footer { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:2rem 1.6rem 4rem; border-top:1px solid rgba(46,232,200,.15); font-family:var(--font-ui); font-size:.8rem; letter-spacing:.06em; color:var(--text-mid); }
+footer p { margin:0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  .js .chapter { opacity:1; transform:none; transition:none; }
+  .ext-card { transition:none; }
+}
+
 </style>
 </head>
 <body>
+<div id="progress"></div>
+<canvas id="cosmos"></canvas>
+<nav><span class="nav-brand">riemann-terj</span><a href="#skad">Projekt</a><a href="#znaczniki">Znaczniki</a><a href="#stan">Stan przewidywań</a><a href="#testy">Trzy testy</a><a href="#wyniki">Wyniki</a><a href="#program">Program</a><a href="#po-co">Po co</a></nav>
+
+<header id="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">riemann-terj</h1>
+    <p class="hero-sub">Ten projekt łączy dwie rzeczy, które rzadko się ze sobą spotykają: stuletni, nierozwiązany problem z samego serca matematyki i osobistą, filozoficzną intuicję, że relacja i geometria są bardziej fundamentalne niż to, co nazywamy substancją.</p>
+  </div>
+</header>
+
 <main>
-<h1>riemann-terj — numeryczny test przewidywań TERJ</h1>
-<section>
-<h2>Skąd ten projekt</h2>
+<section class="chapter" id="skad">
+<h2 class="sec-title">Skąd ten projekt</h2>
 <p>Ten projekt łączy dwie rzeczy, które rzadko się ze sobą spotykają: stuletni, nierozwiązany problem z samego serca matematyki i osobistą, filozoficzną intuicję, że relacja i geometria są bardziej fundamentalne niż to, co nazywamy substancją. Hipoteza Riemanna, sformułowana w 1859 roku w krótkiej pracy Bernharda Riemanna o liczbie liczb pierwszych poniżej danej wielkości, mówi o pewnym nieskończonym ciągu liczb, zwanych zerami funkcji dzeta, i twierdzi, że wszystkie one leżą dokładnie na jednej, wyróżnionej prostej na płaszczyźnie liczb zespolonych. Nikt dotąd tego nie udowodnił ani nie obalił, mimo sprawdzenia komputerowo bilionów pierwszych przypadków. To jeden z siedmiu problemów milenijnych, za którego rozwiązanie Instytut Claya wyznaczył milion dolarów nagrody, i jeden z najgłębiej badanych obiektów współczesnej matematyki, bo od dokładnego rozmieszczenia tych zer zależy, jak bardzo regularnie rozłożone są liczby pierwsze wśród wszystkich liczb naturalnych.</p>
 <p>Rama teoretyczna <a href="https://pawcio99.github.io/teoria.html">TERJ</a>, rozwijana przez Pawła Majsterka, stawia tezę, że u podstaw rzeczywistości leży nie substancja, lecz relacja, i że geometria oraz gradient są tym, co organizuje świat, od fizyki kwantowej po semantykę starożytnych tekstów — teza szerzej rozwinięta w <a href="https://pawcio99.github.io/komentarz.html">komentarzu do całości</a> i w zapleczu fizycznym zebranym w <a href="https://pawcio99.github.io/warsztat.html">osobnym warsztacie naukowym</a>. Postanowiliśmy sprawdzić, czy ta intuicja jest czymś więcej niż tylko piękną metaforą, czy da się ją przełożyć na konkretny, możliwy do obalenia test na obiekcie, który opiera się pełnemu zrozumieniu od półtora wieku. Zera funkcji dzeta okazały się dobrym kandydatem nie przez przypadek: fizycy i matematycy już wcześniej zauważyli, że ich rozmieszczenie przypomina rozkład poziomów energetycznych w chaotycznych układach kwantowych, opisywanych przez teorię macierzy losowych. To jest dokładnie pytanie o geometrię i strukturę relacji między obiektami, a nie o wartość pojedynczej liczby, więc wpisuje się w to, co TERJ każe podejrzewać na długo przed policzeniem czegokolwiek — w duchu operatorów Ĝ i Ĥ opisanych w <a href="https://pawcio99.github.io/semantyka.html">analizie semantyki gradientów</a> i w idei gradientu jako mechanizmu porządkującego przepływ, rozwiniętej w eseju o <a href="https://pawcio99.github.io/falowod.html">gradiencie jako ontologii przepływu</a>.</p>
 </section>
 
-<h2>Znaczniki wiarygodności</h2>
-<div class="tabela"><table>
+<section class="chapter" id="znaczniki">
+<h2 class="sec-title">Znaczniki wiarygodności</h2>
+<div class="tabela"><table class="tbl">
 <thead><tr><th>Znacznik</th><th>Znaczenie</th></tr></thead>
 <tbody>
-<tr><td><code>[TWIERDZENIE]</code></td><td>wynik dowiedziony w literaturze matematycznej lub fizycznej, cytowany ze źródła</td></tr>
-<tr><td><code>[FAKT NUMERYCZNY]</code></td><td>własny, odtwarzalny wynik obliczeniowy — z komendą, która go odtwarza</td></tr>
-<tr><td><code>[HIPOTEZA]</code></td><td>zdanie testowalne; status podany wprost, także gdy wynik jest negatywny</td></tr>
-<tr><td><code>[ANALOGIA TERJ]</code></td><td>odczytanie pojęciowe łączące wynik z ramą TERJ — interpretacja, nie dowód</td></tr>
+<tr><td><span class="tag-twierdzenie">[TWIERDZENIE]</span></td><td>wynik dowiedziony w literaturze matematycznej lub fizycznej, cytowany ze źródła</td></tr>
+<tr><td><span class="tag-fakt">[FAKT NUMERYCZNY]</span></td><td>własny, odtwarzalny wynik obliczeniowy — z komendą, która go odtwarza</td></tr>
+<tr><td><span class="tag-hipoteza">[HIPOTEZA]</span></td><td>zdanie testowalne; status podany wprost, także gdy wynik jest negatywny</td></tr>
+<tr><td><span class="tag-analogia">[ANALOGIA TERJ]</span></td><td>odczytanie pojęciowe łączące wynik z ramą TERJ — interpretacja, nie dowód</td></tr>
 </tbody>
 </table></div>
+</section>
 
-<h2>Stan przewidywań</h2>
-<div class="tabela"><table>
+<section class="chapter" id="stan">
+<h2 class="sec-title">Stan przewidywań</h2>
+<div class="tabela"><table class="tbl">
 <thead><tr><th>Przewidywanie TERJ</th><th>Test</th><th>Status</th></tr></thead>
 <tbody>
-<tr><td>Poziomy energetyczne zer dzety odpowiadają widmu układu chaotycznego (macierze losowe)</td><td>Test 1</td><td><code>[FAKT NUMERYCZNY]</code> zgodne z CUE(N_eff) (Bogomolny i in. 2006) od wysokości 10¹² (p_KS 0,22–0,88); dla bloków 10³–10⁸ (N_eff &lt; 4) CUE(N_eff) jest odrzucone testem KS, a w trzech najniższych blokach także CUE(N) ze swobodnym N (Test 2); hipoteza, że to artefakt małego N, nie została potwierdzona, a Test 1 nie wykazał domieszki GOE</td></tr>
-<tr><td>Efektywna liczba stopni swobody rośnie z wysokością zer</td><td>Test 2</td><td><code>[FAKT NUMERYCZNY]</code> wynik ograniczony rozdzielczością danych, bez rozstrzygnięcia między potwierdzeniem a obaleniem wzrostu logarytmicznego</td></tr>
-<tr><td>W statystyce zer pozostaje domieszka symetrii odwrócenia czasu na dużych wysokościach</td><td>Test 1</td><td><code>[HIPOTEZA]</code> odrzucona — brak śladu ponad model zerowy</td></tr>
-<tr><td>Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1)</td><td>Test 3, faza A</td><td><code>[FAKT NUMERYCZNY]</code> brak naruszeń dla 42 z 42 sprawdzonych par</td></tr>
-<tr><td>Reszta niewyjaśniona geometrią lokalną niesie ślad arytmetyczny (ζ′, faza Grama)</td><td>Test 3, analiza reszt</td><td><code>[HIPOTEZA]</code> bez potwierdzenia w tej próbie; moc testu ograniczona</td></tr>
+<tr><td>Poziomy energetyczne zer dzety odpowiadają widmu układu chaotycznego (macierze losowe)</td><td>Test 1</td><td><span class="tag-fakt">[FAKT NUMERYCZNY]</span> zgodne z CUE(N_eff) (Bogomolny i in. 2006) od wysokości 10¹² (p_KS 0,22–0,88); dla bloków 10³–10⁸ (N_eff &lt; 4) CUE(N_eff) jest odrzucone testem KS, a w trzech najniższych blokach także CUE(N) ze swobodnym N (Test 2); hipoteza, że to artefakt małego N, nie została potwierdzona, a Test 1 nie wykazał domieszki GOE</td></tr>
+<tr><td>Efektywna liczba stopni swobody rośnie z wysokością zer</td><td>Test 2</td><td><span class="tag-fakt">[FAKT NUMERYCZNY]</span> wynik ograniczony rozdzielczością danych, bez rozstrzygnięcia między potwierdzeniem a obaleniem wzrostu logarytmicznego</td></tr>
+<tr><td>W statystyce zer pozostaje domieszka symetrii odwrócenia czasu na dużych wysokościach</td><td>Test 1</td><td><span class="tag-hipoteza">[HIPOTEZA]</span> odrzucona — brak śladu ponad model zerowy</td></tr>
+<tr><td>Sąsiednie zera działają na parę jak siła pływowa przy zderzeniu w przepływie ciepła (t_c/t_c⁰ ≥ 1)</td><td>Test 3, faza A</td><td><span class="tag-fakt">[FAKT NUMERYCZNY]</span> brak naruszeń dla 42 z 42 sprawdzonych par</td></tr>
+<tr><td>Reszta niewyjaśniona geometrią lokalną niesie ślad arytmetyczny (ζ′, faza Grama)</td><td>Test 3, analiza reszt</td><td><span class="tag-hipoteza">[HIPOTEZA]</span> bez potwierdzenia w tej próbie; moc testu ograniczona</td></tr>
 </tbody>
 </table></div>
+</section>
 
-<section>
-<h2>Trzy testy</h2>
+<section class="chapter" id="testy">
+<h2 class="sec-title">Trzy testy</h2>
 <p>Zrobiliśmy trzy niezależne testy, każdy sprawdzający inną przewidywaną własność tej struktury. Pierwszy porównał odległości między kolejnymi zerami z tym, czego oczekuje teoria chaotycznych układów kwantowych, na wielu różnych wysokościach ciągu, od zer bardzo niskich po takie, których numer w kolejności sięga dwudziestu trzech cyfr. Drugi sprawdził, czy złożoność tej struktury, rozumiana jako efektywny rozmiar opisującej ją macierzy, rośnie z wysokością tak, jak przewiduje teoria z 2006 roku. Trzeci, najbardziej oryginalny, prześledził coś zupełnie innego: matematyczny proces zwany przepływem ciepła, wprowadzony w latach pięćdziesiątych XX wieku, w którym zera zaczynają się do siebie zbliżać, aż w końcu zderzają się parami i schodzą z wyróżnionej prostej. Policzyliśmy dokładnie moment zderzenia dla 53 par zer, z czego 46 leży w zasięgu analizy (42 pokolenia pierwszego i 4 drugiego, oba zera o numerach do 100), a 7 par jest cenzurowanych, bo ich zderzenie następuje przy t_c < −100, i sprawdziliśmy, czy sąsiednie zera działają na parę jak coś w rodzaju siły pływowej, spowalniającej zderzenie — dokładnie taki mechanizm, jakiego spodziewa się intuicja o relacyjności i wzajemnym wpływie struktur, opisana ogólniej w rozdziałach o pierwotności relacji wobec bytu w <a href="https://pawcio99.github.io/ontologia.html">ontologii relacyjnej TERJ</a>.</p>
 </section>
 
-<section>
-<h2>Wyniki: uczciwie, nie pod tezę</h2>
+<section class="chapter" id="wyniki">
+<h2 class="sec-title">Wyniki: uczciwie, nie pod tezę</h2>
 <p>Wyniki są mieszane, i podajemy je takimi, jakie są, bo to jest właśnie sedno tego przedsięwzięcia: nie szukamy potwierdzenia za wszelką cenę, tylko sprawdzamy uczciwie, gotowi zaakceptować porażkę równie chętnie jak sukces. Test 1 dał wynik negatywny, Test 2 wynik ograniczony rozdzielczością danych, a Test 3 nie wykazał naruszeń niezmiennika t_c/t_c⁰ ≥ 1 w zbadanym zakresie. Jedno przewidywanie, że w statystyce zer da się znaleźć ślad czegoś głębszego niż sama geometria, czyli ślad arytmetyczny w resztach (ζ′, faza Grama, znak prawa Grama), nie znalazło potwierdzenia w naszej próbie. Każdy z tych wyników, pozytywny czy negatywny, nosi jeden z czterech znaczników wiarygodności opisanych w <a href="PRZEDMOWA.md">przedmowie do tego projektu</a>, tej samej, która otwiera <a href="https://pawcio99.github.io/przedmowa.html">stronę TERJ</a> — żeby czytelnik zawsze widział, ile dana liczba jest właściwie warta: czy to twierdzenie dowiedzione w literaturze, nasz własny wynik obliczeniowy, hipoteza wciąż otwarta, czy tylko interpretacja łącząca to z TERJ.</p>
 </section>
 
-<h2>Wyniki testów</h2>
-<p>Poniższe zdania i liczby są cytowane dosłownie z raportów w <code>results/</code>; pełny kontekst, metody i ograniczenia są w samych raportach.</p>
-
-<section>
-<h2>Test 1 — domieszka symetrii odwrócenia czasu w statystyce zer ζ</h2>
-<p class="werdykt"><strong>Wynik negatywny.</strong> Źródło: <a href="results/test1/REPORT.md">results/test1/REPORT.md</a></p>
-<p><code>[HIPOTEZA]</code> Statystyka zer funkcji ζ na rosnących wysokościach zawiera składnik klasy GOE (symetria odwrócenia czasu) ponad znane poprawki skończonej wysokości; oczekiwanie standardowe brzmi: brak takiej domieszki. Analizowano dziewięć bloków po 9 999 odstępów, zaczynających się od zera o numerze 10^3, 10^4, 10^5, 10^6, 10^7 i 10^8 (obliczone przez <code>src.zeros</code>) oraz od 10^12, 10^21 i 10^22 (tabele Odlyzki przekonwertowane przez <code>src.odlyzko</code>).</p>
-<p><code>[FAKT NUMERYCZNY]</code> We wszystkich dziewięciu blokach i dla obu rozwinięć widma (gęstościowego i lokalnego) odchylenie |z| nie przekracza 2,27, a nie ma ani jednego przypadku powyżej 3σ. Domieszka GOE obniżałaby a w stronę 2, więc kierunek odchyleń jest przeciwny do sygnału poszukiwanego.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Skończone α nie jest istotnie lepsze od czystego modelu unitarnego w żadnym bloku: najmniejsza p-wartość ilorazu wiarygodności wynosi 0,19, a mieści się w przedziale od 0,19 do 1,0 dla obu rozwinięć. <code>[FAKT NUMERYCZNY]</code> Wynik jest zatem negatywny: nie znaleziono śladu domieszki symetrii odwrócenia czasu w zakresie wysokości do 10^21.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Test Kołmogorowa–Smirnowa całego rozkładu odstępów odrzuca CUE(N_eff) dla bloków od n = 10^3 do n = 10^8 (N_eff &lt; 4): p_KS wynosi 0,005 (co odpowiada dolnej granicy 1/201 przy 200 replikach, więc jest to w istocie nierówność p_KS ≤ 0,005) dla bloków od 10^3 do 10^7 (w obu rozwinięciach) oraz dla rozwinięcia lokalnego bloku 10^8, a 0,010 dla rozwinięcia gęstościowego bloku 10^8. Od n = 10^12 (N_eff = 5,63) p_KS mieści się w przedziale 0,22–0,88, zatem model zerowy nie jest odrzucany.</p>
-<p>Czułość na małą domieszkę GOE jest ograniczona liczbą odstępów: przy około 10^4 odstępów niepewność a przy modelu zerowym wynosi około 0,25, więc przejście GOE→GUE ze skromnym α pozostaje nierozróżnialne od czystego GUE. <code>[ANALOGIA TERJ]</code> Nie stanowi to argumentu ani za RH, ani przeciw niej.</p>
+<section class="chapter" id="wyniki-testow">
+<h2 class="sec-title">Wyniki testów</h2>
+<div class="snote"><p>Poniższe zdania i liczby są cytowane dosłownie z raportów w <code>results/</code>; pełny kontekst, metody i ograniczenia są w samych raportach.</p></div>
 </section>
 
-<section>
-<h2>Test 2 — efektywny wymiar N̂ modelu CUE(N) dopasowany do odstępów zer</h2>
-<p class="werdykt"><strong>Wynik ograniczony rozdzielczością danych.</strong> Źródło: <a href="results/test2/REPORT.md">results/test2/REPORT.md</a></p>
+<section class="chapter" id="test1">
+<div class="ch-meta"><span class="ch-num">Test 1</span><span class="tag-fakt">[FAKT NUMERYCZNY]</span></div>
+<h2 class="ch-title">domieszka symetrii odwrócenia czasu w statystyce zer ζ</h2>
+<div class="banner b-fakt">Wynik negatywny.</div>
+<p><span class="tag-hipoteza">[HIPOTEZA]</span> Statystyka zer funkcji ζ na rosnących wysokościach zawiera składnik klasy GOE (symetria odwrócenia czasu) ponad znane poprawki skończonej wysokości; oczekiwanie standardowe brzmi: brak takiej domieszki. Analizowano dziewięć bloków po 9 999 odstępów, zaczynających się od zera o numerze 10^3, 10^4, 10^5, 10^6, 10^7 i 10^8 (obliczone przez <code>src.zeros</code>) oraz od 10^12, 10^21 i 10^22 (tabele Odlyzki przekonwertowane przez <code>src.odlyzko</code>).</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> We wszystkich dziewięciu blokach i dla obu rozwinięć widma (gęstościowego i lokalnego) odchylenie |z| nie przekracza 2,27, a nie ma ani jednego przypadku powyżej 3σ. Domieszka GOE obniżałaby a w stronę 2, więc kierunek odchyleń jest przeciwny do sygnału poszukiwanego.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Skończone α nie jest istotnie lepsze od czystego modelu unitarnego w żadnym bloku: najmniejsza p-wartość ilorazu wiarygodności wynosi 0,19, a mieści się w przedziale od 0,19 do 1,0 dla obu rozwinięć. <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Wynik jest zatem negatywny: nie znaleziono śladu domieszki symetrii odwrócenia czasu w zakresie wysokości do 10^21.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Test Kołmogorowa–Smirnowa całego rozkładu odstępów odrzuca CUE(N_eff) dla bloków od n = 10^3 do n = 10^8 (N_eff &lt; 4): p_KS wynosi 0,005 (co odpowiada dolnej granicy 1/201 przy 200 replikach, więc jest to w istocie nierówność p_KS ≤ 0,005) dla bloków od 10^3 do 10^7 (w obu rozwinięciach) oraz dla rozwinięcia lokalnego bloku 10^8, a 0,010 dla rozwinięcia gęstościowego bloku 10^8. Od n = 10^12 (N_eff = 5,63) p_KS mieści się w przedziale 0,22–0,88, zatem model zerowy nie jest odrzucany.</p>
+<p>Czułość na małą domieszkę GOE jest ograniczona liczbą odstępów: przy około 10^4 odstępów niepewność a przy modelu zerowym wynosi około 0,25, więc przejście GOE→GUE ze skromnym α pozostaje nierozróżnialne od czystego GUE. <span class="tag-analogia">[ANALOGIA TERJ]</span> Nie stanowi to argumentu ani za RH, ani przeciw niej.</p>
+<div class="fn-section"><span class="fn-label">Źródło</span><div class="ext-grid"><a class="ext-card" href="results/test1/REPORT.md"><span class="ext-lbl">Źródło</span><span class="ext-title">results/test1/REPORT.md</span></a></div></div>
+</section>
+
+<section class="chapter" id="test2">
+<div class="ch-meta"><span class="ch-num">Test 2</span><span class="tag-fakt">[FAKT NUMERYCZNY]</span></div>
+<h2 class="ch-title">efektywny wymiar N̂ modelu CUE(N) dopasowany do odstępów zer</h2>
+<div class="banner b-fakt">Wynik ograniczony rozdzielczością danych.</div>
 <p>Pytanie brzmi, jakiego rozmiaru N potrzebuje model CUE(N), żeby odtworzyć rozkład odstępów zer na wysokości T, i jak N̂ ma się do N_eff = ln(T/2π)/√(12Λ), Λ = 1,57314 (Bogomolny i in. 2006, arXiv math/0602270, wzór 19; sprawdzony w Teście 1).</p>
-<p><code>[FAKT NUMERYCZNY]</code> Dla bloków 10³…10⁸ dopasowane N̂ (unfolding „dens”) wynosi odpowiednio 3,60; 4,85; 3,90; 4,45; 4,45 i 7,15, czyli 1,5–2,3 razy więcej niż N_eff = 1,59; 1,77; 2,17; 2,64; 3,13; 3,62. Dla 10¹², 10²¹ i 10²² N̂ wynosi 5,70 z przedziałem 68% [5,45; &gt;128], 10,70 [6,40; 47,4] oraz &gt;128 [5,35; &gt;128], a ilorazy N̂/N_eff to 1,66; 1,07 i 1,00, z niepewnością obejmującą jedność.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Dla bloków 10³…10⁸ dopasowane N̂ (unfolding „dens”) wynosi odpowiednio 3,60; 4,85; 3,90; 4,45; 4,45 i 7,15, czyli 1,5–2,3 razy więcej niż N_eff = 1,59; 1,77; 2,17; 2,64; 3,13; 3,62. Dla 10¹², 10²¹ i 10²² N̂ wynosi 5,70 z przedziałem 68% [5,45; &gt;128], 10,70 [6,40; 47,4] oraz &gt;128 [5,35; &gt;128], a ilorazy N̂/N_eff to 1,66; 1,07 i 1,00, z niepewnością obejmującą jedność.</p>
 <p>Każdą wartość N̂ powyżej około 8 należy czytać jako dolną granicę, a nie jako pomiar.</p>
 <p>Nawet z N swobodnie regulowanym model CUE(N) nie opisuje więc całego kształtu rozkładu w trzech najniższych blokach, co oznacza, że rozbieżność względem N_eff nie sprowadza się do złego doboru rozmiaru; hipoteza z raportu Testu 1, że odrzucenie wynika wyłącznie z całkowitego lub obciętego N, nie została potwierdzona.</p>
-<p><code>[ANALOGIA TERJ]</code> Jest to wynik ograniczony rozdzielczością, a nie potwierdzenie ani obalenie logarytmicznego wzrostu; nie stanowi argumentu ani za RH, ani przeciw niej.</p>
+<p><span class="tag-analogia">[ANALOGIA TERJ]</span> Jest to wynik ograniczony rozdzielczością, a nie potwierdzenie ani obalenie logarytmicznego wzrostu; nie stanowi argumentu ani za RH, ani przeciw niej.</p>
+<div class="fn-section"><span class="fn-label">Źródło</span><div class="ext-grid"><a class="ext-card" href="results/test2/REPORT.md"><span class="ext-lbl">Źródło</span><span class="ext-title">results/test2/REPORT.md</span></a></div></div>
 </section>
 
-<section>
-<h2>Test 3, faza A — przepływ ciepła i czasy zderzeń zer</h2>
-<p class="werdykt"><strong>Brak naruszeń niezmiennika t_c/t_c⁰ ≥ 1.</strong> Źródło: <a href="results/test3/REPORT_A.md">results/test3/REPORT_A.md</a></p>
-<p><code>[FAKT NUMERYCZNY]</code> Statusy rozkładają się na 53 pary zderzone, 6 wyprzedzonych (preempted), 99 pochłoniętych (absorbed, wszystkie z zapisaną przyczyną), 7 cenzurowanych i 1 zgubioną (lost); statusu braku seedu nie ma żadna para. <code>[FAKT NUMERYCZNY]</code> Zderzeń jest 53, w tym 48 pokolenia pierwszego i 5 pokolenia drugiego, a pokolenia trzeciego nie ma; w zakresie analizy (oba zera o numerach do 100) leży 46 zderzeń, czyli 42 pokolenia pierwszego i 4 pokolenia drugiego.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Dla 42 zderzeń pokolenia pierwszego w zakresie iloraz t_c/t_c⁰ przyjmuje wartości od 1,077 do 16,07, z medianą 1,386, kwantylem 10% równym 1,114 i kwantylem 90% równym 3,173. <code>[FAKT NUMERYCZNY]</code> Wszystkie te ilorazy są nie mniejsze niż 1, zgodnie z niezmiennikiem, że pozostałe zera działają pływowo i rozciągają przerwę, więc t_c ≤ t_c⁰; naruszeń nie stwierdzono.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Nie jest to zmiana nazewnictwa, lecz zmiana merytoryczna: liczba zderzeń pokolenia pierwszego w zakresie rośnie z 35 do 42. <code>[FAKT NUMERYCZNY]</code> Dane preempted mają więc słabsze potwierdzenie niż zderzenia pokolenia pierwszego, i w analizie geometrii należy je oznaczać osobno.</p>
-<p><code>[HIPOTEZA]</code> Wartość t_c z fazy A dotyczy więc dokładnie zderzeń pokolenia pierwszego i drugiego w przedziale t ∈ (−100, 0].</p>
+<section class="chapter" id="test3a">
+<div class="ch-meta"><span class="ch-num">Test 3, faza A</span><span class="tag-fakt">[FAKT NUMERYCZNY]</span></div>
+<h2 class="ch-title">przepływ ciepła i czasy zderzeń zer</h2>
+<div class="banner b-fakt">Brak naruszeń niezmiennika t_c/t_c⁰ ≥ 1.</div>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Statusy rozkładają się na 53 pary zderzone, 6 wyprzedzonych (preempted), 99 pochłoniętych (absorbed, wszystkie z zapisaną przyczyną), 7 cenzurowanych i 1 zgubioną (lost); statusu braku seedu nie ma żadna para. <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Zderzeń jest 53, w tym 48 pokolenia pierwszego i 5 pokolenia drugiego, a pokolenia trzeciego nie ma; w zakresie analizy (oba zera o numerach do 100) leży 46 zderzeń, czyli 42 pokolenia pierwszego i 4 pokolenia drugiego.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Dla 42 zderzeń pokolenia pierwszego w zakresie iloraz t_c/t_c⁰ przyjmuje wartości od 1,077 do 16,07, z medianą 1,386, kwantylem 10% równym 1,114 i kwantylem 90% równym 3,173. <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Wszystkie te ilorazy są nie mniejsze niż 1, zgodnie z niezmiennikiem, że pozostałe zera działają pływowo i rozciągają przerwę, więc t_c ≤ t_c⁰; naruszeń nie stwierdzono.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Nie jest to zmiana nazewnictwa, lecz zmiana merytoryczna: liczba zderzeń pokolenia pierwszego w zakresie rośnie z 35 do 42. <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Dane preempted mają więc słabsze potwierdzenie niż zderzenia pokolenia pierwszego, i w analizie geometrii należy je oznaczać osobno.</p>
+<p><span class="tag-hipoteza">[HIPOTEZA]</span> Wartość t_c z fazy A dotyczy więc dokładnie zderzeń pokolenia pierwszego i drugiego w przedziale t ∈ (−100, 0].</p>
+<div class="fn-section"><span class="fn-label">Źródło</span><div class="ext-grid"><a class="ext-card" href="results/test3/REPORT_A.md"><span class="ext-lbl">Źródło</span><span class="ext-title">results/test3/REPORT_A.md</span></a></div></div>
 </section>
 
-<section>
-<h2>Test 3, faza B — geometria czasów zderzeń i reszta arytmetyczna</h2>
-<p class="werdykt"><strong>Wynik negatywny dla reszty arytmetycznej.</strong> Źródło: <a href="results/test3/REPORT_B.md">results/test3/REPORT_B.md</a></p>
+<section class="chapter" id="test3b">
+<div class="ch-meta"><span class="ch-num">Test 3, faza B</span><span class="tag-fakt">[FAKT NUMERYCZNY]</span></div>
+<h2 class="ch-title">geometria czasów zderzeń i reszta arytmetyczna</h2>
+<div class="banner b-fakt">Wynik negatywny dla reszty arytmetycznej.</div>
 <p>Cel wynika z docs/TESTY.md: sprawdzić, jak iloraz t_c/t_c⁰ zależy od znormalizowanej odległości pary i od odległości do najbliższych sąsiadów, zanim zapytamy, czy coś arytmetycznego wyjaśnia resztę zmienności.</p>
-<p><code>[FAKT NUMERYCZNY]</code> We wszystkich 42 parach T jest ujemne i iloraz t_c/t_c⁰ jest nie mniejszy niż 1, co zgadza się z mechanizmem ściskania pary przez zewnętrznych sąsiadów. <code>[FAKT NUMERYCZNY]</code> Dla 36 par z x &lt; 1 dopasowanie ln(iloraz obserwowany) = α + β ln(iloraz przewidywany) z dokładnym T daje α = 0,024, β = 0,678 (95% przedział bootstrapu 0,652–0,744), R² = 0,978 i błąd walidacji jeden-poza-próbą 0,028; funkcja straty Hubera daje β = 0,676. Zakładane β = 1 jest więc odrzucone: model stałego pola pływowego zawyża iloraz, a przewidywanie bez żadnych parametrów ma średnią resztę −0,109 i pierwiastek błędu średniokwadratowego 0,139.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Dla sześciu zderzeń, w parach 11, 29, 38, 55, 73 i 95, wielkość x wynosi 1,08–2,55, czyli model stałego T przewiduje brak zderzenia, choć ono zachodzi (iloraz obserwowany 2,76–16,07; przerwa 55 ma x = 2,55 i iloraz 16,07). <code>[FAKT NUMERYCZNY]</code> Selekcja jest tu wbudowana: takie oznaczenie jest z definicji mniej prawdopodobne dla par zderzających się szybko (mediana |t_c| wynosi 0,97 w zbiorze ostrożnym i 3,11 w reszcie, iloraz mieści się w 1,08–1,58 wobec 1,16–16,07), więc wysokie R² w zbiorze ostrożnym jest po części skutkiem wąskiego zakresu i nie stanowi niezależnego potwierdzenia modelu.</p>
-<p><code>[FAKT NUMERYCZNY]</code> Progiem po poprawce Bonferroniego na trzy testy jest α = 0,0167, więc żaden wynik nie jest istotny; dwa p = 0,046 to poziomy nominalne, których nie wolno czytać bez poprawki. Wynik jest negatywny: po usunięciu geometrii i elastycznego trendu w x żaden z trzech kandydatów arytmetycznych nie wyjaśnia reszty zmienności t_c w tej próbie. <code>[HIPOTEZA]</code> Przyczyną nieistotności może być zarówno brak efektu, jak i mała moc oraz ta sama geometria zawarta w kandydatach, więc wynik nie dowodzi braku związku z arytmetyką.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> We wszystkich 42 parach T jest ujemne i iloraz t_c/t_c⁰ jest nie mniejszy niż 1, co zgadza się z mechanizmem ściskania pary przez zewnętrznych sąsiadów. <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Dla 36 par z x &lt; 1 dopasowanie ln(iloraz obserwowany) = α + β ln(iloraz przewidywany) z dokładnym T daje α = 0,024, β = 0,678 (95% przedział bootstrapu 0,652–0,744), R² = 0,978 i błąd walidacji jeden-poza-próbą 0,028; funkcja straty Hubera daje β = 0,676. Zakładane β = 1 jest więc odrzucone: model stałego pola pływowego zawyża iloraz, a przewidywanie bez żadnych parametrów ma średnią resztę −0,109 i pierwiastek błędu średniokwadratowego 0,139.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Dla sześciu zderzeń, w parach 11, 29, 38, 55, 73 i 95, wielkość x wynosi 1,08–2,55, czyli model stałego T przewiduje brak zderzenia, choć ono zachodzi (iloraz obserwowany 2,76–16,07; przerwa 55 ma x = 2,55 i iloraz 16,07). <span class="tag-fakt">[FAKT NUMERYCZNY]</span> Selekcja jest tu wbudowana: takie oznaczenie jest z definicji mniej prawdopodobne dla par zderzających się szybko (mediana |t_c| wynosi 0,97 w zbiorze ostrożnym i 3,11 w reszcie, iloraz mieści się w 1,08–1,58 wobec 1,16–16,07), więc wysokie R² w zbiorze ostrożnym jest po części skutkiem wąskiego zakresu i nie stanowi niezależnego potwierdzenia modelu.</p>
+<p><span class="tag-fakt">[FAKT NUMERYCZNY]</span> Progiem po poprawce Bonferroniego na trzy testy jest α = 0,0167, więc żaden wynik nie jest istotny; dwa p = 0,046 to poziomy nominalne, których nie wolno czytać bez poprawki. Wynik jest negatywny: po usunięciu geometrii i elastycznego trendu w x żaden z trzech kandydatów arytmetycznych nie wyjaśnia reszty zmienności t_c w tej próbie. <span class="tag-hipoteza">[HIPOTEZA]</span> Przyczyną nieistotności może być zarówno brak efektu, jak i mała moc oraz ta sama geometria zawarta w kandydatach, więc wynik nie dowodzi braku związku z arytmetyką.</p>
+<div class="fn-section"><span class="fn-label">Źródło</span><div class="ext-grid"><a class="ext-card" href="results/test3/REPORT_B.md"><span class="ext-lbl">Źródło</span><span class="ext-title">results/test3/REPORT_B.md</span></a></div></div>
 </section>
 
-<section>
-<h2>Program w Pythonie</h2>
+<section class="chapter" id="program">
+<h2 class="sec-title">Program w Pythonie</h2>
 <p>To, co udostępniamy, to nie tylko opis słowny, ale cały działający program w Pythonie, w całości otwarty i możliwy do samodzielnego uruchomienia. Repozytorium klonuje się poleceniem <code>git clone https://github.com/Pawcio99/riemann-terj.git</code>, a cała reszta uruchamia się w kilku krokach: utworzenie osobnego środowiska Pythona, żeby nie mieszać zależności z innymi projektami na tym samym komputerze, instalacja bibliotek wymienionych w pliku requirements.txt, i uruchomienie krótkiego skryptu kontrolnego, który w niecałą minutę sprawdza, że wszystko działa poprawnie, zanim zacznie się liczyć cokolwiek poważniejszego. Sercem obliczeń jest biblioteka python-flint, oparta na Arb, tej samej klasie narzędzi do arytmetyki interwałowej, których używają zawodowi matematycy do formalnie certyfikowanych obliczeń — każde policzone zero ma gwarantowaną, a nie tylko przybliżoną, precyzję. Wokół niej stoją osobne moduły: jeden liczy same zera, kolejne badają statystykę odstępów między nimi i porównują ją z symulowanymi macierzami losowymi kilku różnych typów, w tym z autorskim modelem łączącym uporządkowanie i losowość w jednym parametrze, inspirowanym wprost językiem TERJ, a jeszcze inny zestaw skryptów śledzi wspomniany przepływ ciepła i liczy dokładny moment zderzenia każdej pary zer, wraz z kontrolą poprawności niezależną od samego algorytmu śledzącego, przez zliczanie zmian znaku H_t. Wdrożenie tego programu nie wymaga żadnej specjalnej infrastruktury: całość działa na zwykłym laptopie z systemem Linux, bez karty graficznej, a poszczególne obliczenia trwają od kilku minut do najwyżej godziny, przy czym więcej rdzeni procesora skraca czas proporcjonalnie, ale nie jest warunkiem koniecznym. Każdy wynik na tej stronie da się odtworzyć samodzielnie dokładnie tymi komendami, jakie podaje dokumentacja w katalogu docs, gdzie <code>docs/TESTY.md</code> opisuje pełną specyfikację każdego testu, a <code>docs/LITERATURA.md</code> pełną bibliografię, z rozróżnieniem źródeł sprawdzonych bezpośrednio od podanych z pamięci. Kod stoi na licencji MIT, więc można go swobodnie kopiować, zmieniać i wykorzystywać we własnych badaniach, a każdy, kto znajdzie błąd albo policzy coś dalej, może zgłosić to jako issue w repozytorium albo przesłać własną poprawkę.</p>
-<pre>python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+<div class="fbox"><pre>python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install -r requirements.txt
-python tests/baseline_check.py</pre>
+python tests/baseline_check.py</pre></div>
 </section>
 
-<section>
-<h2>Po co to wszystko</h2>
+<section class="chapter" id="po-co">
+<h2 class="sec-title">Po co to wszystko</h2>
 <p>Na koniec warto zapytać wprost, po co to wszystko i jaką ma to wartość poza samą przyjemnością liczenia. Uczciwa odpowiedź ma trzy piętra, i żadne z nich nie jest tak duże, jak mogłoby się wydawać z rozmachu samego przedsięwzięcia. Pierwsze piętro jest najskromniejsze: nawet dobrze udokumentowany wynik niejednoznaczny albo negatywny dokłada się do zbioru wiedzy o tym, jak zachowuje się jeden z najważniejszych obiektów matematycznych, a otwarty, odtwarzalny kod i dane są czymś, co inni badacze mogą wziąć i policzyć dalej, bez powtarzania naszej pracy od zera — to jest realny, choć niewielki wkład, dokładnie tej wielkości, jaki niezależny, jednoosobowy projekt na własnym laptopie może w ogóle wnieść do stuletniego problemu badanego przez najlepsze ośrodki matematyczne świata. Drugie piętro dotyczy samego sposobu pracy: ten projekt jest żywym przykładem tego, jak testować śmiałą, filozoficzną intuicję rzetelnie, nie naginając wyników pod z góry założoną tezę, i publicznym pokazaniem, że taką dyscyplinę da się utrzymać nawet wtedy, gdy wynik zawodzi oczekiwania autora teorii, którą się sprawdza — to ma wartość niezależną od samej hipotezy Riemanna, jako wzór postępowania dostępny każdemu, kto chce zmierzyć się z trudnym problemem bez zaplecza instytucjonalnego, mając tylko wolno dostępne narzędzia matematyczne i cierpliwość do sprawdzania własnych błędów. Trzecie piętro dotyczy samej TERJ: zmuszenie intuicji o gradiencie i relacji do przyjęcia postaci konkretnego równania macierzowego, które albo pasuje do danych, albo nie, jest wartościowe niezależnie od tego, jak wypadnie każdy pojedynczy test, bo to właśnie ta dyscyplina przekładania metafory na coś sprawdzalnego odróżnia rozwijaną teorię od czystej spekulacji. Dla ludzkości w największym planie ten projekt nie rozwiązuje hipotezy Riemanna ani nie odkrywa niczego, co zmieni bieg nauki — i szczerość wymaga, żeby to powiedzieć wprost, zamiast sugerować więcej, niż wynika z tego, co faktycznie policzyliśmy. Jego realna wartość leży gdzie indziej: w małym, ale prawdziwym i sprawdzalnym przyroście do zbioru wiedzy o liczbach pierwszych, w publicznie dostępnym narzędziu, z którego może skorzystać każdy zainteresowany, i w pokazaniu, że rzetelność można zachować nawet wtedy, gdy wynik jest niewygodny dla własnej teorii — a to jest coś, co ma znaczenie znacznie szersze niż sama matematyka, w każdej dziedzinie, w której ludzie próbują dowiedzieć się czegoś prawdziwego o świecie.</p>
 </section>
+</main>
 
 <footer>
 <p><a href="PRZEDMOWA.md">PRZEDMOWA.md</a> · Kod na licencji MIT (<a href="LICENSE">LICENSE</a>) · <a href="https://pawcio99.github.io/">Hub TERJ</a></p>
 </footer>
-</main>
+<script>
+'use strict';
+(function(){
+  var bar=document.getElementById('progress');
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement;
+    if(bar) bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  },{passive:true});
+  var chapters=document.querySelectorAll('.chapter');
+  if('IntersectionObserver' in window){
+    var revealObs=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+    },{threshold:0.05});
+    chapters.forEach(function(c){ revealObs.observe(c); });
+    var links=document.querySelectorAll('nav a[href^="#"]');
+    var navObs=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+e.target.id); });
+      });
+    },{threshold:0.25});
+    chapters.forEach(function(c){ navObs.observe(c); });
+  } else { chapters.forEach(function(c){ c.classList.add('visible'); }); }
+  var cv=document.getElementById('cosmos'); if(!cv) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cx=cv.getContext('2d'), W, H, particles=[], TAU=2*Math.PI;
+  function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+  function init(){
+    particles=Array.from({length:180},function(){ return {
+      x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.2+0.2, alpha:Math.random(),
+      da:(Math.random()-0.5)*0.005, vx:(Math.random()-0.5)*0.018, vy:(Math.random()-0.5)*0.018,
+      hue:Math.random()>0.7?185:(Math.random()>0.5?42:220)
+    };});
+  }
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    [[0.2,0.3,180,0.08],[0.7,0.6,42,0.06],[0.5,0.8,280,0.05]].forEach(function(n){
+      var g=cx.createRadialGradient(n[0]*W,n[1]*H,0,n[0]*W,n[1]*H,Math.min(W,H)*0.45);
+      g.addColorStop(0,'hsla('+n[2]+',70%,40%,'+n[3]+')'); g.addColorStop(1,'rgba(0,0,0,0)');
+      cx.fillStyle=g; cx.fillRect(0,0,W,H);
+    });
+    particles.forEach(function(p){
+      if(!reduce){
+        p.alpha+=p.da; if(p.alpha<=0||p.alpha>=1) p.da*=-1;
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0) p.x=W; if(p.x>W) p.x=0; if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      }
+      cx.beginPath(); cx.arc(p.x,p.y,p.r,0,TAU);
+      cx.fillStyle='hsla('+p.hue+',80%,75%,'+(Math.min(Math.max(p.alpha,0),1)*0.7)+')'; cx.fill();
+    });
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',function(){ resize(); init(); if(reduce) draw(); });
+  resize(); init(); draw();
+})();
+
+</script>
 </body>
 </html>
