@@ -35,7 +35,7 @@ Zasada: w raportach cytuj wyłącznie pozycje z tego pliku. Zdania o treści pra
 ## 3. Zera a fizyka statystyczna (tło dla TERJ)
 
 - [P] T. D. Lee, C. N. Yang, „Statistical theory of equations of state and phase transitions. II. Lattice gas and Ising model”, Phys. Rev. 87 (1952), 410–419. Twierdzenie o okręgu: zera funkcji podziału modelu Isinga leżą na okręgu jednostkowym.
-- [Z] C. M. Newman, „The GHS inequality and the Riemann hypothesis”, Constr. Approx. 7 (1991), 389–399.
+- [Z] C. M. Newman, „The GHS inequality and the Riemann hypothesis”, Constr. Approx. 7 (1991), 389–399, doi:10.1007/BF01888165.
 - [P] J.-B. Bost, A. Connes, „Hecke algebras, type III factors and phase transitions with spontaneous symmetry breaking in number theory”, Selecta Math. (N.S.) 1 (1995), 411–457. Funkcja podziału ζ(β) i spontaniczne złamanie symetrii w β = 1.
 - [P] B. Julia, „Statistical theory of numbers”, w: Number Theory and Physics (Les Houches 1989), Springer Proc. Phys. 47 (1990). Gaz liczb pierwszych („primon gas”).
 - [P] D. Spector, „Supersymmetry and the Möbius inversion function”, Commun. Math. Phys. 127 (1990), 239–252. Funkcja Möbiusa jako (−1)^F w fermionowym gazie liczb pierwszych.
