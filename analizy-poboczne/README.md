@@ -25,6 +25,8 @@ python round4_reciprocity.py
 
 Skrypty strumieniują pliki synaps z publicznego bucketu H01 i wymagają pliku `somas.csv` z tego samego wydania. Źródło pliku wejściowego: <https://storage.googleapis.com/h01-release/data/20210601/c3/tables/somas.csv>; adres sprawdzony 2026-09-28 (HTTP 200, 6 258 384 B, tyle samo co plik użyty w analizie; daty pobrania nie zapisano). Notatka z wynikami: `NOTATKA_H01.md`. Małe pliki wynikowe leżą w `parts/`, `parts2/` i `typecheck.json`. Pierwszy przebieg (`parts/`) powstał z `h01_pairs.py`, a drugi (`parts2/`, z podziałem na klasę miejsca presynaptycznego) z `h01_pairs2.py`. Oba dają te same sumy: 73 745 par i 112 344 rekordy. `h01_pairs.py` jest tu w wersji z łatką. Łatka (`h01_pairs.patch`, wynik `diff` względem wersji pierwotnej) dodaje rzutowanie identyfikatorów i współrzędnych, które w JSON-ach są tekstami, na liczby.
 
+Plik `json_head.bin` to początek dowolnego pliku JSON synaps, np.: `curl -s -r 0-65535 https://storage.googleapis.com/h01-release/data/20210601/c3/synapses/exported/json/export000000000000.json -o json_head.bin`. W analizie użyto dokładnie tych pierwszych 64 KB pliku `export000000000000.json`: plik z analizy jest bajt w bajt identyczny z wynikiem tej komendy (sprawdzono 2026-09-28, selftest `h01_pairs2.py`: WYNIK: OK). Plik `somas.csv`: adres w tej sekcji.
+
 ```
 cd h01
 # przebieg 1: wszystkie klasy -> parts/
