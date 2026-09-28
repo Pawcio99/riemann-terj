@@ -1,0 +1,655 @@
+{
+ "note": "patrz docstring: obciecie aksonow, type niepotwierdzone, odleglosc xy w jednostkach siatki",
+ "all": {
+  "n_neurons": 15487,
+  "n_pairs": 29645,
+  "n_synapses": 39753,
+  "degrees": {
+   "out": {
+    "mean": 1.9141860915606639,
+    "nonzero_share": 0.3696003099373668,
+    "median_nonzero": 3,
+    "p90_nonzero": 13,
+    "p99_nonzero": 33,
+    "max": 58
+   },
+   "inn": {
+    "mean": 1.9141860915606639,
+    "nonzero_share": 0.5383224640020663,
+    "median_nonzero": 2,
+    "p90_nonzero": 8,
+    "p99_nonzero": 22,
+    "max": 65
+   },
+   "pair_weight_1_2_3plus": [
+    24278,
+    3387,
+    1980
+   ]
+  },
+  "reciprocity": {
+   "directed_edges_reciprocated": 412,
+   "share_of_edges": 0.013897790521167144,
+   "mutual_pairs": 206
+  },
+  "by_celltype": {
+   "C_SHAPED": {
+    "n": 162,
+    "share_out_gt0": 0.4506172839506173,
+    "share_in_gt0": 0.05555555555555555,
+    "mean_out": 1.0246913580246915,
+    "mean_in": 0.06172839506172839,
+    "outgoing_pairs": 166,
+    "outgoing_reciprocated_share": 0.006024096385542169,
+    "type1_type2_other": [
+     130,
+     71,
+     0
+    ]
+   },
+   "INTERNEURON": {
+    "n": 4469,
+    "share_out_gt0": 0.24927276795703737,
+    "share_in_gt0": 0.48690982322667264,
+    "mean_out": 1.2978294920563884,
+    "mean_in": 2.5341239650928618,
+    "outgoing_pairs": 5800,
+    "outgoing_reciprocated_share": 0.02982758620689655,
+    "type1_type2_other": [
+     6960,
+     1239,
+     0
+    ]
+   },
+   "PYRAMIDAL": {
+    "n": 8520,
+    "share_out_gt0": 0.4802816901408451,
+    "share_in_gt0": 0.6258215962441315,
+    "mean_out": 2.57981220657277,
+    "mean_in": 1.9661971830985916,
+    "outgoing_pairs": 21980,
+    "outgoing_reciprocated_share": 0.010100090991810737,
+    "type1_type2_other": [
+     6077,
+     22965,
+     0
+    ]
+   },
+   "SPINY_ATYPICAL": {
+    "n": 1479,
+    "share_out_gt0": 0.23461798512508453,
+    "share_in_gt0": 0.4266396213657877,
+    "mean_out": 0.9350912778904665,
+    "mean_in": 0.8154158215010142,
+    "outgoing_pairs": 1383,
+    "outgoing_reciprocated_share": 0.009399855386840203,
+    "type1_type2_other": [
+     388,
+     1477,
+     0
+    ]
+   },
+   "SPINY_STELLATE": {
+    "n": 190,
+    "share_out_gt0": 0.30526315789473685,
+    "share_in_gt0": 0.5684210526315789,
+    "mean_out": 0.9210526315789473,
+    "mean_in": 1.0157894736842106,
+    "outgoing_pairs": 175,
+    "outgoing_reciprocated_share": 0.011428571428571429,
+    "type1_type2_other": [
+     68,
+     158,
+     0
+    ]
+   },
+   "UNCLASSIFIED_NEURON": {
+    "n": 667,
+    "share_out_gt0": 0.05997001499250375,
+    "share_in_gt0": 0.12143928035982009,
+    "mean_out": 0.21139430284857572,
+    "mean_in": 0.2383808095952024,
+    "outgoing_pairs": 141,
+    "outgoing_reciprocated_share": 0.0070921985815602835,
+    "type1_type2_other": [
+     114,
+     106,
+     0
+    ]
+   }
+  },
+  "by_layer": {
+   "Layer 1": {
+    "n": 542,
+    "share_out_gt0": 0.05166051660516605
+   },
+   "Layer 2": {
+    "n": 4555,
+    "share_out_gt0": 0.45159165751920965
+   },
+   "Layer 3": {
+    "n": 2642,
+    "share_out_gt0": 0.5185465556396669
+   },
+   "Layer 4": {
+    "n": 3416,
+    "share_out_gt0": 0.36065573770491804
+   },
+   "Layer 5": {
+    "n": 2288,
+    "share_out_gt0": 0.2928321678321678
+   },
+   "Layer 6": {
+    "n": 1054,
+    "share_out_gt0": 0.2504743833017078
+   },
+   "NULL": {
+    "n": 80,
+    "share_out_gt0": 0.0
+   },
+   "White matter": {
+    "n": 592,
+    "share_out_gt0": 0.13175675675675674
+   },
+   "unclassified": {
+    "n": 318,
+    "share_out_gt0": 0.07861635220125786
+   }
+  },
+  "pre_post_celltype_pairs": {
+   "C_SHAPED": {
+    "PYRAMIDAL": 131,
+    "INTERNEURON": 22,
+    "SPINY_ATYPICAL": 11,
+    "UNCLASSIFIED_NEURON": 1,
+    "SPINY_STELLATE": 1
+   },
+   "INTERNEURON": {
+    "PYRAMIDAL": 4329,
+    "INTERNEURON": 1074,
+    "UNCLASSIFIED_NEURON": 33,
+    "SPINY_ATYPICAL": 314,
+    "SPINY_STELLATE": 48,
+    "C_SHAPED": 2
+   },
+   "PYRAMIDAL": {
+    "PYRAMIDAL": 11496,
+    "INTERNEURON": 9480,
+    "SPINY_ATYPICAL": 766,
+    "UNCLASSIFIED_NEURON": 114,
+    "SPINY_STELLATE": 118,
+    "C_SHAPED": 6
+   },
+   "SPINY_ATYPICAL": {
+    "SPINY_ATYPICAL": 84,
+    "INTERNEURON": 623,
+    "PYRAMIDAL": 649,
+    "SPINY_STELLATE": 17,
+    "UNCLASSIFIED_NEURON": 8,
+    "C_SHAPED": 2
+   },
+   "SPINY_STELLATE": {
+    "PYRAMIDAL": 63,
+    "INTERNEURON": 78,
+    "SPINY_ATYPICAL": 24,
+    "SPINY_STELLATE": 8,
+    "UNCLASSIFIED_NEURON": 2
+   },
+   "UNCLASSIFIED_NEURON": {
+    "PYRAMIDAL": 84,
+    "INTERNEURON": 48,
+    "SPINY_STELLATE": 1,
+    "SPINY_ATYPICAL": 7,
+    "UNCLASSIFIED_NEURON": 1
+   }
+  },
+  "distance_dependence": {
+   "neurons_used": 15252,
+   "pairs_used": 29365,
+   "mode": "log",
+   "bins": [
+    {
+     "d_from": 0.0,
+     "d_to": 1254.7434000623393,
+     "pairs": 188,
+     "sample_points": 200,
+     "p": 0.008082258405862575,
+     "unreliable": false
+    },
+    {
+     "d_from": 1254.7434000623393,
+     "d_to": 1898.3905882654326,
+     "pairs": 246,
+     "sample_points": 292,
+     "p": 0.007243644592838069,
+     "unreliable": false
+    },
+    {
+     "d_from": 1898.3905882654326,
+     "d_to": 2872.2102267569,
+     "pairs": 440,
+     "sample_points": 637,
+     "p": 0.005939065597681172,
+     "unreliable": false
+    },
+    {
+     "d_from": 2872.2102267569,
+     "d_to": 4345.571263195426,
+     "pairs": 933,
+     "sample_points": 1420,
+     "p": 0.005649346038859591,
+     "unreliable": false
+    },
+    {
+     "d_from": 4345.571263195426,
+     "d_to": 6574.724032242018,
+     "pairs": 1870,
+     "sample_points": 3225,
+     "p": 0.004985592353278249,
+     "unreliable": false
+    },
+    {
+     "d_from": 6574.724032242018,
+     "d_to": 9947.367902178798,
+     "pairs": 3440,
+     "sample_points": 7490,
+     "p": 0.00394894879927382,
+     "unreliable": false
+    },
+    {
+     "d_from": 9947.367902178798,
+     "d_to": 15050.080839294851,
+     "pairs": 5401,
+     "sample_points": 15992,
+     "p": 0.002903864009801694,
+     "unreliable": false
+    },
+    {
+     "d_from": 15050.080839294851,
+     "d_to": 22770.33839471225,
+     "pairs": 6642,
+     "sample_points": 33527,
+     "p": 0.0017033702380151918,
+     "unreliable": false
+    },
+    {
+     "d_from": 22770.33839471225,
+     "d_to": 34450.865490101874,
+     "pairs": 5491,
+     "sample_points": 68132,
+     "p": 0.0006929552412430844,
+     "unreliable": false
+    },
+    {
+     "d_from": 34450.865490101874,
+     "d_to": 52123.16621929113,
+     "pairs": 2967,
+     "sample_points": 134671,
+     "p": 0.000189429816826999,
+     "unreliable": false
+    },
+    {
+     "d_from": 52123.16621929113,
+     "d_to": 78860.8477051012,
+     "pairs": 1232,
+     "sample_points": 261414,
+     "p": 4.052161475676185e-05,
+     "unreliable": false
+    },
+    {
+     "d_from": 78860.8477051012,
+     "d_to": 119314.18890791516,
+     "pairs": 382,
+     "sample_points": 489338,
+     "p": 6.712113602022949e-06,
+     "unreliable": false
+    },
+    {
+     "d_from": 119314.18890791516,
+     "d_to": 180518.92782066562,
+     "pairs": 123,
+     "sample_points": 614460,
+     "p": 1.7211406935428802e-06,
+     "unreliable": false
+    },
+    {
+     "d_from": 180518.92782066562,
+     "d_to": 273119.93317637104,
+     "pairs": 10,
+     "sample_points": 339441,
+     "p": 2.533031437062504e-07,
+     "unreliable": false
+    },
+    {
+     "d_from": 273119.93317637104,
+     "d_to": 413223.58446144976,
+     "pairs": 0,
+     "sample_points": 29761,
+     "p": 0.0,
+     "unreliable": false
+    }
+   ]
+  }
+ },
+ "interior_z": {
+  "margin_z": 100.0,
+  "n_neurons": 3476,
+  "n_pairs": 2195,
+  "n_synapses": 3455,
+  "degrees": {
+   "out": {
+    "mean": 0.6314729574223246,
+    "nonzero_share": 0.17002301495972383,
+    "median_nonzero": 2,
+    "p90_nonzero": 8,
+    "p99_nonzero": 17,
+    "max": 22
+   },
+   "inn": {
+    "mean": 0.6314729574223246,
+    "nonzero_share": 0.22209436133486765,
+    "median_nonzero": 1,
+    "p90_nonzero": 6,
+    "p99_nonzero": 21,
+    "max": 31
+   },
+   "pair_weight_1_2_3plus": [
+    1586,
+    339,
+    270
+   ]
+  },
+  "reciprocity": {
+   "directed_edges_reciprocated": 18,
+   "share_of_edges": 0.008200455580865604,
+   "mutual_pairs": 9
+  },
+  "by_celltype": {
+   "C_SHAPED": {
+    "n": 123,
+    "share_out_gt0": 0.04065040650406504,
+    "share_in_gt0": 0.008130081300813009,
+    "mean_out": 0.04878048780487805,
+    "mean_in": 0.008130081300813009,
+    "outgoing_pairs": 6,
+    "outgoing_reciprocated_share": 0.0,
+    "type1_type2_other": [
+     5,
+     1,
+     0
+    ]
+   },
+   "INTERNEURON": {
+    "n": 1819,
+    "share_out_gt0": 0.10720175920835624,
+    "share_in_gt0": 0.22704782847718527,
+    "mean_out": 0.24518966465090708,
+    "mean_in": 0.88565145684442,
+    "outgoing_pairs": 446,
+    "outgoing_reciprocated_share": 0.02242152466367713,
+    "type1_type2_other": [
+     484,
+     143,
+     0
+    ]
+   },
+   "PYRAMIDAL": {
+    "n": 1125,
+    "share_out_gt0": 0.304,
+    "share_in_gt0": 0.2728888888888889,
+    "mean_out": 1.3475555555555556,
+    "mean_in": 0.44,
+    "outgoing_pairs": 1516,
+    "outgoing_reciprocated_share": 0.00395778364116095,
+    "type1_type2_other": [
+     404,
+     2053,
+     0
+    ]
+   },
+   "SPINY_ATYPICAL": {
+    "n": 162,
+    "share_out_gt0": 0.25925925925925924,
+    "share_in_gt0": 0.24691358024691357,
+    "mean_out": 1.2530864197530864,
+    "mean_in": 0.4074074074074074,
+    "outgoing_pairs": 203,
+    "outgoing_reciprocated_share": 0.009852216748768473,
+    "type1_type2_other": [
+     63,
+     276,
+     0
+    ]
+   },
+   "SPINY_STELLATE": {
+    "n": 4,
+    "share_out_gt0": 0.5,
+    "share_in_gt0": 0.75,
+    "mean_out": 3.75,
+    "mean_in": 1.75,
+    "outgoing_pairs": 15,
+    "outgoing_reciprocated_share": 0.0,
+    "type1_type2_other": [
+     1,
+     15,
+     0
+    ]
+   },
+   "UNCLASSIFIED_NEURON": {
+    "n": 243,
+    "share_out_gt0": 0.0205761316872428,
+    "share_in_gt0": 0.03292181069958848,
+    "mean_out": 0.037037037037037035,
+    "mean_in": 0.06172839506172839,
+    "outgoing_pairs": 9,
+    "outgoing_reciprocated_share": 0.0,
+    "type1_type2_other": [
+     4,
+     6,
+     0
+    ]
+   }
+  },
+  "by_layer": {
+   "Layer 1": {
+    "n": 302,
+    "share_out_gt0": 0.04304635761589404
+   },
+   "Layer 2": {
+    "n": 1652,
+    "share_out_gt0": 0.286319612590799
+   },
+   "Layer 3": {
+    "n": 534,
+    "share_out_gt0": 0.16104868913857678
+   },
+   "Layer 4": {
+    "n": 400,
+    "share_out_gt0": 0.0275
+   },
+   "Layer 5": {
+    "n": 229,
+    "share_out_gt0": 0.026200873362445413
+   },
+   "Layer 6": {
+    "n": 92,
+    "share_out_gt0": 0.0
+   },
+   "NULL": {
+    "n": 2,
+    "share_out_gt0": 0.0
+   },
+   "White matter": {
+    "n": 92,
+    "share_out_gt0": 0.0
+   },
+   "unclassified": {
+    "n": 173,
+    "share_out_gt0": 0.011560693641618497
+   }
+  },
+  "pre_post_celltype_pairs": {
+   "C_SHAPED": {
+    "INTERNEURON": 5,
+    "PYRAMIDAL": 1
+   },
+   "INTERNEURON": {
+    "INTERNEURON": 245,
+    "PYRAMIDAL": 175,
+    "SPINY_ATYPICAL": 19,
+    "UNCLASSIFIED_NEURON": 6,
+    "SPINY_STELLATE": 1
+   },
+   "PYRAMIDAL": {
+    "INTERNEURON": 1181,
+    "PYRAMIDAL": 282,
+    "UNCLASSIFIED_NEURON": 8,
+    "SPINY_ATYPICAL": 38,
+    "SPINY_STELLATE": 6,
+    "C_SHAPED": 1
+   },
+   "SPINY_ATYPICAL": {
+    "INTERNEURON": 163,
+    "PYRAMIDAL": 33,
+    "UNCLASSIFIED_NEURON": 1,
+    "SPINY_ATYPICAL": 6
+   },
+   "SPINY_STELLATE": {
+    "INTERNEURON": 14,
+    "SPINY_ATYPICAL": 1
+   },
+   "UNCLASSIFIED_NEURON": {
+    "INTERNEURON": 3,
+    "PYRAMIDAL": 4,
+    "SPINY_ATYPICAL": 2
+   }
+  },
+  "distance_dependence": {
+   "neurons_used": 3473,
+   "pairs_used": 2195,
+   "mode": "log",
+   "bins": [
+    {
+     "d_from": 0.0,
+     "d_to": 893.8640836279305,
+     "pairs": 10,
+     "sample_points": 200,
+     "p": 0.00829307322717315,
+     "unreliable": false
+    },
+    {
+     "d_from": 893.8640836279305,
+     "d_to": 1384.508625464217,
+     "pairs": 9,
+     "sample_points": 306,
+     "p": 0.004878278368925382,
+     "unreliable": false
+    },
+    {
+     "d_from": 1384.508625464217,
+     "d_to": 2144.469354003832,
+     "pairs": 31,
+     "sample_points": 718,
+     "p": 0.007161149583352859,
+     "unreliable": false
+    },
+    {
+     "d_from": 2144.469354003832,
+     "d_to": 3321.5746913239204,
+     "pairs": 62,
+     "sample_points": 1753,
+     "p": 0.005866178437931948,
+     "unreliable": false
+    },
+    {
+     "d_from": 3321.5746913239204,
+     "d_to": 5144.796501495672,
+     "pairs": 124,
+     "sample_points": 4137,
+     "p": 0.004971433793422628,
+     "unreliable": false
+    },
+    {
+     "d_from": 5144.796501495672,
+     "d_to": 7968.789957046567,
+     "pairs": 246,
+     "sample_points": 9506,
+     "p": 0.004292228095696602,
+     "unreliable": false
+    },
+    {
+     "d_from": 7968.789957046567,
+     "d_to": 12342.881465003584,
+     "pairs": 524,
+     "sample_points": 20144,
+     "p": 0.004314505928354578,
+     "unreliable": false
+    },
+    {
+     "d_from": 12342.881465003584,
+     "d_to": 19117.924262066077,
+     "pairs": 605,
+     "sample_points": 42168,
+     "p": 0.0023796762011192166,
+     "unreliable": false
+    },
+    {
+     "d_from": 19117.924262066077,
+     "d_to": 29611.80735036643,
+     "pairs": 409,
+     "sample_points": 79832,
+     "p": 0.0008497512150300176,
+     "unreliable": false
+    },
+    {
+     "d_from": 29611.80735036643,
+     "d_to": 45865.81275955183,
+     "pairs": 150,
+     "sample_points": 137136,
+     "p": 0.00018142004784680498,
+     "unreliable": false
+    },
+    {
+     "d_from": 45865.81275955183,
+     "d_to": 71041.68804030243,
+     "pairs": 20,
+     "sample_points": 223852,
+     "p": 1.4818850360368725e-05,
+     "unreliable": false
+    },
+    {
+     "d_from": 71041.68804030243,
+     "d_to": 110036.6729806744,
+     "pairs": 5,
+     "sample_points": 362722,
+     "p": 2.2863441498373827e-06,
+     "unreliable": false
+    },
+    {
+     "d_from": 110036.6729806744,
+     "d_to": 170436.116239058,
+     "pairs": 0,
+     "sample_points": 508972,
+     "p": 0.0,
+     "unreliable": false
+    },
+    {
+     "d_from": 170436.116239058,
+     "d_to": 263988.9859606665,
+     "pairs": 0,
+     "sample_points": 523664,
+     "p": 0.0,
+     "unreliable": false
+    },
+    {
+     "d_from": 263988.9859606665,
+     "d_to": 408894.29237467324,
+     "pairs": 0,
+     "sample_points": 84890,
+     "p": 0.0,
+     "unreliable": false
+    }
+   ]
+  }
+ }
+}

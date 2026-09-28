@@ -1,0 +1,204 @@
+{
+ "chem": {
+  "file": "herm_chem_272_noauto.npy",
+  "nonzero_before": 3390,
+  "diag_nonzero_removed": 35,
+  "nonzero_after": 3355,
+  "zero_rows": [
+   "DD04",
+   "DD05",
+   "SABVR"
+  ],
+  "zero_cols": [
+   "PLML",
+   "PLMR"
+  ],
+  "new_zero_rows": [],
+  "new_zero_cols": [],
+  "weak_n": 1,
+  "weak_sizes": [
+   272
+  ],
+  "strong_n": 6,
+  "strong_sizes": [
+   267,
+   1,
+   1,
+   1,
+   1,
+   1
+  ]
+ },
+ "gap": {
+  "file": "herm_gap_sym_272_noauto.npy",
+  "nonzero_before": 2044,
+  "diag_nonzero_removed": 10,
+  "nonzero_after": 2034,
+  "zero_rows": [
+   "AS07",
+   "AS08",
+   "AS09",
+   "RMFR"
+  ],
+  "zero_cols": [
+   "AS07",
+   "AS08",
+   "AS09",
+   "RMFR"
+  ],
+  "new_zero_rows": [],
+  "new_zero_cols": [],
+  "n_components": 6,
+  "component_sizes": [
+   266,
+   2,
+   1,
+   1,
+   1,
+   1
+  ],
+  "core_shape": [
+   266,
+   266
+  ],
+  "core_nonzero": 2032,
+  "outside_core": [
+   "IL2DL",
+   "RMFR",
+   "URADL",
+   "AS07",
+   "AS08",
+   "AS09"
+  ]
+ },
+ "degrees": {
+  "chem_out": {
+   "mean": 12.334558823529411,
+   "median": 11.0,
+   "max": 48,
+   "top5": [
+    {
+     "label": "AVAR",
+     "degree": 48,
+     "strength": 292.0
+    },
+    {
+     "label": "DVA",
+     "degree": 44,
+     "strength": 158.0
+    },
+    {
+     "label": "AVAL",
+     "degree": 43,
+     "strength": 258.0
+    },
+    {
+     "label": "PVCR",
+     "degree": 38,
+     "strength": 172.0
+    },
+    {
+     "label": "ADEL",
+     "degree": 35,
+     "strength": 129.0
+    }
+   ]
+  },
+  "chem_in": {
+   "mean": 12.334558823529411,
+   "median": 10.0,
+   "max": 65,
+   "top5": [
+    {
+     "label": "AVAL",
+     "degree": 65,
+     "strength": 667.0
+    },
+    {
+     "label": "AVAR",
+     "degree": 59,
+     "strength": 685.0
+    },
+    {
+     "label": "AVDR",
+     "degree": 45,
+     "strength": 236.0
+    },
+    {
+     "label": "AVEL",
+     "degree": 45,
+     "strength": 303.0
+    },
+    {
+     "label": "AVBL",
+     "degree": 44,
+     "strength": 337.0
+    }
+   ]
+  },
+  "chem_total_undirected": {
+   "mean": 20.235294117647058,
+   "median": 16.0,
+   "max": 94,
+   "top5": [
+    {
+     "label": "AVAL",
+     "degree": 94,
+     "strength": 925.0
+    },
+    {
+     "label": "AVAR",
+     "degree": 92,
+     "strength": 977.0
+    },
+    {
+     "label": "AVDR",
+     "degree": 65,
+     "strength": 391.0
+    },
+    {
+     "label": "DVA",
+     "degree": 64,
+     "strength": 304.0
+    },
+    {
+     "label": "AVEL",
+     "degree": 61,
+     "strength": 427.0
+    }
+   ]
+  },
+  "gap": {
+   "mean": 7.477941176470588,
+   "median": 6.0,
+   "max": 50,
+   "top5": [
+    {
+     "label": "AVAR",
+     "degree": 50,
+     "strength": 250.0
+    },
+    {
+     "label": "AVAL",
+     "degree": 44,
+     "strength": 227.0
+    },
+    {
+     "label": "AVBR",
+     "degree": 27,
+     "strength": 129.0
+    },
+    {
+     "label": "PVCR",
+     "degree": 27,
+     "strength": 216.0
+    },
+    {
+     "label": "PVPL",
+     "degree": 26,
+     "strength": 188.0
+    }
+   ]
+  }
+ }
+}

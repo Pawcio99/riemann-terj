@@ -1,0 +1,186 @@
+{
+ "note": "Runda eksploracyjna, poza rejestrem TERJ; wszystko opisowe. Nowy model: zamiany osobno w klasie par wzajemnych (podwojna zamiana w grafie nieskierowanym) i krawedzi jednokierunkowych (zamiana (a->b),(c->d) -> (a->d),(c->b)), z odrzucaniem zamian tworzacych lub niszczacych pary wzajemne, petle lub krawedzie podwojne; nswap = 10 x liczba elementow klasy. Wagi przetasowane w obrebie klasy (miedzy krawedziami skierowanymi), co zrywa korelacje wag ze stopniami i sparowanie wag w parach wzajemnych.",
+ "seed": 20260928,
+ "nreal": 2000,
+ "observed": {
+  "reciprocal_pairs": 603,
+  "unidirectional_edges": 2149,
+  "weighted": {
+   "n_real": 40,
+   "mean_cos": -0.18861251439445087,
+   "mean_r": 0.7530554273695174
+  },
+  "binary": {
+   "n_real": 34,
+   "mean_cos": -0.012955037767565725,
+   "mean_r": 0.7592978251263132
+  }
+ },
+ "step1": {
+  "observed": {
+   "reciprocal_pairs": 603,
+   "unidirectional_edges": 2149
+  },
+  "reproduced_round3_null": {
+   "weighted_cos": true,
+   "weighted_r": true,
+   "binary_cos": true
+  },
+  "reciprocal_pairs": {
+   "observed": 603.0,
+   "null_mean": 126.2715,
+   "null_sd": 9.602702416343455,
+   "null_q025_q975": [
+    107.0,
+    145.0
+   ],
+   "z": 49.64524352942826,
+   "percentile": 100.0,
+   "n": 2000
+  },
+  "unidirectional_edges": {
+   "observed": 2149.0,
+   "null_mean": 3102.457,
+   "null_sd": 19.20540483268691,
+   "null_q025_q975": [
+    3065.0,
+    3141.0
+   ],
+   "z": -49.64524352942825,
+   "percentile": 0.0,
+   "n": 2000
+  },
+  "spearman_nreal_vs_cos": {
+   "weighted": {
+    "rho": 0.019118371235935284,
+    "p": 0.3928041261654947
+   },
+   "binary": {
+    "rho": -0.024348465191325632,
+    "p": 0.2764286860642838
+   }
+  },
+  "spearman_nreal_vs_reciprocal": {
+   "weighted": {
+    "rho": 0.026530430946479003,
+    "p": 0.2356444480639123
+   },
+   "binary": {
+    "rho": 0.03162620415033067,
+    "p": 0.15740998231917758
+   }
+  },
+  "round3_null_n_real_binary": {
+   "observed": 34.0,
+   "null_mean": 22.186,
+   "null_sd": 3.047958173025387,
+   "null_q025_q975": [
+    16.0,
+    28.0
+   ],
+   "z": 3.876037441902783,
+   "percentile": 99.95,
+   "n": 2000
+  }
+ },
+ "step2": {
+  "asserts_passed": 2000,
+  "n_reciprocal_pairs": 603,
+  "n_unidirectional": 2149,
+  "accepted_swaps_rec": {
+   "mean": 4414.75,
+   "sd": 34.96105887725527,
+   "q025": 4347.0,
+   "q975": 4483.0,
+   "n": 2000
+  },
+  "accepted_swaps_uni": {
+   "mean": 15665.9275,
+   "sd": 66.222238985239,
+   "q025": 15538.0,
+   "q975": 15799.025,
+   "n": 2000
+  },
+  "attempts_rec": 6030,
+  "attempts_uni": 21490
+ },
+ "step3": {
+  "weighted": {
+   "n_real": {
+    "observed": 40.0,
+    "null_mean": 31.283,
+    "null_sd": 3.9247436612348583,
+    "null_q025_q975": [
+     24.0,
+     40.0
+    ],
+    "z": 2.221036773967891,
+    "percentile": 98.275,
+    "n": 2000
+   },
+   "mean_cos": {
+    "observed": -0.18861251439445087,
+    "null_mean": -0.11195084858764773,
+    "null_sd": 0.061414295939979796,
+    "null_q025_q975": [
+     -0.23168516391507854,
+     0.011301004526878789
+    ],
+    "z": -1.2482706938743482,
+    "percentile": 9.9,
+    "n": 2000
+   },
+   "mean_r": {
+    "observed": 0.7530554273695174,
+    "null_mean": 0.7347125590979785,
+    "null_sd": 0.01996088755126706,
+    "null_q025_q975": [
+     0.6940697743826746,
+     0.7737261656757867
+    ],
+    "z": 0.9189405142645827,
+    "percentile": 82.75,
+    "n": 2000
+   }
+  },
+  "binary": {
+   "n_real": {
+    "observed": 34.0,
+    "null_mean": 29.505,
+    "null_sd": 3.736837831441076,
+    "null_q025_q975": [
+     22.0,
+     36.0
+    ],
+    "z": 1.2028886996861052,
+    "percentile": 87.5,
+    "n": 2000
+   },
+   "mean_cos": {
+    "observed": -0.012955037767565725,
+    "null_mean": -0.13460242864802932,
+    "null_sd": 0.0631601323256208,
+    "null_q025_q975": [
+     -0.2580262258872914,
+     -0.009226923394015084
+    ],
+    "z": 1.9260154531233864,
+    "percentile": 97.05,
+    "n": 2000
+   },
+   "mean_r": {
+    "observed": 0.7592978251263132,
+    "null_mean": 0.7340633555985865,
+    "null_sd": 0.02028325100810196,
+    "null_q025_q975": [
+     0.6929862210601356,
+     0.774091731191689
+    ],
+    "z": 1.2441037936988997,
+    "percentile": 90.55,
+    "n": 2000
+   }
+  }
+ },
+ "seconds": 445.1664366722107
+}

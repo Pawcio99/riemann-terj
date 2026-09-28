@@ -1,0 +1,19 @@
+{
+ "parts": 166,
+ "totals": {
+  "records": 166216068,
+  "bad": 0,
+  "no_ids": 0,
+  "pre_in": 642274,
+  "post_in": 26773572,
+  "pair_in": 112344,
+  "bytes": 126066253429
+ },
+ "neurons_in_set": 15487,
+ "neurons_with_bbox": 15430,
+ "distinct_pairs": 73745,
+ "synapses_in_pairs": 112344,
+ "max_outdeg": 123,
+ "max_indeg": 69,
+ "note": "bbox = obwiednia synaps neuronu (proxy obciecia); jednostki wspolrzednych do potwierdzenia"
+}

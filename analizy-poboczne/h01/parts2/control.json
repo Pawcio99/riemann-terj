@@ -1,0 +1,69 @@
+{
+ "n_neurons": 15487,
+ "full": {
+  "pairs": 73745,
+  "largest_scc": 8930,
+  "largest_wcc": 13162,
+  "mutual_pairs": 1030,
+  "share_with_out": 0.7307419125718344,
+  "share_with_in": 0.7710983405436818
+ },
+ "axon": {
+  "pairs": 29645,
+  "largest_scc": 2739,
+  "largest_wcc": 9482,
+  "mutual_pairs": 206,
+  "share_with_out": 0.3696003099373668,
+  "share_with_in": 0.5383224640020663
+ },
+ "complement": {
+  "pairs": 44100,
+  "largest_scc": 3780,
+  "largest_wcc": 12561,
+  "mutual_pairs": 290,
+  "share_with_out": 0.6579066313682443,
+  "share_with_in": 0.6599728804804029
+ },
+ "recip_multi_axon": {
+  "pairs_multi": 5844,
+  "share_reverse_exists": 0.02104722792607803
+ },
+ "recip_multi_complement": {
+  "pairs_multi": 11889,
+  "share_reverse_exists": 0.02262595676675919
+ },
+ "random_subsets": {
+  "size": 29645,
+  "reps": 200,
+  "largest_scc": {
+   "mean": 4448.72,
+   "p2_5": 4303,
+   "median": 4451,
+   "p97_5": 4582
+  },
+  "largest_wcc": {
+   "mean": 11235.785,
+   "p2_5": 11169,
+   "median": 11232,
+   "p97_5": 11323
+  },
+  "mutual_pairs": {
+   "mean": 166.31,
+   "p2_5": 144,
+   "median": 166,
+   "p97_5": 189
+  },
+  "share_with_out": {
+   "mean": 0.5685930134951895,
+   "p2_5": 0.5644734293278233,
+   "median": 0.5687996384064054,
+   "p97_5": 0.5732549880544974
+  },
+  "share_with_in": {
+   "mean": 0.6056518370246012,
+   "p2_5": 0.6020533350552076,
+   "median": 0.6056692710014852,
+   "p97_5": 0.6103829017885969
+  }
+ }
+}

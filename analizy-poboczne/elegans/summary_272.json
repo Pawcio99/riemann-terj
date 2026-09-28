@@ -1,0 +1,42 @@
+{
+ "source": "SI5_connectome_July2020.xlsx",
+ "dropped_groups": [
+  "PHARYNX",
+  "SEX SPECIFIC"
+ ],
+ "n": 272,
+ "matrices": {
+  "chemical": {
+   "file": "herm_chem_272.npy",
+   "shape": [
+    272,
+    272
+   ],
+   "nonzero": 3390,
+   "asym_pairs_unordered": 2673,
+   "asym_entries_ordered": 5346,
+   "symmetric": false,
+   "zero_rows": 3,
+   "zero_cols": 2,
+   "total_weight": 19775.0,
+   "integer_valued": true,
+   "negative": 0
+  },
+  "gap_symmetric": {
+   "file": "herm_gap_sym_272.npy",
+   "shape": [
+    272,
+    272
+   ],
+   "nonzero": 2044,
+   "asym_pairs_unordered": 0,
+   "asym_entries_ordered": 0,
+   "symmetric": true,
+   "zero_rows": 4,
+   "zero_cols": 4,
+   "total_weight": 9230.0,
+   "integer_valued": true,
+   "negative": 0
+  }
+ }
+}

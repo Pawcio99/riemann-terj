@@ -1,0 +1,9 @@
+klasa     n>= par nieuporz. oba kierunki oczekiwane przy dowolnym kierunku
+axon        2      5461    206 ( 3.8%)   3420 (62.6%)
+axon        3      2025     97 ( 4.8%)   1702 (84.1%)
+axon        4      1027     50 ( 4.9%)    954 (92.9%)
+axon        6       375     22 ( 5.9%)    369 (98.4%)
+dendryt     2     10345      0 ( 0.0%)   6643 (64.2%)
+dendryt     3      4323      0 ( 0.0%)   3632 (84.0%)
+dendryt     4      2199      0 ( 0.0%)   2039 (92.7%)
+dendryt     6       773      0 ( 0.0%)    761 (98.5%)

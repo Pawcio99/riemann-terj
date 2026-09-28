@@ -1,0 +1,541 @@
+{
+ "note": "patrz docstring: obciecie aksonow, type niepotwierdzone, odleglosc xy w jednostkach siatki",
+ "all": {
+  "n_neurons": 15487,
+  "n_pairs": 73745,
+  "n_synapses": 112344,
+  "degrees": {
+   "out": {
+    "mean": 4.761735649254213,
+    "nonzero_share": 0.7307419125718344,
+    "median_nonzero": 4,
+    "p90_nonzero": 15,
+    "p99_nonzero": 35,
+    "max": 123
+   },
+   "inn": {
+    "mean": 4.761735649254213,
+    "nonzero_share": 0.7710983405436818,
+    "median_nonzero": 4,
+    "p90_nonzero": 14,
+    "p99_nonzero": 31,
+    "max": 69
+   },
+   "pair_weight_1_2_3plus": [
+    56012,
+    10277,
+    7456
+   ]
+  },
+  "reciprocity": {
+   "directed_edges_reciprocated": 2060,
+   "share_of_edges": 0.02793409722693064,
+   "mutual_pairs": 1030
+  },
+  "by_celltype": {
+   "C_SHAPED": {
+    "n": 162,
+    "share_out_gt0": 0.845679012345679,
+    "share_in_gt0": 0.6049382716049383,
+    "mean_out": 2.074074074074074,
+    "mean_in": 0.845679012345679,
+    "outgoing_pairs": 336,
+    "outgoing_reciprocated_share": 0.20238095238095238,
+    "type1_type2_other": [
+     1004,
+     118,
+     0
+    ]
+   },
+   "INTERNEURON": {
+    "n": 4469,
+    "share_out_gt0": 0.5896173640635489,
+    "share_in_gt0": 0.6569702394271649,
+    "mean_out": 2.498545535914075,
+    "mean_in": 3.639292906690535,
+    "outgoing_pairs": 11166,
+    "outgoing_reciprocated_share": 0.04504746552032957,
+    "type1_type2_other": [
+     14744,
+     2912,
+     0
+    ]
+   },
+   "PYRAMIDAL": {
+    "n": 8520,
+    "share_out_gt0": 0.8366197183098592,
+    "share_in_gt0": 0.8643192488262911,
+    "mean_out": 6.492018779342723,
+    "mean_in": 5.896713615023474,
+    "outgoing_pairs": 55312,
+    "outgoing_reciprocated_share": 0.02348495805611802,
+    "type1_type2_other": [
+     54089,
+     27673,
+     0
+    ]
+   },
+   "SPINY_ATYPICAL": {
+    "n": 1479,
+    "share_out_gt0": 0.716024340770791,
+    "share_in_gt0": 0.7768762677484787,
+    "mean_out": 3.5875591615956726,
+    "mean_in": 3.658553076402975,
+    "outgoing_pairs": 5306,
+    "outgoing_reciprocated_share": 0.022804372408594044,
+    "type1_type2_other": [
+     6651,
+     2036,
+     0
+    ]
+   },
+   "SPINY_STELLATE": {
+    "n": 190,
+    "share_out_gt0": 0.8842105263157894,
+    "share_in_gt0": 0.9368421052631579,
+    "mean_out": 5.363157894736842,
+    "mean_in": 6.221052631578948,
+    "outgoing_pairs": 1019,
+    "outgoing_reciprocated_share": 0.03042198233562316,
+    "type1_type2_other": [
+     1577,
+     298,
+     0
+    ]
+   },
+   "UNCLASSIFIED_NEURON": {
+    "n": 667,
+    "share_out_gt0": 0.2848575712143928,
+    "share_in_gt0": 0.32533733133433285,
+    "mean_out": 0.9085457271364318,
+    "mean_in": 0.7661169415292354,
+    "outgoing_pairs": 606,
+    "outgoing_reciprocated_share": 0.0627062706270627,
+    "type1_type2_other": [
+     845,
+     397,
+     0
+    ]
+   }
+  },
+  "by_layer": {
+   "Layer 1": {
+    "n": 542,
+    "share_out_gt0": 0.16789667896678967
+   },
+   "Layer 2": {
+    "n": 4555,
+    "share_out_gt0": 0.7899012074643249
+   },
+   "Layer 3": {
+    "n": 2642,
+    "share_out_gt0": 0.8050719152157456
+   },
+   "Layer 4": {
+    "n": 3416,
+    "share_out_gt0": 0.7382903981264637
+   },
+   "Layer 5": {
+    "n": 2288,
+    "share_out_gt0": 0.743006993006993
+   },
+   "Layer 6": {
+    "n": 1054,
+    "share_out_gt0": 0.8007590132827325
+   },
+   "NULL": {
+    "n": 80,
+    "share_out_gt0": 0.05
+   },
+   "White matter": {
+    "n": 592,
+    "share_out_gt0": 0.5506756756756757
+   },
+   "unclassified": {
+    "n": 318,
+    "share_out_gt0": 0.330188679245283
+   }
+  },
+  "pre_post_celltype_pairs": {
+   "C_SHAPED": {
+    "PYRAMIDAL": 257,
+    "SPINY_ATYPICAL": 25,
+    "INTERNEURON": 35,
+    "SPINY_STELLATE": 11,
+    "C_SHAPED": 6,
+    "UNCLASSIFIED_NEURON": 2
+   },
+   "INTERNEURON": {
+    "INTERNEURON": 2580,
+    "PYRAMIDAL": 7666,
+    "UNCLASSIFIED_NEURON": 109,
+    "SPINY_ATYPICAL": 627,
+    "SPINY_STELLATE": 178,
+    "C_SHAPED": 6
+   },
+   "PYRAMIDAL": {
+    "PYRAMIDAL": 37925,
+    "INTERNEURON": 12434,
+    "SPINY_ATYPICAL": 3780,
+    "UNCLASSIFIED_NEURON": 323,
+    "SPINY_STELLATE": 742,
+    "C_SHAPED": 108
+   },
+   "SPINY_ATYPICAL": {
+    "PYRAMIDAL": 3422,
+    "SPINY_ATYPICAL": 743,
+    "INTERNEURON": 920,
+    "SPINY_STELLATE": 169,
+    "C_SHAPED": 12,
+    "UNCLASSIFIED_NEURON": 40
+   },
+   "SPINY_STELLATE": {
+    "PYRAMIDAL": 585,
+    "INTERNEURON": 179,
+    "SPINY_ATYPICAL": 175,
+    "SPINY_STELLATE": 62,
+    "UNCLASSIFIED_NEURON": 14,
+    "C_SHAPED": 4
+   },
+   "UNCLASSIFIED_NEURON": {
+    "PYRAMIDAL": 385,
+    "UNCLASSIFIED_NEURON": 23,
+    "INTERNEURON": 116,
+    "SPINY_ATYPICAL": 61,
+    "SPINY_STELLATE": 20,
+    "C_SHAPED": 1
+   }
+  },
+  "distance_dependence": {
+   "neurons_used": 15252,
+   "pairs_used": 72841,
+   "bins": [
+    {
+     "d_from": 0.0,
+     "d_to": 44086.38666300517,
+     "pairs": 66688,
+     "p": 0.0028669662157987416
+    },
+    {
+     "d_from": 44086.38666300517,
+     "d_to": 66635.3622185698,
+     "pairs": 3996,
+     "p": 0.0001717909818607811
+    },
+    {
+     "d_from": 66635.3622185698,
+     "d_to": 85386.2139809466,
+     "pairs": 1103,
+     "p": 4.7418782030140534e-05
+    },
+    {
+     "d_from": 85386.2139809466,
+     "d_to": 102011.73305066432,
+     "pairs": 463,
+     "p": 1.990471086124666e-05
+    },
+    {
+     "d_from": 102011.73305066432,
+     "d_to": 118002.19392028269,
+     "pairs": 283,
+     "p": 1.2166378344995258e-05
+    },
+    {
+     "d_from": 118002.19392028269,
+     "d_to": 135155.1674224852,
+     "pairs": 169,
+     "p": 7.265434418036038e-06
+    },
+    {
+     "d_from": 135155.1674224852,
+     "d_to": 154131.08584902657,
+     "pairs": 91,
+     "p": 3.912156994327097e-06
+    },
+    {
+     "d_from": 154131.08584902657,
+     "d_to": 176569.40478180244,
+     "pairs": 36,
+     "p": 1.5476665032502802e-06
+    },
+    {
+     "d_from": 176569.40478180244,
+     "d_to": 207476.00785874014,
+     "pairs": 10,
+     "p": 4.2990736201396676e-07
+    },
+    {
+     "d_from": 207476.00785874014,
+     "d_to": 412236.8758189883,
+     "pairs": 2,
+     "p": 8.598147240279335e-08
+    }
+   ]
+  }
+ },
+ "interior_z": {
+  "margin_z": 100.0,
+  "n_neurons": 3476,
+  "n_pairs": 4496,
+  "n_synapses": 7151,
+  "degrees": {
+   "out": {
+    "mean": 1.2934407364787113,
+    "nonzero_share": 0.3630609896432681,
+    "median_nonzero": 2,
+    "p90_nonzero": 8,
+    "p99_nonzero": 18,
+    "max": 63
+   },
+   "inn": {
+    "mean": 1.2934407364787113,
+    "nonzero_share": 0.39096662830840045,
+    "median_nonzero": 2,
+    "p90_nonzero": 7,
+    "p99_nonzero": 20,
+    "max": 32
+   },
+   "pair_weight_1_2_3plus": [
+    3271,
+    660,
+    565
+   ]
+  },
+  "reciprocity": {
+   "directed_edges_reciprocated": 192,
+   "share_of_edges": 0.042704626334519574,
+   "mutual_pairs": 96
+  },
+  "by_celltype": {
+   "C_SHAPED": {
+    "n": 123,
+    "share_out_gt0": 0.14634146341463414,
+    "share_in_gt0": 0.08130081300813008,
+    "mean_out": 0.16260162601626016,
+    "mean_in": 0.08943089430894309,
+    "outgoing_pairs": 20,
+    "outgoing_reciprocated_share": 0.1,
+    "type1_type2_other": [
+     31,
+     4,
+     0
+    ]
+   },
+   "INTERNEURON": {
+    "n": 1819,
+    "share_out_gt0": 0.30566245189664654,
+    "share_in_gt0": 0.35349092908191315,
+    "mean_out": 0.6877405167674546,
+    "mean_in": 1.2754260582737769,
+    "outgoing_pairs": 1251,
+    "outgoing_reciprocated_share": 0.05995203836930456,
+    "type1_type2_other": [
+     1526,
+     356,
+     0
+    ]
+   },
+   "PYRAMIDAL": {
+    "n": 1125,
+    "share_out_gt0": 0.5146666666666667,
+    "share_in_gt0": 0.5235555555555556,
+    "mean_out": 2.439111111111111,
+    "mean_in": 1.6257777777777778,
+    "outgoing_pairs": 2744,
+    "outgoing_reciprocated_share": 0.03389212827988338,
+    "type1_type2_other": [
+     2141,
+     2311,
+     0
+    ]
+   },
+   "SPINY_ATYPICAL": {
+    "n": 162,
+    "share_out_gt0": 0.49382716049382713,
+    "share_in_gt0": 0.5308641975308642,
+    "mean_out": 2.537037037037037,
+    "mean_in": 1.6666666666666667,
+    "outgoing_pairs": 411,
+    "outgoing_reciprocated_share": 0.038929440389294405,
+    "type1_type2_other": [
+     355,
+     329,
+     0
+    ]
+   },
+   "SPINY_STELLATE": {
+    "n": 4,
+    "share_out_gt0": 0.75,
+    "share_in_gt0": 0.75,
+    "mean_out": 6.25,
+    "mean_in": 4.75,
+    "outgoing_pairs": 25,
+    "outgoing_reciprocated_share": 0.12,
+    "type1_type2_other": [
+     12,
+     16,
+     0
+    ]
+   },
+   "UNCLASSIFIED_NEURON": {
+    "n": 243,
+    "share_out_gt0": 0.10699588477366255,
+    "share_in_gt0": 0.11522633744855967,
+    "mean_out": 0.18518518518518517,
+    "mean_in": 0.1934156378600823,
+    "outgoing_pairs": 45,
+    "outgoing_reciprocated_share": 0.06666666666666667,
+    "type1_type2_other": [
+     52,
+     18,
+     0
+    ]
+   }
+  },
+  "by_layer": {
+   "Layer 1": {
+    "n": 302,
+    "share_out_gt0": 0.12582781456953643
+   },
+   "Layer 2": {
+    "n": 1652,
+    "share_out_gt0": 0.5587167070217918
+   },
+   "Layer 3": {
+    "n": 534,
+    "share_out_gt0": 0.39325842696629215
+   },
+   "Layer 4": {
+    "n": 400,
+    "share_out_gt0": 0.1275
+   },
+   "Layer 5": {
+    "n": 229,
+    "share_out_gt0": 0.09170305676855896
+   },
+   "Layer 6": {
+    "n": 92,
+    "share_out_gt0": 0.043478260869565216
+   },
+   "NULL": {
+    "n": 2,
+    "share_out_gt0": 0.0
+   },
+   "White matter": {
+    "n": 92,
+    "share_out_gt0": 0.05434782608695652
+   },
+   "unclassified": {
+    "n": 173,
+    "share_out_gt0": 0.057803468208092484
+   }
+  },
+  "pre_post_celltype_pairs": {
+   "C_SHAPED": {
+    "PYRAMIDAL": 7,
+    "C_SHAPED": 4,
+    "INTERNEURON": 8,
+    "SPINY_ATYPICAL": 1
+   },
+   "INTERNEURON": {
+    "INTERNEURON": 670,
+    "PYRAMIDAL": 498,
+    "UNCLASSIFIED_NEURON": 23,
+    "SPINY_ATYPICAL": 51,
+    "SPINY_STELLATE": 7,
+    "C_SHAPED": 2
+   },
+   "PYRAMIDAL": {
+    "INTERNEURON": 1415,
+    "PYRAMIDAL": 1117,
+    "SPINY_ATYPICAL": 176,
+    "UNCLASSIFIED_NEURON": 19,
+    "SPINY_STELLATE": 12,
+    "C_SHAPED": 5
+   },
+   "SPINY_ATYPICAL": {
+    "PYRAMIDAL": 177,
+    "INTERNEURON": 195,
+    "SPINY_ATYPICAL": 37,
+    "UNCLASSIFIED_NEURON": 2
+   },
+   "SPINY_STELLATE": {
+    "PYRAMIDAL": 8,
+    "INTERNEURON": 15,
+    "SPINY_ATYPICAL": 2
+   },
+   "UNCLASSIFIED_NEURON": {
+    "PYRAMIDAL": 22,
+    "INTERNEURON": 17,
+    "SPINY_ATYPICAL": 3,
+    "UNCLASSIFIED_NEURON": 3
+   }
+  },
+  "distance_dependence": {
+   "neurons_used": 3473,
+   "pairs_used": 4496,
+   "bins": [
+    {
+     "d_from": 0.0,
+     "d_to": 34609.572852030404,
+     "pairs": 4361,
+     "p": 0.0036166092343702105
+    },
+    {
+     "d_from": 34609.572852030404,
+     "d_to": 57709.77529847088,
+     "pairs": 124,
+     "p": 0.00010283410801694706
+    },
+    {
+     "d_from": 57709.77529847088,
+     "d_to": 79920.52830781338,
+     "pairs": 7,
+     "p": 5.805151259021205e-06
+    },
+    {
+     "d_from": 79920.52830781338,
+     "d_to": 101303.68432589211,
+     "pairs": 1,
+     "p": 8.29307322717315e-07
+    },
+    {
+     "d_from": 101303.68432589211,
+     "d_to": 123000.63735200725,
+     "pairs": 2,
+     "p": 1.65861464543463e-06
+    },
+    {
+     "d_from": 123000.63735200725,
+     "d_to": 146457.3290245319,
+     "pairs": 1,
+     "p": 8.29307322717315e-07
+    },
+    {
+     "d_from": 146457.3290245319,
+     "d_to": 171523.95040051985,
+     "pairs": 0,
+     "p": 0.0
+    },
+    {
+     "d_from": 171523.95040051985,
+     "d_to": 198157.54647502073,
+     "pairs": 0,
+     "p": 0.0
+    },
+    {
+     "d_from": 198157.54647502073,
+     "d_to": 230934.76319081977,
+     "pairs": 0,
+     "p": 0.0
+    },
+    {
+     "d_from": 230934.76319081977,
+     "d_to": 408893.29237467324,
+     "pairs": 0,
+     "p": 0.0
+    }
+   ]
+  }
+ }
+}

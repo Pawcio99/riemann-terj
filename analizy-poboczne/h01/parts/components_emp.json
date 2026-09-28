@@ -1,0 +1,351 @@
+{
+ "all": {
+  "neurons": 15487,
+  "pairs": 73745,
+  "synapses": 112344,
+  "self_pairs": 0,
+  "with_out": 11317,
+  "with_in": 11942,
+  "reciprocal_pairs": 1030,
+  "largest_wcc": 13162,
+  "largest_scc": 8930,
+  "scc_top5": [
+   8930,
+   4,
+   3,
+   3,
+   2
+  ],
+  "scc_gt1": 43
+ },
+ "interior": [
+  {
+   "neurons": 15430,
+   "pairs": 73745,
+   "synapses": 112344,
+   "self_pairs": 0,
+   "with_out": 11317,
+   "with_in": 11942,
+   "reciprocal_pairs": 1030,
+   "largest_wcc": 13162,
+   "largest_scc": 8930,
+   "scc_top5": [
+    8930,
+    4,
+    3,
+    3,
+    2
+   ],
+   "scc_gt1": 43,
+   "margin_xy": 0,
+   "margin_z": 0
+  },
+  {
+   "neurons": 3476,
+   "pairs": 4496,
+   "synapses": 7151,
+   "self_pairs": 0,
+   "with_out": 1262,
+   "with_in": 1359,
+   "reciprocal_pairs": 96,
+   "largest_wcc": 1315,
+   "largest_scc": 614,
+   "scc_top5": [
+    614,
+    3,
+    3,
+    2,
+    2
+   ],
+   "scc_gt1": 15,
+   "margin_xy": 0,
+   "margin_z": 100
+  },
+  {
+   "neurons": 2360,
+   "pairs": 2304,
+   "synapses": 3635,
+   "self_pairs": 0,
+   "with_out": 754,
+   "with_in": 826,
+   "reciprocal_pairs": 54,
+   "largest_wcc": 855,
+   "largest_scc": 351,
+   "scc_top5": [
+    351,
+    3,
+    2,
+    2,
+    2
+   ],
+   "scc_gt1": 10,
+   "margin_xy": 0,
+   "margin_z": 500
+  },
+  {
+   "neurons": 15386,
+   "pairs": 73562,
+   "synapses": 112056,
+   "self_pairs": 0,
+   "with_out": 11285,
+   "with_in": 11907,
+   "reciprocal_pairs": 1026,
+   "largest_wcc": 13128,
+   "largest_scc": 8907,
+   "scc_top5": [
+    8907,
+    4,
+    3,
+    3,
+    2
+   ],
+   "scc_gt1": 42,
+   "margin_xy": 2000,
+   "margin_z": 0
+  },
+  {
+   "neurons": 3473,
+   "pairs": 4496,
+   "synapses": 7151,
+   "self_pairs": 0,
+   "with_out": 1262,
+   "with_in": 1359,
+   "reciprocal_pairs": 96,
+   "largest_wcc": 1315,
+   "largest_scc": 614,
+   "scc_top5": [
+    614,
+    3,
+    3,
+    2,
+    2
+   ],
+   "scc_gt1": 15,
+   "margin_xy": 2000,
+   "margin_z": 100
+  },
+  {
+   "neurons": 2357,
+   "pairs": 2304,
+   "synapses": 3635,
+   "self_pairs": 0,
+   "with_out": 754,
+   "with_in": 826,
+   "reciprocal_pairs": 54,
+   "largest_wcc": 855,
+   "largest_scc": 351,
+   "scc_top5": [
+    351,
+    3,
+    2,
+    2,
+    2
+   ],
+   "scc_gt1": 10,
+   "margin_xy": 2000,
+   "margin_z": 500
+  },
+  {
+   "neurons": 14030,
+   "pairs": 61458,
+   "synapses": 94370,
+   "self_pairs": 0,
+   "with_out": 10016,
+   "with_in": 10583,
+   "reciprocal_pairs": 845,
+   "largest_wcc": 11726,
+   "largest_scc": 7696,
+   "scc_top5": [
+    7696,
+    4,
+    4,
+    2,
+    2
+   ],
+   "scc_gt1": 44,
+   "margin_xy": 10000,
+   "margin_z": 0
+  },
+  {
+   "neurons": 3223,
+   "pairs": 4359,
+   "synapses": 6931,
+   "self_pairs": 0,
+   "with_out": 1189,
+   "with_in": 1268,
+   "reciprocal_pairs": 94,
+   "largest_wcc": 1315,
+   "largest_scc": 614,
+   "scc_top5": [
+    614,
+    3,
+    3,
+    2,
+    2
+   ],
+   "scc_gt1": 13,
+   "margin_xy": 10000,
+   "margin_z": 100
+  },
+  {
+   "neurons": 2219,
+   "pairs": 2281,
+   "synapses": 3592,
+   "self_pairs": 0,
+   "with_out": 737,
+   "with_in": 806,
+   "reciprocal_pairs": 53,
+   "largest_wcc": 855,
+   "largest_scc": 351,
+   "scc_top5": [
+    351,
+    3,
+    2,
+    2,
+    2
+   ],
+   "scc_gt1": 9,
+   "margin_xy": 10000,
+   "margin_z": 500
+  },
+  {
+   "neurons": 11777,
+   "pairs": 48581,
+   "synapses": 74092,
+   "self_pairs": 0,
+   "with_out": 8393,
+   "with_in": 8911,
+   "reciprocal_pairs": 686,
+   "largest_wcc": 9897,
+   "largest_scc": 6245,
+   "scc_top5": [
+    6245,
+    4,
+    4,
+    4,
+    3
+   ],
+   "scc_gt1": 49,
+   "margin_xy": 30000,
+   "margin_z": 0
+  },
+  {
+   "neurons": 2770,
+   "pairs": 4180,
+   "synapses": 6630,
+   "self_pairs": 0,
+   "with_out": 1114,
+   "with_in": 1188,
+   "reciprocal_pairs": 92,
+   "largest_wcc": 1275,
+   "largest_scc": 593,
+   "scc_top5": [
+    593,
+    3,
+    3,
+    3,
+    2
+   ],
+   "scc_gt1": 14,
+   "margin_xy": 30000,
+   "margin_z": 100
+  },
+  {
+   "neurons": 1936,
+   "pairs": 2244,
+   "synapses": 3512,
+   "self_pairs": 0,
+   "with_out": 712,
+   "with_in": 780,
+   "reciprocal_pairs": 53,
+   "largest_wcc": 847,
+   "largest_scc": 351,
+   "scc_top5": [
+    351,
+    3,
+    2,
+    2,
+    2
+   ],
+   "scc_gt1": 9,
+   "margin_xy": 30000,
+   "margin_z": 500
+  },
+  {
+   "neurons": 5667,
+   "pairs": 14388,
+   "synapses": 22769,
+   "self_pairs": 0,
+   "with_out": 3545,
+   "with_in": 3818,
+   "reciprocal_pairs": 216,
+   "largest_wcc": 4382,
+   "largest_scc": 2183,
+   "scc_top5": [
+    2183,
+    3,
+    2,
+    2,
+    2
+   ],
+   "scc_gt1": 29,
+   "margin_xy": 60000,
+   "margin_z": 0
+  },
+  {
+   "neurons": 1103,
+   "pairs": 889,
+   "synapses": 1526,
+   "self_pairs": 0,
+   "with_out": 305,
+   "with_in": 325,
+   "reciprocal_pairs": 16,
+   "largest_wcc": 334,
+   "largest_scc": 80,
+   "scc_top5": [
+    80,
+    3,
+    3,
+    2,
+    2
+   ],
+   "scc_gt1": 7,
+   "margin_xy": 60000,
+   "margin_z": 100
+  },
+  {
+   "neurons": 703,
+   "pairs": 269,
+   "synapses": 473,
+   "self_pairs": 0,
+   "with_out": 147,
+   "with_in": 159,
+   "reciprocal_pairs": 5,
+   "largest_wcc": 157,
+   "largest_scc": 14,
+   "scc_top5": [
+    14,
+    2,
+    2,
+    2,
+    1
+   ],
+   "scc_gt1": 4,
+   "margin_xy": 60000,
+   "margin_z": 500
+  }
+ ],
+ "bounds": {
+  "kind": "empirical",
+  "lo": [
+   69011.0,
+   41047.0,
+   63.0
+  ],
+  "hi": [
+   477842.0,
+   295406.0,
+   5229.0
+  ]
+ }
+}

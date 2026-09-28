@@ -1,0 +1,42 @@
+59a60,74
+> def _i(x):
+>     try:
+>         return int(x)
+>     except (ValueError, TypeError):
+>         try:
+>             return int(float(x))
+>         except (ValueError, TypeError):
+>             return None
+> 
+> 
+> def _c(x, y, z):
+>     x, y, z = _i(x), _i(y), _i(z)
+>     return None if None in (x, y, z) else (x, y, z)
+> 
+> 
+63c78
+<             return (o["x"], o["y"], o["z"])
+---
+>             return _c(o["x"], o["y"], o["z"])
+66c81
+<         return (o[0], o[1], o[2])
+---
+>         return _c(o[0], o[1], o[2])
+104c119
+<         pid = pre.get("neuron_id")
+---
+>         pid = _i(pre.get("neuron_id"))
+109,110c124,125
+<             _upd(bbox, pid, _xyz(pre.get("location")) or rloc)
+<         t = rec.get("type")
+---
+>             _upd(bbox, pid, _xyz(pre.get("centroid") or pre.get("location")) or rloc)
+>         t = _i(rec.get("type"))
+115c130
+<             qid = po.get("neuron_id")
+---
+>             qid = _i(po.get("neuron_id"))
+119c134
+<                 _upd(bbox, qid, _xyz(po.get("location")) or rloc)
+---
+>                 _upd(bbox, qid, _xyz(po.get("centroid") or po.get("location")) or rloc)

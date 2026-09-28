@@ -1,0 +1,23 @@
+{
+ "parts": 166,
+ "totals": {
+  "records": 166216068,
+  "bad": 0,
+  "no_ids": 0,
+  "pre_in": 642274,
+  "post_in": 26773572,
+  "pair_in": 112344,
+  "bytes": 126066253429
+ },
+ "neurons_in_set": 15487,
+ "neurons_with_bbox": 15430,
+ "distinct_pairs_all": 73745,
+ "distinct_pairs_axon": 29645,
+ "records_in_pairs": 112344,
+ "records_pre_axon": 39753,
+ "records_pre_dendrite": 61282,
+ "records_pre_soma": 7000,
+ "records_pre_unknown": 4034,
+ "records_pre_other": 275,
+ "note": "pairs_axon.csv = tylko rekordy z presynapta o klasie AXON"
+}
