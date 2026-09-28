@@ -21,6 +21,7 @@ import argparse
 import json
 import math
 import os
+from typing import Any, cast
 
 import numpy as np
 from scipy.stats import f as f_dist
@@ -75,7 +76,7 @@ def cmd_run(a):
             raise SystemExit(f"niezgodnosc z geom.json: {k}={check[k]} vs ref={check[f'{k}_ref']}")
 
     absT, absR = np.abs(T), np.abs(resid)
-    rho, p_rho = spearmanr(absT, absR)
+    rho, p_rho = cast(Any, spearmanr(absT, absR))
 
     med = float(np.median(absT))
     order = np.argsort(absT)
@@ -108,9 +109,9 @@ def cmd_run(a):
             cnt += 1
     p_perm = (cnt + 1) / (NPERM + 1)
 
-    rho_T_delta, p_T_delta = spearmanr(absT, delta)
-    rho_T_x, p_T_x = spearmanr(absT, x)
-    rho_R_delta, p_R_delta = spearmanr(delta, resid)
+    rho_T_delta, p_T_delta = cast(Any, spearmanr(absT, delta))
+    rho_T_x, p_T_x = cast(Any, spearmanr(absT, x))
+    rho_R_delta, p_R_delta = cast(Any, spearmanr(delta, resid))
     partial_rho = partial_spearman(absT, absR, delta)
 
     out = {

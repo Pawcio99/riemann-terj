@@ -10,6 +10,7 @@ checked empirically by halving h and doubling dps, see src.test3]. Derivatives a
 integrand: d/dx -> -u sin, d^2/dx^2 -> -u^2 cos, d/dt -> u^2 (so H_t = -H_xx).
 """
 import math
+from typing import Any
 
 import mpmath as mp
 
@@ -69,6 +70,7 @@ class HeatFlow:
                 w[0] = w[0] / 2
                 self._w = [x * self.h for x in w]
             self._t = t
+        assert self._w is not None
         return self._w
 
     def derivs(self, x, t):
@@ -90,7 +92,7 @@ class HeatFlow:
         return self.derivs(x, t)[0]
 
 
-def h_quad(z, t, dps):
+def h_quad(z, t, dps) -> Any:
     """Reference: mp.quad of the defining integral, split at k*pi/z."""
     with mp.workdps(dps):
         z = mp.mpf(z)

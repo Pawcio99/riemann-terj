@@ -16,6 +16,7 @@ import argparse
 import json
 import math
 import os
+from typing import Any, cast
 
 import numpy as np
 from scipy.stats import spearmanr
@@ -42,8 +43,8 @@ def cmd_run(a):
     resid = np.array([math.log(r["ratio_obs"]) - math.log(r["ratio_pred"]) for r in rows])
     gaps = [r["gap"] for r in rows]
 
-    rho_T, p_T = spearmanr(neff, np.abs(T))
-    rho_R, p_R = spearmanr(neff, np.abs(resid))
+    rho_T, p_T = cast(Any, spearmanr(neff, np.abs(T)))
+    rho_R, p_R = cast(Any, spearmanr(neff, np.abs(resid)))
 
     out = {
         "n": n, "gaps": gaps,

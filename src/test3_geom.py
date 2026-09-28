@@ -16,6 +16,7 @@ import argparse
 import json
 import math
 import os
+from typing import Any
 
 import matplotlib
 
@@ -134,7 +135,7 @@ def main():
     def analyse(rs, tag):
         yall = np.log(arr(rs, "ratio_obs"))
         valid = np.isfinite(arr(rs, "ratio_pred")) & np.isfinite(arr(rs, "ratio_pred_nn"))
-        res = dict(n=len(rs), n_valid=int(valid.sum()), n_pred_inf=int((~np.isfinite(arr(rs, "ratio_pred"))).sum()),
+        res: dict[str, Any] = dict(n=len(rs), n_valid=int(valid.sum()), n_pred_inf=int((~np.isfinite(arr(rs, "ratio_pred"))).sum()),
                    n_pred_nn_inf=int((~np.isfinite(arr(rs, "ratio_pred_nn"))).sum()),
                    T_negative=int((arr(rs, "T") < 0).sum()),
                    x_ge_1_gaps=[r["gap"] for r in rs if r["x_ge_1"]])
@@ -155,7 +156,7 @@ def main():
                 res[key] = None
                 continue
             lx = np.log(arr(rv, col))
-            f = ols(lx[:, None], y)
+            f: dict[str, Any] = ols(lx[:, None], y)
             f["beta_ci95"] = boot_slope(lx, y, rng)
             f["huber"] = huber_fit(lx, y)
             r0 = y - lx
@@ -164,7 +165,7 @@ def main():
             res[key] = f
         return res
 
-    out = dict(seed=SEED, n_boot=NBOOT, n_zeros=N, sets=dict(primary=len(prim), extended=len(ext), cautious=len(cautious)),
+    out: dict[str, Any] = dict(seed=SEED, n_boot=NBOOT, n_zeros=N, sets=dict(primary=len(prim), extended=len(ext), cautious=len(cautious)),
                analyses={"primary": analyse(prim, "primary"), "cautious": analyse(cautious, "cautious"),
                          "extended": analyse(ext, "extended")})
     out["neighbor_zero_removed_first"] = [dict(gap=r["gap"], status=r["status"], events=r["neighbor_zero_events"],

@@ -117,7 +117,7 @@ def cmd_check(a):
     for w, tag in ((0, "dens"), (1, "loc")):
         z = np.load(a.table)
         nodes, cdf = z["nodes"], z["cdf"][w]
-        loo = {}
+        loo: dict[int, float] = {}
         for k in range(3, 31):
             keep = nodes != k
             tmp = a.out + ".tmp.npz"
@@ -131,7 +131,7 @@ def cmd_check(a):
         d = cdf[big] - cdf[nodes == 128]
         coef = (u @ d) / (u @ u)
         res = np.abs(d - np.outer(u, coef)).max()
-        out[tag] = {"loo_max": max(loo.values()), "loo_worst_k": max(loo, key=loo.get), "loo": loo,
+        out[tag] = {"loo_max": max(loo.values()), "loo_worst_k": max(loo, key=loo.__getitem__), "loo": loo,
                     "lin_resid_max_N_ge_15": float(res), "noise_expect": 0.5 / np.sqrt(float(z["ns"]))}
     json.dump(out, open(a.out, "w"), indent=1)
     for t, r in out.items():

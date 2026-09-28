@@ -22,6 +22,7 @@ import argparse
 import json
 import time
 from multiprocessing import Pool
+from typing import cast
 
 import mpmath as mp
 import numpy as np
@@ -38,7 +39,8 @@ def hump(eng, t, x0, w, s, ngrid):
     Returns (x, g = sH(x), dg/dt)."""
     xs = np.linspace(x0 - w, x0 + w, ngrid)
     d = [float(eng.derivs(x, t)[1]) for x in xs]
-    roots = [brentq(lambda x: float(eng.derivs(x, t)[1]), xs[k], xs[k + 1], xtol=1e-13, rtol=1e-14)
+    roots = [cast(float, brentq(lambda x: float(eng.derivs(x, t)[1]), xs[k], xs[k + 1], xtol=1e-13,
+                                rtol=np.float64(1e-14)))
              for k in range(ngrid - 1) if d[k] * d[k + 1] < 0]
     if not roots:
         raise Absorbed
@@ -63,7 +65,7 @@ def track_zero(eng, x0, t_end, dt0=0.1, dt_min=0.0125):
     while t > t_end + 1e-12:
         dtn = min(dt, t - t_end)
         tn = t - dtn
-        pred = x if xp is None else x + (x - xp) * (dtn / (tp - t))
+        pred = x if xp is None or tp is None else x + (x - xp) * (dtn / (tp - t))
         y, ok = mp.mpf(pred), False
         for _ in range(12):
             h0, h1, _ = eng.derivs(y, tn)
@@ -130,7 +132,7 @@ def pair_tc(job):
     bracket, status = None, "lost"
     while True:
         dt = dt_max if sl <= 0 else min(dt_max, max(dt_min, 0.6 * g / sl))
-        got = None
+        got, tn = None, t
         while got is None:
             tn = t - dt
             if tn < tmin:
@@ -154,7 +156,8 @@ def pair_tc(job):
     if bracket is not None:
         tp, tn, xp = bracket
         try:
-            tc = brentq(lambda tt: hump(eng, tt, xp, w, s, ngrid)[1], tn, tp, xtol=1e-12, rtol=1e-14)
+            tc = cast(float, brentq(lambda tt: hump(eng, tt, xp, w, s, ngrid)[1], tn, tp, xtol=1e-12,
+                                    rtol=np.float64(1e-14)))
             xstar = hump(eng, tc, xp, w, s, ngrid)[0]
             hi = _hi()
             xh = newton(hi, mp.mpf(xstar), tc)

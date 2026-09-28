@@ -20,6 +20,7 @@ import json
 import math
 import time
 from multiprocessing import Pool
+from typing import Any, cast
 
 import mpmath as mp
 import numpy as np
@@ -124,7 +125,8 @@ def find_xstar(eng, t, a, b, xprev):
     roots = []
     for i in range(NGRID - 1):
         if d[i] * d[i + 1] < 0:
-            r = brentq(lambda x: float(eng.derivs(x, t)[1]), xs[i], xs[i + 1], xtol=1e-13, rtol=1e-14)
+            r = cast(float, brentq(lambda x: float(eng.derivs(x, t)[1]), xs[i], xs[i + 1], xtol=1e-13,
+                                   rtol=np.float64(1e-14)))
             roots.append(r)
     if not roots:
         raise Absorbed
@@ -141,7 +143,7 @@ def gap_tc(args):
     tc0 = -(b - a) ** 2 / 8
     rec = dict(gap=i + 1, z_lo=a, z_hi=b, tc0=tc0)
     s = 1.0 if float(eng.H(0.5 * (a + b), 0.0)) > 0 else -1.0
-    state = dict(x=None)
+    state: dict[str, Any] = dict(x=None)
 
     def g(t):
         x = find_xstar(eng, t, a, b, state["x"])
@@ -174,8 +176,8 @@ def gap_tc(args):
     if bracket is not None:
         state["x"] = state.get("xprev_ok")
         try:
-            tc = brentq(g, bracket[1], bracket[0], xtol=1e-12, rtol=1e-14)
-            xstar = state["x"]
+            tc = cast(float, brentq(g, bracket[1], bracket[0], xtol=1e-12, rtol=np.float64(1e-14)))
+            xstar = cast(float, state["x"])
             # stability: double dps, half h; Newton correction dt = H/H_xx at x*
             hi = _hi()
             xh = newton(hi, mp.mpf(xstar), tc)

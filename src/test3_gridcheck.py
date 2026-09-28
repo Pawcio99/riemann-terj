@@ -7,6 +7,7 @@ Outcome key: t_c if the pair collides, otherwise the last time at which the hump
 import argparse
 import json
 import time
+from typing import Any
 
 from src.test3_gen import run_jobs
 
@@ -36,8 +37,8 @@ def main():
     res = run_jobs(jobs, a.workers, d["zeros"][-1] + 2, a.tmin)
     out, k = [], 0
     for r in recs:
-        base = dict(x0=r["path"][0][1] if r.get("path") else None, out=outcome(r), status=r["status"])
-        row = dict(pair=[r["i"] + 1, r["j"] + 1], gen=r["gen"], tracked=bool(r.get("zeros_at_start")), base=base, runs=[])
+        base: dict[str, Any] = dict(x0=r["path"][0][1] if r.get("path") else None, out=outcome(r), status=r["status"])
+        row: dict[str, Any] = dict(pair=[r["i"] + 1, r["j"] + 1], gen=r["gen"], tracked=bool(r.get("zeros_at_start")), base=base, runs=[])
         for f in facs:
             q = res[k]
             k += 1

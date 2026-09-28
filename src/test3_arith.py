@@ -15,6 +15,7 @@ import argparse
 import json
 import math
 import os
+from typing import Any, cast
 
 import mpmath as mp
 import numpy as np
@@ -109,12 +110,12 @@ def cmd_corr(a):
     info = build(rows)
     gv = gram_first_violation()
     ga = geom_arrays(rows)
-    out = dict(n=len(rows), trend=info, gram_law_violations_n_le_200=gv, candidates={})
+    out: dict[str, Any] = dict(n=len(rows), trend=info, gram_law_violations_n_le_200=gv, candidates={})
     for c in ("c1", "c2", "c3"):
         v = np.array([r[c] for r in rows])
-        cs = dict(mean=float(v.mean()), sd=float(v.std(ddof=1)), spearman={}, R2_geometry=None)
+        cs: dict[str, Any] = dict(mean=float(v.mean()), sd=float(v.std(ddof=1)), spearman={}, R2_geometry=None)
         for k, nm in (("delta", "ln_delta"), ("dL", "ln_dL"), ("dR", "ln_dR"), ("x", "x")):
-            rho, p = spearmanr(v, ga[k])
+            rho, p = cast(Any, spearmanr(v, ga[k]))
             cs["spearman"][nm] = dict(rho=float(rho), p=float(p))
         _, r2, r2loo = ols_resid(v, [ga["delta"], ga["dL"], ga["dR"]])
         cs["R2_geometry"] = dict(R2=r2, R2_loo=r2loo, predictors="ln delta, ln dL, ln dR")
@@ -145,10 +146,10 @@ def detrend(x, y, kind):
 
 
 def perm_p(r, c, rng):
-    obs = spearmanr(r, c)[0]
+    obs = cast(Any, spearmanr(r, c))[0]
     cnt = 0
     for _ in range(NPERM):
-        if abs(spearmanr(r, rng.permutation(c))[0]) >= abs(obs) - 1e-12:
+        if abs(cast(Any, spearmanr(r, rng.permutation(c)))[0]) >= abs(obs) - 1e-12:
             cnt += 1
     return float(obs), (cnt + 1) / (NPERM + 1)
 
@@ -164,23 +165,25 @@ def cmd_test(a):
     d = json.load(open(R + "geom.json"))
     cautious = {r["gap"] for r in d["rows"] if r["status"] == "collided" and not r["neighbor_zero_removed_first"]
                 and r["gap"] != 55}
-    out = dict(seed=SEED, n_perm=NPERM, alpha_bonferroni=ALPHA, sets={}, note="p is two-sided permutation p; primary = isotonic")
+    out: dict[str, Any] = dict(seed=SEED, n_perm=NPERM, alpha_bonferroni=ALPHA, sets={}, note="p is two-sided permutation p; primary = isotonic")
     for setname, rs in (("primary_36", rows), ("cautious_21", [r for r in rows if r["gap"] in cautious])):
         ga = geom_arrays(rs)
-        so = dict(n=len(rs), min_detectable_abs_rho_80pct=min_detectable(len(rs)), detrend={})
+        so: dict[str, Any] = dict(n=len(rs), min_detectable_abs_rho_80pct=min_detectable(len(rs)), detrend={})
         G = [ga["delta"], ga["dL"], ga["dR"], ga["x"]]
         for kind in ("isotonic", "spline"):
             r = detrend(ga["x"], ga["y"], kind)
-            trace = {nm: dict(zip(("rho", "p"), map(float, spearmanr(r, ga[k]))))
-                     for k, nm in (("delta", "ln_delta"), ("dL", "ln_dL"), ("dR", "ln_dR"))}
-            block = dict(resid_sd=float(r.std(ddof=1)), resid_range=[float(r.min()), float(r.max())],
+            trace = {}
+            for k, nm in (("delta", "ln_delta"), ("dL", "ln_dL"), ("dR", "ln_dR")):
+                rho, p = cast(Any, spearmanr(r, ga[k]))
+                trace[nm] = dict(rho=float(rho), p=float(p))
+            block: dict[str, Any] = dict(resid_sd=float(r.std(ddof=1)), resid_range=[float(r.min()), float(r.max())],
                          leftover_geometry_trace=trace, candidates={})
             rng = np.random.default_rng(SEED)
             for c in ("c1", "c2", "c3"):
                 cv = np.array([q[c] for q in rs])
                 cperp, _, _ = ols_resid(cv, G)
                 rho, p = perm_p(r, cperp, rng)
-                rho_raw = float(spearmanr(r, cv)[0])
+                rho_raw = float(cast(Any, spearmanr(r, cv))[0])
                 block["candidates"][c] = dict(rho_partial=rho, p_perm=p, rho_raw=rho_raw,
                                               significant_bonferroni=bool(p < ALPHA))
             so["detrend"][kind] = block
