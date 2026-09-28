@@ -1,0 +1,6 @@
+# Wersje, na których 2026-09-28 zweryfikowano powtarzalność (Python 3.14.4). requirements.txt zawiera tylko dolne granice.
+python-flint==0.9.0
+mpmath==1.4.1
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2

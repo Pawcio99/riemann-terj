@@ -6,7 +6,7 @@ Analizy poza rejestrem przewidywań TERJ. Dane nie są redystrybuowane; źródł
 
 ### C. elegans (`elegans/`)
 
-Wymaga pliku `SI5_connectome_July2020.xlsx` (Cook i in. 2019, WormWiring) w katalogu `elegans/`. Notatki: `NOTATKA.md`, `raport2.md`, `NOTATKA3.md`, `NOTATKA4.md`; prerejestracje `prereg*.md` z sumami SHA-256 w `prereg*.sha256`.
+Wymaga pliku `SI5_connectome_July2020.xlsx` (Cook i in. 2019, WormWiring) w katalogu `elegans/`. Źródło pliku wejściowego: <https://wormwiring.org/si/SI%205%20Connectome%20adjacency%20matrices%2C%20corrected%20July%202020.xlsx>; adres sprawdzony 2026-09-28 (HTTP 200, 4 188 190 B, tyle samo co plik użyty w analizie; daty pobrania nie zapisano). Notatki: `NOTATKA.md`, `raport2.md`, `NOTATKA3.md`, `NOTATKA4.md`; prerejestracje `prereg*.md` z sumami SHA-256 w `prereg*.sha256`.
 
 ```
 cd elegans
@@ -23,7 +23,7 @@ python round4_reciprocity.py
 
 ### H01 (`h01/`)
 
-Skrypty strumieniują pliki synaps z publicznego bucketu H01 i wymagają pliku `somas.csv` z tego samego wydania. Notatka z wynikami: `NOTATKA_H01.md`. Małe pliki wynikowe leżą w `parts/`, `parts2/` i `typecheck.json`. Pierwszy przebieg (`parts/`) powstał z `h01_pairs.py`, a drugi (`parts2/`, z podziałem na klasę miejsca presynaptycznego) z `h01_pairs2.py`. Oba dają te same sumy: 73 745 par i 112 344 rekordy. `h01_pairs.py` jest tu w wersji z łatką. Łatka (`h01_pairs.patch`, wynik `diff` względem wersji pierwotnej) dodaje rzutowanie identyfikatorów i współrzędnych, które w JSON-ach są tekstami, na liczby.
+Skrypty strumieniują pliki synaps z publicznego bucketu H01 i wymagają pliku `somas.csv` z tego samego wydania. Źródło pliku wejściowego: <https://storage.googleapis.com/h01-release/data/20210601/c3/tables/somas.csv>; adres sprawdzony 2026-09-28 (HTTP 200, 6 258 384 B, tyle samo co plik użyty w analizie; daty pobrania nie zapisano). Notatka z wynikami: `NOTATKA_H01.md`. Małe pliki wynikowe leżą w `parts/`, `parts2/` i `typecheck.json`. Pierwszy przebieg (`parts/`) powstał z `h01_pairs.py`, a drugi (`parts2/`, z podziałem na klasę miejsca presynaptycznego) z `h01_pairs2.py`. Oba dają te same sumy: 73 745 par i 112 344 rekordy. `h01_pairs.py` jest tu w wersji z łatką. Łatka (`h01_pairs.patch`, wynik `diff` względem wersji pierwotnej) dodaje rzutowanie identyfikatorów i współrzędnych, które w JSON-ach są tekstami, na liczby.
 
 ```
 cd h01
