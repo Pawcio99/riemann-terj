@@ -112,4 +112,15 @@ Każdy wpis: data, etap, najważniejsze liczby, komenda odtwarzająca, status. N
 - [FAKT NUMERYCZNY, eksploracyjny] Spadek r̃ części lustrzanie symetrycznej (0,4306) i podwyższone IPR (0,0748 wobec 0,0112 dla GOE) występują w podobnej skali w modelu zerowym (0,4330 ± 0,0202, percentyl 46,8; IPR 0,0667 ± 0,0044, percentyl 97,4).
 - [HIPOTEZA] Sektor nieparzysty L/R (88 poziomów): r̃ = 0,4325 wobec 0,5083 ± 0,0328, percentyl 1,8. Powstał w rundzie eksploracyjnej z kilkoma porównaniami naraz; przy około 8 niezależnych porównaniach szansa na co najmniej jedną wartość poniżej 2. percentyla wynosi około 15% (1 − 0,98⁸ ≈ 0,149), więc wymaga osobnego, prerejestrowanego testu.
 - Ograniczenia: jedna realizacja widma jednego zwierzęcia; macierz synaps chemicznych przygotowana, ale niezbadana; P(s) po rozwinięciu wielomianem (stopnie 5, 7, 9) nie działa z powodu dwóch skrajnych wartości własnych (niedodatnie odstępy).
-- Dane i skrypty leżą poza repozytorium, w katalogu dane-elegans/ obok projektu (notatka zamykająca NOTATKA.md tamże), więc te liczby nie są odtwarzalne z riemann-terj i nie należą do REPORT_*.md.
+- Skrypty i notatki: analizy-poboczne/; dane nie są redystrybuowane (źródło: Cook i in. 2019).
+
+## Poza projektem: C. elegans, macierz synaps chemicznych (2026-09-28; rundy 3 i 4, eksploracja poza rejestrem przewidywań TERJ)
+- Dane: skierowana ważona macierz synaps chemicznych hermafrodyty (272 neurony, 3355 krawędzi bez autaps); statystyka główna: zespolony stosunek odstępów ⟨cos θ⟩, wybrana w kalibracji przed liczeniem na danych (prereg3.md, aneks). Przy kalibracji kontrola zgodności ⟨cos θ⟩ z wartościami literaturowymi nie przeszła na pełnym zbiorze punktów (efekt brzegowy przy ~130 punktach), więc kryterium przeformułowano na punkty wewnętrzne przed liczeniem na danych i odnotowano to jawnie w aneksie.
+- [FAKT NUMERYCZNY, eksploracyjny] ⟨cos θ⟩ = −0,1886 wobec −0,1220 ± 0,0640 w 2000 grafach o tych samych stopniach wejściowych i wyjściowych (z = −1,04, percentyl 15,7), czyli bez wyróżnienia względem modelu zerowego, zgodnie z prerejestracją.
+- [FAKT NUMERYCZNY, eksploracyjny] Opisowo: liczba wartości rzeczywistych 40 wobec 26,4 ± 3,5. Po dodaniu wzajemności do modelu zerowego (603 pary wzajemne w danych wobec 126,3 ± 9,6) wynosi 40 wobec 31,3 ± 3,9 (z = +2,22), więc hipoteza z prereg4.md nie została potwierdzona według zapisanego kryterium |z| < 2; nadmiar liczony jako różnica danych i średniej modelu zmniejszył się o około jedną trzecią dla macierzy ważonej (13,6 → 8,7) i o ponad połowę dla binarnej (11,8 → 4,5).
+- [HIPOTEZA] Nadmiar wartości rzeczywistych: wynik graniczny, do replikacji (np. na samcu); składowa dotycząca symetrii lustrzanej L/R nietestowana. Ograniczenia: jedno zwierzę, jedna realizacja widma.
+- Skrypty i notatki: analizy-poboczne/; dane nie są redystrybuowane (źródło: Cook i in. 2019).
+
+## Poza projektem: fragment kory człowieka H01 (2026-09-28; analiza poza rejestrem przewidywań TERJ)
+- Kod i notatka (NOTATKA_H01.md): analizy-poboczne/h01/.
+- Dane nie są redystrybuowane (źródło: zbiór H01, Shapson-Coe i in.).

@@ -2,6 +2,10 @@
 
 Numeryczna eksploracja hipotezy Riemanna przez geometrię widmową i teorię macierzy losowych, prowadzona jako niezależny test przewidywań ramy teoretycznej TERJ. Zobacz PRZEDMOWA.md po znaczenie znaczników wiarygodności i aktualny stan przewidywań.
 
+Bilans projektu (co osiągnięto, czego nie wykazano, dokąd dalej): [docs/BILANS.md](docs/BILANS.md).
+
+Autor: Paweł Majsterek, niezależny badacz (Independent researcher), Kopenhaga, Dania. Kontakt: majsterek_pawel@proton.me
+
 ## Szybki start
 
     python3 -m venv .venv && source .venv/bin/activate

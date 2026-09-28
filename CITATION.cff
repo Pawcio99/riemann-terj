@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Jeśli używasz tego kodu lub wyników, zacytuj to repozytorium."
+title: "riemann-terj: numeryczny test przewidywań TERJ na zerach funkcji dzeta Riemanna"
+authors:
+  - family-names: Majsterek
+    given-names: Paweł
+    affiliation: "Independent researcher, Copenhagen, Denmark"
+    city: "Copenhagen"
+    country: "DK"
+license: MIT
+repository-code: "https://github.com/Pawcio99/riemann-terj"
