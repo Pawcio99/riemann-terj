@@ -21,8 +21,8 @@ Zasada: w raportach cytuj wyłącznie pozycje z tego pliku. Zdania o treści pra
 ## 2. Dynamika zer, pary Lehmera, dolne oszacowania Λ (Test 3)
 
 - [P] D. H. Lehmer, „On the roots of the Riemann zeta-function”, Acta Math. 95 (1956), 291–298. Wyjątkowo bliska para zer przy t ≈ 7005 (w naszych danych zera 6709 i 6710).
-- [Z] G. Csordas, T. S. Norfolk, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ”, Numer. Math. 52 (1987), 483–497, doi:10.1007/BF01400887 (rok wg Crossref; wpis miał 1988; tytuł w Crossref brzmi inaczej: „A low bound for the de Bruijn-newman constant ?”; zachowano tytuł z wpisu). Λ > −50.
-- [Z] H. J. J. te Riele, „A new lower bound for the de Bruijn–Newman constant”, Numer. Math. 58 (1990), 661–667 (rok wg Crossref; wpis miał 1991). Λ > −5.
+- [Z] G. Csordas, T. S. Norfolk, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ”, Numer. Math. 52 (1988), 483–497, doi:10.1007/BF01400887 (Crossref: published-print 1987-09; rok tomu niepotwierdzony; tytuł w Crossref brzmi inaczej: „A low bound for the de Bruijn-newman constant Λ”, zachowano tytuł z wpisu). Λ > −50.
+- [Z] H. J. J. te Riele, „A new lower bound for the de Bruijn–Newman constant”, Numer. Math. 58 (1991), 661–667 (Crossref: published-print 1990-12; rok tomu niepotwierdzony). Λ > −5.
 - [Z] G. Csordas, A. Ruttan, R. S. Varga, „The Laguerre inequalities with applications to a problem associated with the Riemann hypothesis”, Numer. Algorithms 1 (1991), 305–329. Λ > −0,0991.
 - [Z] T. S. Norfolk, A. Ruttan, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ. II”, w: A. A. Gonchar, E. B. Saff (red.), Progress in Approximation Theory, Springer, 1992, 403–418 (rozdział w książce; tom serii niepotwierdzony). Λ > −0,385.
 - [Z] G. Csordas, A. M. Odlyzko, W. Smith, R. S. Varga, „A new Lehmer pair of zeros and a new lower bound for the de Bruijn–Newman constant Λ”, Electron. Trans. Numer. Anal. 1 (1993), 104–111 (potwierdzone na stronie czasopisma etna.ricam.oeaw.ac.at/volumes/1993-2000/vol1/ dnia 2026-09-28; brak w Crossref). Λ > −5,895·10⁻⁹.
