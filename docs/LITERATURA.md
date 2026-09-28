@@ -21,7 +21,7 @@ Zasada: w raportach cytuj wyłącznie pozycje z tego pliku. Zdania o treści pra
 ## 2. Dynamika zer, pary Lehmera, dolne oszacowania Λ (Test 3)
 
 - [P] D. H. Lehmer, „On the roots of the Riemann zeta-function”, Acta Math. 95 (1956), 291–298. Wyjątkowo bliska para zer przy t ≈ 7005 (w naszych danych zera 6709 i 6710).
-- [Z] G. Csordas, T. S. Norfolk, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ”, Numer. Math. 52 (1988), 483–497, doi:10.1007/BF01400887 (Crossref: published-print 1987-09; rok tomu niepotwierdzony; tytuł w Crossref brzmi inaczej: „A low bound for the de Bruijn-newman constant Λ”, zachowano tytuł z wpisu). Λ > −50.
+- [Z] G. Csordas, T. S. Norfolk, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ”, Numer. Math. 52 (1988), 483–497, doi:10.1007/BF01400887 (Crossref: published-print 1987-09; rok tomu niepotwierdzony; tytuł w Crossref ma „low bound” zamiast „lower bound” oraz znak zapytania w miejscu Λ; zachowano tytuł z wpisu). Λ > −50.
 - [Z] H. J. J. te Riele, „A new lower bound for the de Bruijn–Newman constant”, Numer. Math. 58 (1991), 661–667 (Crossref: published-print 1990-12; rok tomu niepotwierdzony). Λ > −5.
 - [Z] G. Csordas, A. Ruttan, R. S. Varga, „The Laguerre inequalities with applications to a problem associated with the Riemann hypothesis”, Numer. Algorithms 1 (1991), 305–329. Λ > −0,0991.
 - [Z] T. S. Norfolk, A. Ruttan, R. S. Varga, „A lower bound for the de Bruijn–Newman constant Λ. II”, w: A. A. Gonchar, E. B. Saff (red.), Progress in Approximation Theory, Springer, 1992, 403–418 (rozdział w książce; tom serii niepotwierdzony). Λ > −0,385.
@@ -39,7 +39,7 @@ Zasada: w raportach cytuj wyłącznie pozycje z tego pliku. Zdania o treści pra
 - [P] J.-B. Bost, A. Connes, „Hecke algebras, type III factors and phase transitions with spontaneous symmetry breaking in number theory”, Selecta Math. (N.S.) 1 (1995), 411–457. Funkcja podziału ζ(β) i spontaniczne złamanie symetrii w β = 1.
 - [P] B. Julia, „Statistical theory of numbers”, w: Number Theory and Physics (Les Houches 1989), Springer Proc. Phys. 47 (1990). Gaz liczb pierwszych („primon gas”).
 - [P] D. Spector, „Supersymmetry and the Möbius inversion function”, Commun. Math. Phys. 127 (1990), 239–252. Funkcja Möbiusa jako (−1)^F w fermionowym gazie liczb pierwszych.
-- [Z] L. Erdős, B. Schlein, H.-T. Yau, „Universality of random matrices and local relaxation flow”, Invent. Math. 185 (2011), 75–119, doi:10.1007/s00222-010-0302-7 (rok wg Crossref). Relaksacja do lokalnej równowagi dla wartości własnych; analogia wykorzystywana w kontekście przepływu zer.
+- [Z] L. Erdős, B. Schlein, H.-T. Yau, „Universality of random matrices and local relaxation flow”, Invent. Math. 185 (2011), 75–119, doi:10.1007/s00222-010-0302-7 (Crossref: published-print 2011-07, online 2010-12-29). Relaksacja do lokalnej równowagi dla wartości własnych; analogia wykorzystywana w kontekście przepływu zer.
 
 ## 4. Statystyka zer a macierze losowe (Testy 1–2)
 
