@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this research or software, please cite it as below."
+title: "Neural Spectra: Global Spectral Reorganization with Preserved Local Beta=1 Statistics"
+type: software
+authors:
+  - family-names: "Majsterek"
+    given-names: "Paweł"
+version: "0.1.0"
+date-released: "2026-09-29"
+license: "LicenseRef-Neural-Spectra-Research-Attribution-1.0"
+repository-code: "https://github.com/Pawcio99/riemann-terj/tree/main/neural-spectra"
+url: "https://pawcio99.github.io/riemann-terj/neural-spectra/"
+abstract: >-
+  Reproducible numerical study of global and local spectral statistics of
+  Gram matrices W2^T W2 during training of multilayer perceptrons, including
+  true-label and shuffled-label controls, finite-size scaling, random-matrix
+  controls, and seed-level statistical inference.
