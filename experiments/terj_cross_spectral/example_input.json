@@ -1,0 +1,103 @@
+{
+  "schema": "terj-cross-spectral-v1",
+  "note": "Synthetic implementation check only. These values are not scientific results.",
+  "features": [
+    "mean_rtilde",
+    "median_rtilde",
+    "frac_small"
+  ],
+  "groups": [
+    {
+      "domain": "riemann",
+      "id": "R1",
+      "observed": {
+        "mean_rtilde": 0.605,
+        "median_rtilde": 0.602,
+        "frac_small": 0.012
+      },
+      "null": {
+        "mean_rtilde": {
+          "mean": 0.6,
+          "sd": 0.01
+        },
+        "median_rtilde": {
+          "mean": 0.6,
+          "sd": 0.012
+        },
+        "frac_small": {
+          "mean": 0.01,
+          "sd": 0.004
+        }
+      }
+    },
+    {
+      "domain": "riemann",
+      "id": "R2",
+      "observed": {
+        "mean_rtilde": 0.596,
+        "median_rtilde": 0.604,
+        "frac_small": 0.009
+      },
+      "null": {
+        "mean_rtilde": {
+          "mean": 0.6,
+          "sd": 0.01
+        },
+        "median_rtilde": {
+          "mean": 0.6,
+          "sd": 0.012
+        },
+        "frac_small": {
+          "mean": 0.01,
+          "sd": 0.004
+        }
+      }
+    },
+    {
+      "domain": "neural",
+      "id": "N1",
+      "observed": {
+        "mean_rtilde": 0.535,
+        "median_rtilde": 0.527,
+        "frac_small": 0.021
+      },
+      "null": {
+        "mean_rtilde": {
+          "mean": 0.53,
+          "sd": 0.012
+        },
+        "median_rtilde": {
+          "mean": 0.531,
+          "sd": 0.014
+        },
+        "frac_small": {
+          "mean": 0.02,
+          "sd": 0.006
+        }
+      }
+    },
+    {
+      "domain": "neural",
+      "id": "N2",
+      "observed": {
+        "mean_rtilde": 0.526,
+        "median_rtilde": 0.536,
+        "frac_small": 0.018
+      },
+      "null": {
+        "mean_rtilde": {
+          "mean": 0.53,
+          "sd": 0.012
+        },
+        "median_rtilde": {
+          "mean": 0.531,
+          "sd": 0.014
+        },
+        "frac_small": {
+          "mean": 0.02,
+          "sd": 0.006
+        }
+      }
+    }
+  ]
+}
