@@ -195,8 +195,12 @@ def main() -> None:
         atomic_download(str(spec["url"]), src)
         digest = sha256_file(src)
         size = src.stat().st_size
-        lines = first_text_lines(src, spec["compressed"])
-        verify_high_header(name, lines, int(spec["base"]))
+        if spec["holdout"] and not args.unlock_holdout:
+            # Strict holdout: do not parse or preview local numeric content.
+            lines = []
+        else:
+            lines = first_text_lines(src, spec["compressed"], n=7)
+            verify_high_header(name, lines, int(spec["base"]))
 
         rec = {
             "name": name,
@@ -209,7 +213,9 @@ def main() -> None:
             "base": str(spec["base"]),
             "holdout": bool(spec["holdout"]),
             "accuracy_note": spec["accuracy_note"],
-            "header_preview": lines[:8] if not spec["holdout"] else ["WITHHELD: strict holdout"],
+            "header_preview": lines[:7] if not spec["holdout"] else ["WITHHELD: strict holdout"],
+            "holdout_slice_start": 1808 if spec["holdout"] else None,
+            "holdout_slice_count": 8192 if spec["holdout"] else None,
         }
 
         if spec["holdout"] and not args.unlock_holdout:
@@ -219,16 +225,38 @@ def main() -> None:
             if spec["holdout"]:
                 print("WARNING: holdout has been explicitly unlocked")
             dest = converted / f"odlyzko_{name}.npz"
-            # For an explicitly unlocked holdout, permit conversion into converted/.
             if spec["holdout"]:
-                tmp_spec = dict(spec)
-                tmp_spec["holdout"] = False
-                old = TABLES[name]
-                TABLES[name] = tmp_spec
-                try:
-                    conv = convert_table(name, src, dest)
-                finally:
-                    TABLES[name] = old
+                # Final-analysis unlock: parse the source only now and persist only
+                # the predeclared unseen tail used as the strict holdout.
+                lines = first_text_lines(src, spec["compressed"], n=7)
+                verify_high_header(name, lines, int(spec["base"]))
+                vals = np.asarray(numeric_lines(src, spec["compressed"]), dtype=np.float64)
+                if vals.size != int(spec["count"]):
+                    raise RuntimeError(f"{name}: expected {spec['count']} values, found {vals.size}")
+                if not np.all(np.diff(vals) > 0):
+                    raise RuntimeError(f"{name}: values are not strictly increasing")
+                start = 1808
+                tail = vals[start:]
+                if tail.size != 8192:
+                    raise RuntimeError(f"{name}: strict holdout tail size mismatch: {tail.size}")
+                dest = converted / "odlyzko_1e22_strict_tail8192.npz"
+                if dest.exists():
+                    raise FileExistsError(f"refusing to overwrite converted holdout: {dest}")
+                np.savez(
+                    dest,
+                    base=str(spec["base"]),
+                    x=tail,
+                    start_index=str(int(spec["start_index"]) + start),
+                    source_url=spec["url"],
+                    source_sha256=sha256_file(src),
+                    source_offset_start=np.asarray(start, dtype=np.int64),
+                )
+                conv = {
+                    "converted": str(dest),
+                    "n": int(tail.size),
+                    "offset_first": float(tail[0]),
+                    "offset_last": float(tail[-1]),
+                }
             else:
                 conv = convert_table(name, src, dest)
             rec["action"] = "downloaded_hashed_converted"
