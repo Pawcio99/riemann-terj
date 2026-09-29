@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Wprowadzenie do projektu neural-spectra: od metodologii riemann-terj do badania globalnej i lokalnej struktury widm macierzy wagowych sieci neuronowych.">
+<title>Neural Spectra — od riemann-terj do widm uczonych sieci</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&family=Syncopate:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+
+<style>
+:root{
+  --bg:#05080f;
+  --bg2:#070c18;
+  --surface:#0d1525;
+  --panel:#111e38;
+  --border:rgba(255,255,255,.065);
+  --border-amber:rgba(255,180,60,.20);
+  --amber:#ffb43c;
+  --amber-dim:#b07a1a;
+  --amber-glow:rgba(255,180,60,.10);
+  --teal:#2ee8c8;
+  --teal-dim:#0d6b5a;
+  --teal-glow:rgba(46,232,200,.08);
+  --cyan:#60d4f8;
+  --violet:#b088f8;
+  --rose:#f86060;
+  --green:#7ae86e;
+  --text:#d0ddf0;
+  --text-mid:#7a90b8;
+  --text-mute:#3a4a68;
+  --font-body:'Cormorant Garamond',Georgia,serif;
+  --font-ui:'Josefin Sans',sans-serif;
+  --font-title:'Syncopate',sans-serif;
+  --font-mono:'Space Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:17px}
+body{
+  background:
+    radial-gradient(circle at 50% -20%,rgba(46,232,200,.05),transparent 30rem),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.9;
+  overflow-x:hidden;
+}
+#progress{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:linear-gradient(90deg,var(--teal-dim),var(--teal),var(--amber));
+  z-index:9999;
+}
+#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.62}
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:48px;padding:0 1.1rem;
+  display:flex;align-items:center;
+  background:rgba(5,8,15,.89);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  font-family:var(--font-ui);font-size:.51rem;
+  letter-spacing:.19em;text-transform:uppercase;
+}
+.nav-brand{
+  color:var(--amber);margin-right:auto;font-family:var(--font-title);
+  font-size:.56rem;letter-spacing:.25em;white-space:nowrap;
+}
+nav a{
+  color:var(--text-mute);text-decoration:none;height:48px;padding:0 .72rem;
+  display:flex;align-items:center;border-left:1px solid var(--border);
+  transition:.2s;
+}
+nav a:last-child{border-right:1px solid var(--border)}
+nav a:hover{color:var(--teal);background:var(--teal-glow)}
+#hero{
+  position:relative;z-index:1;min-height:96vh;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:6rem 2rem 4rem;overflow:hidden;
+}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-eyebrow{
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.32em;
+  color:var(--teal-dim);text-transform:uppercase;margin-bottom:2rem;
+  border:1px solid rgba(46,232,200,.16);display:inline-block;
+  padding:.35rem 1rem;border-radius:2px;
+}
+.hero-title{
+  font-family:var(--font-title);font-size:clamp(1.5rem,4.5vw,3.2rem);
+  color:#fff;line-height:1.16;margin-bottom:1.1rem;
+  text-shadow:0 0 80px rgba(46,232,200,.13)
+}
+.hero-title .accent{color:var(--amber)}
+.hero-sub{
+  max-width:720px;margin:0 auto 2.5rem;color:var(--text-mid);
+  font-size:1.15rem;font-style:italic;line-height:1.8
+}
+.bridge{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;
+  max-width:760px;margin:2.4rem auto 2.8rem
+}
+.bridge-card{
+  min-height:118px;padding:1.25rem 1.25rem;border-radius:12px;
+  border:1px solid var(--border);background:rgba(13,21,37,.86);
+  text-align:left
+}
+.bridge-card.left{border-color:rgba(176,136,248,.22)}
+.bridge-card.right{border-color:rgba(46,232,200,.22)}
+.bridge-tag{
+  display:block;font-family:var(--font-mono);font-size:.49rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text-mute);margin-bottom:.45rem
+}
+.bridge-card.left .bridge-tag{color:var(--violet)}
+.bridge-card.right .bridge-tag{color:var(--teal)}
+.bridge-title{font-family:var(--font-ui);font-size:.78rem;letter-spacing:.08em;color:#dce8ff}
+.bridge-body{font-size:.87rem;color:var(--text-mid);line-height:1.55;margin-top:.45rem}
+.bridge-arrow{font-family:var(--font-mono);color:var(--amber);font-size:1.2rem}
+.hero-link{
+  display:inline-block;text-decoration:none;color:var(--amber);
+  font-family:var(--font-mono);font-size:.61rem;letter-spacing:.12em;
+  padding:.7rem 1.05rem;border:1px solid var(--border-amber);border-radius:5px;
+  background:var(--amber-glow);transition:.2s
+}
+.hero-link:hover{transform:translateY(-2px);border-color:rgba(255,180,60,.5)}
+main{position:relative;z-index:1;max-width:930px;margin:0 auto;padding:0 1.8rem 7rem}
+.chapter{
+  margin-top:5rem;scroll-margin-top:60px;opacity:0;transform:translateY(20px);
+  transition:opacity .7s,transform .7s
+}
+.chapter.visible{opacity:1;transform:none}
+.ch-meta{display:flex;gap:.8rem;align-items:center;margin-bottom:.65rem;flex-wrap:wrap}
+.ch-num{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.24em;color:var(--teal-dim);
+  border:1px solid rgba(46,232,200,.18);padding:.18rem .65rem;border-radius:2px
+}
+.ch-tag{
+  font-family:var(--font-ui);font-size:.47rem;letter-spacing:.18em;color:var(--text-mute)
+}
+.ch-title{
+  font-family:var(--font-title);font-size:clamp(1.12rem,3vw,1.92rem);
+  line-height:1.28;color:#e8f0ff;margin-bottom:.35rem
+}
+.ch-sub{
+  font-size:.92rem;font-style:italic;color:var(--text-mute);
+  border-bottom:1px solid var(--border);padding-bottom:1.45rem;margin-bottom:1.75rem
+}
+p{margin-bottom:1.35rem}
+.lead{font-size:1.2rem;line-height:2;color:#b8cae8}
+em{color:var(--amber)}
+strong{font-weight:600;color:#e4eeff}
+.sec-title{
+  font-family:var(--font-ui);font-size:.66rem;letter-spacing:.19em;
+  color:var(--amber);margin:2.7rem 0 1rem;padding-left:.9rem;
+  border-left:2px solid var(--amber-dim);text-transform:uppercase
+}
+.snote,.warning,.hypothesis,.result{
+  margin:1.8rem 0;padding:1.15rem 1.35rem;border-radius:7px;position:relative
+}
+.snote{background:rgba(46,232,200,.04);border:1px solid rgba(46,232,200,.15)}
+.warning{background:rgba(248,96,96,.045);border:1px solid rgba(248,96,96,.18)}
+.hypothesis{background:rgba(176,136,248,.05);border:1px solid rgba(176,136,248,.20)}
+.result{background:rgba(255,180,60,.045);border:1px solid rgba(255,180,60,.18)}
+.box-label{
+  display:block;font-family:var(--font-mono);font-size:.48rem;letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:.4rem
+}
+.snote .box-label{color:var(--teal)}
+.warning .box-label{color:var(--rose)}
+.hypothesis .box-label{color:var(--violet)}
+.result .box-label{color:var(--amber)}
+.snote p,.warning p,.hypothesis p,.result p{font-size:.92rem;color:var(--text-mid);margin:0}
+.tag-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin:1.6rem 0 2.2rem}
+.tag-card{
+  padding:1.05rem 1.1rem;background:rgba(13,21,37,.72);
+  border:1px solid var(--border);border-radius:8px
+}
+.tag-code{
+  display:block;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.08em;
+  color:var(--amber);margin-bottom:.35rem
+}
+.tag-desc{font-size:.84rem;color:var(--text-mid);line-height:1.55}
+.flow{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:2rem 0
+}
+.flow-card{
+  position:relative;background:rgba(13,21,37,.74);border:1px solid var(--border);
+  padding:1.1rem 1rem;border-radius:10px;min-height:155px
+}
+.flow-n{
+  display:block;font-family:var(--font-mono);font-size:.48rem;color:var(--teal);
+  letter-spacing:.18em;margin-bottom:.4rem
+}
+.flow-title{
+  display:block;font-family:var(--font-ui);font-size:.68rem;color:#dce8ff;
+  letter-spacing:.07em;margin-bottom:.45rem
+}
+.flow-body{font-size:.82rem;color:var(--text-mid);line-height:1.52}
+.formula{
+  margin:1.8rem 0;padding:1.1rem 1.4rem;background:rgba(7,12,24,.92);
+  border:1px solid rgba(96,212,248,.17);border-radius:6px;
+  text-align:center;color:#a8cce8;font-family:var(--font-mono);font-size:.92rem
+}
+.formula-lbl{
+  display:block;font-family:var(--font-ui);font-size:.48rem;letter-spacing:.18em;
+  color:var(--teal-dim);text-transform:uppercase;margin-bottom:.45rem
+}
+.map-table{width:100%;border-collapse:collapse;margin:2rem 0;font-size:.88rem}
+.map-table th{
+  font-family:var(--font-ui);font-size:.53rem;letter-spacing:.16em;text-align:left;
+  color:var(--amber);padding:.7rem .8rem;border-bottom:1px solid rgba(255,180,60,.22);
+  background:rgba(255,180,60,.025)
+}
+.map-table td{padding:.82rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+.map-table tr:hover td{background:rgba(46,232,200,.025)}
+.mono{font-family:var(--font-mono);font-size:.75rem;color:var(--cyan)}
+.teal{color:var(--teal)}
+.violet{color:var(--violet)}
+.amber{color:var(--amber)}
+.rose{color:var(--rose)}
+blockquote{
+  margin:2rem 0;padding:1.55rem 1.9rem;background:rgba(46,232,200,.04);
+  border-left:2px solid var(--teal-dim);border-radius:0 8px 8px 0
+}
+blockquote p{margin:0;font-size:1.05rem;font-style:italic;color:#9bb7d2}
+.part-nav{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:4rem}
+.part-nav a{
+  text-decoration:none;color:var(--text-mute);font-family:var(--font-mono);
+  font-size:.55rem;letter-spacing:.13em;padding:.5rem .9rem;border:1px solid var(--border);
+  border-radius:4px;transition:.2s
+}
+.part-nav a:hover{color:var(--teal);border-color:rgba(46,232,200,.28)}
+footer{
+  position:relative;z-index:1;max-width:930px;margin:0 auto;
+  padding:2.5rem 1.8rem 4rem;border-top:1px solid var(--border);
+  color:var(--text-mute);font-size:.8rem
+}
+footer .mono{font-size:.62rem;color:var(--text-mute)}
+@media(max-width:820px){
+  nav a{display:none}
+  .bridge{grid-template-columns:1fr}
+  .bridge-arrow{transform:rotate(90deg)}
+  .flow{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .tag-grid,.flow{grid-template-columns:1fr}
+  main{padding-left:1.1rem;padding-right:1.1rem}
+  #hero{padding-left:1.1rem;padding-right:1.1rem}
+}
+
+/* ===== Integrated publication: Part II support styles ===== */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin:1.8rem 0}
+.card{padding:1.1rem;background:rgba(13,21,37,.74);border:1px solid var(--border);border-radius:10px}
+.card .k{font-family:var(--font-mono);font-size:.48rem;letter-spacing:.16em;color:var(--text-mute);text-transform:uppercase;display:block;margin-bottom:.4rem}
+.card .v{font-family:var(--font-title);font-size:1.05rem;color:#eaf2ff;display:block;margin-bottom:.35rem}
+.card .d{font-size:.83rem;color:var(--text-mid);line-height:1.5}
+.chartbox{margin:2.2rem 0;background:rgba(7,12,24,.82);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.charthead{padding:.8rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-ui);font-size:.54rem;letter-spacing:.17em;color:var(--teal-dim);text-transform:uppercase}
+.chartwrap{padding:1rem}
+svg.chart{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;padding:0 1rem 1rem;font-family:var(--font-mono);font-size:.53rem;color:var(--text-mute)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.35rem}
+.dot.true{background:var(--teal)} .dot.shuf{background:var(--amber)} .dot.ref{background:var(--violet)}
+.good{color:var(--green)} .mono{font-family:var(--font-mono);font-size:.73rem;color:var(--cyan)}
+.methodbox{margin:1.8rem 0;padding:1.15rem 1.35rem;border-radius:7px;position:relative;background:rgba(176,136,248,.045);border:1px solid rgba(176,136,248,.19)}
+.methodbox .box-label{color:var(--violet)}
+@media(max-width:820px){.cards{grid-template-columns:1fr}}
+
+</style>
+
+<meta name="description" content="Zintegrowana publikacja Neural Spectra / TERJ: geneza, metody, kontrole RMT, wyniki globalne i lokalne oraz formalna analiza statystyczna.">
+<title>Neural Spectra — publikacja zintegrowana</title>
+</head>
+<body>
+<div id="progress"></div>
+<canvas id="cosmos"></canvas>
+
+<nav>
+  <span class="nav-brand">NEURAL SPECTRA · TERJ</span>
+  <a href="#punkt-wyjscia">Geneza</a>
+  <a href="#przeniesienie">Most</a>
+  <a href="#eksperyment">Eksperyment</a>
+  <a href="#methods">Metody</a>
+  <a href="#global">Globalne</a>
+  <a href="#local">Lokalne</a>
+  <a href="#formal">Formalne</a>
+  <a href="#conclusion">Wnioski</a>
+</nav>
+
+
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Publikacja zintegrowana · wprowadzenie · metody · wyniki</div>
+    <h1 class="hero-title">Od zer Riemanna do <span class="accent">widm uczonych sieci</span></h1>
+    <p class="hero-sub">
+      Jedna publikacja łącząca kontekst metodologiczny projektu riemann-terj z pełnym
+      eksperymentem neural-spectra: od pytania, przez konstrukcję testów i kontrole RMT,
+      po formalną analizę wyników globalnych, lokalnych i finite-size.
+    </p>
+    <div class="bridge">
+      <div class="bridge-card left">
+        <span class="bridge-tag">część I · geneza</span>
+        <span class="bridge-title">riemann-terj → pytanie o strukturę relacji</span>
+        <div class="bridge-body">Punkt wyjścia, ograniczenia analogii i motywacja naukowa.</div>
+      </div>
+      <div class="bridge-arrow">⟶</div>
+      <div class="bridge-card right">
+        <span class="bridge-tag">część II · eksperyment</span>
+        <span class="bridge-title">W₂ᵀW₂ → kontrole → analiza formalna</span>
+        <div class="bridge-body">Metody, true/shuffled, finite-size i wyniki statystyczne.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+<section class="chapter" id="punkt-wyjscia">
+  <div class="ch-meta">
+    <span class="ch-num">I</span>
+    <span class="ch-tag">KONTEKST · RIEMANN · TEORIA MACIERZY LOSOWYCH · METODOLOGIA</span>
+  </div>
+  <h2 class="ch-title">Punkt wyjścia: nie odpowiedź, lecz sposób stawiania pytania</h2>
+  <p class="ch-sub">Dlaczego praca nad riemann-terj doprowadziła do eksperymentu z sieciami neuronowymi</p>
+
+  <p class="lead">
+    Projekt <em>riemann-terj</em> powstał z próby przełożenia szerokiej intuicji
+    relacyjnej na coś, co może zostać policzone, porównane z modelem zerowym
+    i — jeśli trzeba — odrzucone. Jego przedmiotem były zera funkcji dzeta Riemanna,
+    lecz jego najbardziej użytecznym rezultatem metodologicznym okazał się
+    sam sposób pracy: zamiast pytać, czym „jest” pojedynczy obiekt, pytaliśmy
+    o <strong>strukturę relacji pomiędzy wieloma obiektami</strong>.
+  </p>
+
+  <p>
+    W gałęzi riemann-terj naturalnym językiem takiego pytania stała się
+    teoria macierzy losowych. Zera funkcji dzeta są od dziesięcioleci badane
+    poprzez statystykę odstępów i porównania z klasami uniwersalności znanymi
+    z fizyki matematycznej. W tym projekcie przeprowadzono trzy niezależne linie
+    testów: statystykę odstępów zer, finite-size model CUE oraz dynamikę zderzeń
+    zer w przepływie ciepła. Wyniki publikowano także wtedy, gdy były negatywne
+    albo nierozstrzygające.
+  </p>
+
+  <div class="snote">
+    <span class="box-label">zasada przeniesiona do nowego projektu</span>
+    <p>
+      Z riemann-terj nie przenosimy gotowego wniosku o zerach funkcji dzeta.
+      Przenosimy protokół: <strong>zdefiniować obiekt, zdefiniować null model,
+      wybrać statystykę, zamrozić test, policzyć kontrolę i zaakceptować wynik
+      niezależnie od tego, czy pasuje do intuicji.</strong>
+    </p>
+  </div>
+
+  <div class="sec-title">Znaczniki wiarygodności</div>
+  <p>
+    Zachowujemy semantykę znaczników z projektu riemann-terj, ponieważ oddziela ona
+    warstwy wypowiedzi, które w projektach spekulatywno-obliczeniowych łatwo pomieszać.
+  </p>
+
+  <div class="tag-grid">
+    <div class="tag-card">
+      <span class="tag-code">[TWIERDZENIE]</span>
+      <div class="tag-desc">Wynik matematyczny lub fizyczny pochodzący z literatury, a nie z naszego eksperymentu.</div>
+    </div>
+    <div class="tag-card">
+      <span class="tag-code">[FAKT NUMERYCZNY]</span>
+      <div class="tag-desc">Własny, odtwarzalny wynik obliczeniowy z zamrożonym kodem, seedami i kontrolami.</div>
+    </div>
+    <div class="tag-card">
+      <span class="tag-code">[HIPOTEZA]</span>
+      <div class="tag-desc">Zdanie testowalne, dla którego dopuszczamy zarówno potwierdzenie, jak i wynik negatywny.</div>
+    </div>
+    <div class="tag-card">
+      <span class="tag-code">[ANALOGIA TERJ]</span>
+      <div class="tag-desc">Interpretacja pojęciowa. Nie jest równaniem, przewidywaniem ilościowym ani dowodem związku fizycznego.</div>
+    </div>
+  </div>
+</section><section class="chapter" id="przeniesienie">
+  <div class="ch-meta">
+    <span class="ch-num">II</span>
+    <span class="ch-tag">MOST METODOLOGICZNY · NIE TOŻSAMOŚĆ OBIEKTÓW</span>
+  </div>
+  <h2 class="ch-title">Co zostało przeniesione — i czego nie przenosimy</h2>
+  <p class="ch-sub">Zer Riemanna i wag sieci nie utożsamiamy; wspólny jest język statystycznej struktury widma</p>
+
+  <p>
+    Po zakończeniu pierwszych analiz naturalne stało się pytanie, czy ten sam język
+    spektralny można zastosować do zupełnie innego układu: nie do ustalonego
+    obiektu matematycznego, lecz do <strong>układu adaptacyjnego, który zmienia własną
+    strukturę podczas uczenia</strong>. Sieć neuronowa jest szczególnie interesująca,
+    ponieważ jej macierze wag są jednocześnie obiektem algebraicznym i zapisem
+    historii optymalizacji.
+  </p>
+
+  <p>
+    Most pomiędzy projektami jest zatem metodologiczny. W riemann-terj pytaliśmy,
+    czy statystyka położeń zer wykazuje określoną klasę korelacji. W neural-spectra
+    pytamy, czy trening zmienia statystyczną geometrię wartości własnych macierzy
+    zbudowanej z wag — oraz czy zmiana ta zachodzi jednakowo na wszystkich skalach.
+  </p>
+
+  <div class="warning">
+    <span class="box-label">granica interpretacji</span>
+    <p>
+      Zbieżność z klasą macierzy losowych nie oznacza fizycznego związku między
+      zerami Riemanna a sieciami neuronowymi. W projekcie Riemanna naturalnie
+      pojawia się klasa unitarna CUE/GUE. Dla rzeczywistej macierzy wagowej
+      $W$ i macierzy Grama $G=W^\top W$ naturalnym globalnym punktem odniesienia
+      jest realny zespół Wisharta, a lokalne korelacje należą do klasy
+      rzeczywistej $\beta=1$. To dwa różne problemy.
+    </p>
+  </div>
+
+  <blockquote>
+    <p>
+      Relacja między projektami nie brzmi „Riemann = sieć neuronowa”.
+      Brzmi: czy różne złożone układy można badać tym samym pytaniem o
+      globalną geometrię widma i lokalną klasę korelacji — bez zakładania,
+      że odpowiada za nie ten sam mechanizm?
+    </p>
+  </blockquote>
+</section><section class="chapter" id="eksperyment">
+  <div class="ch-meta">
+    <span class="ch-num">III</span>
+    <span class="ch-tag">OBIEKT · TRENING · TRUE/SHUFFLED · FINITE-SIZE</span>
+  </div>
+  <h2 class="ch-title">Co dokładnie zrobiliśmy</h2>
+  <p class="ch-sub">Od jednej macierzy wag do kontrolowanego eksperymentu wieloskalowego</p>
+
+  <p class="lead">
+    Badanym obiektem nie była aktywacja neuronu ani końcowa accuracy, lecz widmo
+    środkowej macierzy wagowej. Dla każdego checkpointu treningu braliśmy $W_2$
+    i budowaliśmy jej rzeczywistą macierz Grama:
+  </p>
+
+  <div class="formula">
+    <span class="formula-lbl">obiekt spektralny</span>
+    $$G = W_2^\top W_2.$$
+  </div>
+
+  <p>
+    Następnie oddzielaliśmy dwa poziomy opisu. <strong>Poziom globalny</strong>
+    mierzył koncentrację i kształt całego widma: stable rank, normę spektralną,
+    trace oraz udział największej wartości własnej. <strong>Poziom lokalny</strong>
+    badał mikrostrukturę sąsiednich odstępów w centralnych 50% widma za pomocą
+    bezwymiarowej statystyki consecutive gap ratio.
+  </p>
+
+  <div class="formula">
+    <span class="formula-lbl">lokalna statystyka bez unfoldingu</span>
+    $$\widetilde r_i=\frac{\min(s_i,s_{i+1})}{\max(s_i,s_{i+1})},
+    \qquad s_i=\lambda_{i+1}-\lambda_i.$$
+  </div>
+
+  <div class="flow">
+    <div class="flow-card">
+      <span class="flow-n">01 · INITIALIZATION</span>
+      <span class="flow-title">Losowy punkt startowy</span>
+      <div class="flow-body">Sprawdziliśmy, czy inicjalizacja zachowuje się jak naturalny finite-size null model.</div>
+    </div>
+    <div class="flow-card">
+      <span class="flow-n">02 · TRAINING</span>
+      <span class="flow-title">Śledzenie w czasie</span>
+      <div class="flow-body">Widmo analizowano w epokach 0, 1, 2, 5, 10, 20 i 50.</div>
+    </div>
+    <div class="flow-card">
+      <span class="flow-n">03 · CONTROL</span>
+      <span class="flow-title">True vs shuffled</span>
+      <div class="flow-body">Ta sama architektura i seedy, lecz permutowane etykiety treningowe, rozdzielają uczenie struktury od memorowania.</div>
+    </div>
+    <div class="flow-card">
+      <span class="flow-n">04 · FINITE-SIZE</span>
+      <span class="flow-title">96 → 256 → 512</span>
+      <div class="flow-body">Zwiększaliśmy szerokość, aby sprawdzić, czy obserwowany efekt nie jest artefaktem krótkiego widma.</div>
+    </div>
+  </div>
+
+  <table class="map-table">
+    <thead>
+      <tr><th>Szerokość $W_2$</th><th>Poziomy w centralnym bulku</th><th>Valid $r$-ratios</th><th>Rola</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">96 × 96</td><td>48</td><td>46</td><td>pilot i referencja finite-size</td></tr>
+      <tr><td class="mono">256 × 256</td><td>128</td><td>126</td><td>pierwsze skalowanie mocy lokalnej</td></tr>
+      <tr><td class="mono">512 × 512</td><td>256</td><td>254</td><td>najdłuższe widmo i najwęższe kontrole</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Każdy warunek miał dziesięć niezależnych seedów modelu. Nie łączyliśmy
+    pojedynczych odstępów z różnych sieci w jedną sztucznie powiększoną próbę:
+    jednostką replikacji pozostawał <strong>cały seed sieci</strong>.
+  </p>
+
+  <div class="sec-title">Kontrole macierzy losowych</div>
+  <p>
+    Lokalne statystyki porównano z czterema klasami kontrolnymi:
+    Poisson, real Wishart $\beta=1$, GOE oraz GUE. Dla $N=256$ i $N=512$
+    wygenerowano kontrole dokładnie dopasowane do wymiaru badanych macierzy.
+    Dzięki temu zgodności nie oceniano względem asymptotycznej liczby z podręcznika,
+    lecz względem rzeczywistego finite-size rozkładu dla tego samego $N$.
+  </p>
+</section><section class="chapter" id="pytania">
+  <div class="ch-meta">
+    <span class="ch-num">IV</span>
+    <span class="ch-tag">HIPOTEZY · FALSYFIKOWALNOŚĆ · SEMANTYKA NAUKOWA</span>
+  </div>
+  <h2 class="ch-title">Jakich wniosków szukaliśmy</h2>
+  <p class="ch-sub">Nie „czy sieć przypomina Riemanna”, lecz które własności widma są uczone, a które pozostają uniwersalne</p>
+
+  <p>
+    Eksperyment nie został zbudowany po to, by znaleźć dowolne podobieństwo.
+    Został zbudowany wokół rozdzielenia dwóch hipotez, które mogły dać
+    przeciwne wyniki.
+  </p>
+
+  <div class="hypothesis">
+    <span class="box-label">[HIPOTEZA] H₁ · globalna reorganizacja</span>
+    <p>
+      Jeśli optymalizacja nadaje macierzy wag strukturę, globalne widmo powinno
+      odchodzić od inicjalizacyjnego rozkładu losowego: stable rank powinien maleć,
+      a energia spektralna koncentrować się w mniejszej liczbie kierunków.
+    </p>
+  </div>
+
+  <div class="hypothesis">
+    <span class="box-label">[HIPOTEZA] H₂ · lokalna uniwersalność</span>
+    <p>
+      Nawet przy silnej deformacji globalnego widma lokalne korelacje między
+      sąsiednimi poziomami mogą pozostać w tej samej klasie $\beta=1$.
+      W takim przypadku trening zmieniałby makrostrukturę bez niszczenia
+      mikroskopowej klasy repulsji poziomów.
+    </p>
+  </div>
+
+  <div class="hypothesis">
+    <span class="box-label">[HIPOTEZA] H₃ · informacja zadania a memorowanie</span>
+    <p>
+      Porównanie true-label i shuffled-label miało sprawdzić, czy obserwowane
+      zmiany są związane z uczeniem struktury danych, czy są ogólniejszym skutkiem
+      optymalizacji zdolnej również do memorowania losowych etykiet.
+    </p>
+  </div>
+
+  <div class="sec-title">Co byłoby wynikiem negatywnym</div>
+  <p>
+    Projekt został przygotowany tak, aby mógł zakończyć się niepowodzeniem.
+    Gdyby globalne miary nie różniły się od inicjalizacji, hipoteza reorganizacji
+    zostałaby osłabiona. Gdyby lokalne statystyki systematycznie wychodziły poza
+    width-matched Wishart/GOE, hipoteza stabilnej klasy $\beta=1$ zostałaby
+    odrzucona. Gdyby true i shuffled dawały identyczne przebiegi we wszystkich
+    miarach, nie byłoby podstaw do przypisywania globalnej strukturze
+    jakiegokolwiek związku z informacją zadania.
+  </p>
+
+  <div class="snote">
+    <span class="box-label">semantyka naukowa</span>
+    <p>
+      „Zgodne z kontrolą” nie znaczy „udowodniono, że mechanizm jest taki sam”.
+      „Brak istotnej różnicy” nie znaczy „dowiedziono identyczności”.
+      „Uniwersalność” oznacza tu podobieństwo klasy statystycznej lokalnych korelacji,
+      a nie wspólne pochodzenie fizyczne badanych systemów.
+    </p>
+  </div>
+</section><section class="chapter" id="granice">
+  <div class="ch-meta">
+    <span class="ch-num">V</span>
+    <span class="ch-tag">TERJ · INTERPRETACJA · GRANICE WNIOSKOWANIA</span>
+  </div>
+  <h2 class="ch-title">Dlaczego to jest relatywne do TERJ</h2>
+  <p class="ch-sub">Relacja i geometria jako pytanie badawcze — nie jako gotowa odpowiedź</p>
+
+  <p class="lead">
+    W języku TERJ interesuje nas możliwość, że porządek układu nie musi być
+    zawarty w pojedynczym elemencie, lecz może ujawniać się dopiero w relacjach
+    pomiędzy elementami. Spektrum macierzy jest naturalnym miejscem, w którym
+    taki porządek można próbować mierzyć, ponieważ nie opisuje jednej wagi,
+    lecz skoordynowaną strukturę całego operatora.
+  </p>
+
+  <p>
+    W tym sensie neural-spectra jest kontynuacją <em>metody falsyfikacji intuicji</em>,
+    rozpoczętej w riemann-terj. Zamiast rozszerzać metaforę, próbujemy ją zawęzić
+    do pytań, które mają jednoznaczne odpowiedniki obliczeniowe. Jeżeli intuicja
+    relacyjna ma wartość naukową, musi przetrwać konfrontację z null modelami,
+    zmianą skali, kontrolą shuffled labels i formalną analizą statystyczną.
+  </p>
+
+  <div class="result">
+    <span class="box-label">most do części wynikowej</span>
+    <p>
+      Dalsza część publikacji nie pyta już „dlaczego warto było to sprawdzić”.
+      Pokazuje krok po kroku, co wydarzyło się z widmem $W_2^\top W_2$ podczas
+      treningu, które efekty przetrwały skalowanie $96\to256\to512$, a które
+      zniknęły po kontroli finite-size i korekcie wielokrotnych porównań.
+    </p>
+  </div>
+
+  <div class="warning">
+    <span class="box-label">[ANALOGIA TERJ] — ograniczenie</span>
+    <p>
+      Niniejszy projekt nie stanowi argumentu za hipotezą Riemanna, nie wyprowadza
+      sieci neuronowych z funkcji dzeta i nie dowodzi wspólnego mechanizmu
+      fizycznego. Jego związek z riemann-terj polega na wspólnej metodzie badania
+      relacyjnej struktury przez widma, modele zerowe i testy możliwe do obalenia.
+    </p>
+  </div>
+
+  </section>
+<section class="chapter" id="transition">
+  <div class="ch-meta">
+    <span class="ch-num">PRZEJŚCIE</span>
+    <span class="ch-tag">OD PYTANIA DO TESTU</span>
+  </div>
+  <h2 class="ch-title">Od motywacji do procedury</h2>
+  <p class="ch-sub">Poniżej zaczyna się część eksperymentalna tej samej publikacji</p>
+  <p class="lead">
+    Wprowadzenie ustanawia jedynie ramę pytania i granice interpretacji. Od tego miejsca
+    przechodzimy do zamrożonego protokołu, modeli zerowych, wyników oraz formalnej analizy
+    statystycznej. Wszystkie dalsze twierdzenia są oddzielane od analogii TERJ i odnoszą się
+    bezpośrednio do obliczeń wykonanych na macierzach wagowych sieci.
+  </p>
+</section>
+<section class="chapter" id="methods">
+  <div class="ch-meta"><span class="ch-num">VI</span><span class="ch-tag">PROTOKÓŁ · SIEĆ · DANE · REPLIKACJA</span></div>
+  <h2 class="ch-title">Metody: zamrożony eksperyment</h2>
+  <p class="ch-sub">Trzy szerokości, dwa warunki etykiet, dziesięć seedów i siedem checkpointów</p>
+
+  <p class="lead">
+    Rdzeń eksperymentu był celowo prosty. Użyliśmy sieci MLP z dwiema warstwami ukrytymi
+    i analizowaliśmy środkową macierz wagową $W_2$. Zmienialiśmy tylko szerokość ukrytych
+    warstw: 96, 256 i 512. Pozostałe elementy protokołu — dane, optymalizator, liczba epok,
+    seedy i definicje statystyk — pozostawały zamrożone.
+  </p>
+
+  <table class="map-table">
+    <thead><tr><th>Element</th><th>Ustawienie</th><th>Znaczenie</th></tr></thead>
+    <tbody>
+      <tr><td>Architektura</td><td class="mono">64 → N → N → 2</td><td>$N\in\{96,256,512\}$</td></tr>
+      <tr><td>Aktywacja</td><td class="mono">tanh</td><td>warstwy ukryte</td></tr>
+      <tr><td>Numeryka</td><td class="mono">float64</td><td>stabilność obliczeń spektralnych</td></tr>
+      <tr><td>Optymalizator</td><td class="mono">Adam, lr=1e−3</td><td>$\beta_1=0.9,\ \beta_2=0.999,\ \epsilon=10^{-8}$</td></tr>
+      <tr><td>Batch</td><td class="mono">128</td><td>stały we wszystkich eksperymentach</td></tr>
+      <tr><td>Epoki</td><td class="mono">50</td><td>checkpointy 0,1,2,5,10,20,50</td></tr>
+      <tr><td>Replikacja</td><td class="mono">10 seedów</td><td>seed sieci = jednostka obserwacji</td></tr>
+    </tbody>
+  </table>
+
+  <div class="methodbox">
+    <span class="box-label">syntetyczne zadanie klasyfikacyjne</span>
+    <p>
+      Wektor wejściowy miał 64 składowe, $x\sim\mathcal N(0,I_{64})$.
+      Etykieta była determinowana przez nieliniową funkcję
+      $1[x_1+0.8x_2x_3+0.5\sin(x_4)>0]$.
+      Zbiory train/validation/test miały odpowiednio 2048/512/1024 próbek.
+    </p>
+  </div>
+
+  <div class="sec-title">True labels i shuffled labels</div>
+  <p>
+    Każdy seed był uruchamiany w dwóch warunkach. W <strong>true labels</strong> sieć uczyła się
+    rzeczywistej reguły zadania. W <strong>shuffled labels</strong> permutowano wyłącznie etykiety
+    treningowe, zachowując te same dane, inicjalizacje i porządek minibatchy. Validation i test
+    pozostawały na prawdziwych etykietach. Dzięki temu różnica true–shuffled nie była różnicą
+    architektury ani inicjalizacji, lecz różnicą struktury informacji dostępnej podczas treningu.
+  </p>
+</section><section class="chapter" id="controls">
+  <div class="ch-meta"><span class="ch-num">VII</span><span class="ch-tag">RMT · WISHART · GOE · GUE · POISSON</span></div>
+  <h2 class="ch-title">Kontrole: co znaczy „losowe” w tym eksperymencie</h2>
+  <p class="ch-sub">Naturalny null zależy od obiektu, który mierzymy</p>
+
+  <p>
+    Analizowanym obiektem była dodatnio półokreślona macierz Grama
+    $G=W_2^\top W_2$. Z tego powodu globalnym punktem odniesienia nie jest arbitralna
+    macierz GOE, lecz realny zespół Wisharta. GOE i GUE traktowano jako kontrole
+    lokalnej klasy korelacji, a Poissona jako kontrolę braku level repulsion.
+  </p>
+
+  <div class="cards">
+    <div class="card"><span class="k">Poisson</span><span class="v">brak repulsji</span><div class="d">Kontrola dla niezależnych odstępów.</div></div>
+    <div class="card"><span class="k">Wishart / GOE</span><span class="v">β = 1</span><div class="d">Rzeczywista klasa lokalnych korelacji.</div></div>
+    <div class="card"><span class="k">GUE</span><span class="v">β = 2</span><div class="d">Kontrola klasy unitarnej, oczekującej silniejszej repulsji.</div></div>
+  </div>
+
+  <p>
+    Kontrole width-matched obejmowały 5000 realizacji każdej klasy dla $N=256$
+    oraz 5000 dla $N=512$. Dla $N=96$ wykorzystano wcześniejszy zestaw 10 000 realizacji
+    na klasę. Nie stosowano unfoldingu, a lokalną statystykę liczono wyłącznie
+    w centralnych 50% uporządkowanego widma.
+  </p>
+
+  <table class="map-table">
+    <thead><tr><th>N</th><th>Bulk levels</th><th>Spacings</th><th>Valid $\tilde r$</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">96</td><td>48</td><td>47</td><td>46</td></tr>
+      <tr><td class="mono">256</td><td>128</td><td>127</td><td>126</td></tr>
+      <tr><td class="mono">512</td><td>256</td><td>255</td><td>254</td></tr>
+    </tbody>
+  </table>
+
+  <div class="snote">
+    <span class="box-label">integralność kontroli</span>
+    <p>
+      W width-matched Monte Carlo nie wystąpiły NaN/Infinity, zerowe spacingi,
+      przypadki 0/0 ani pominięte ratios. Każda realizacja zachowała oczekiwaną
+      liczbę valid r-ratios.
+    </p>
+  </div>
+</section><section class="chapter" id="global">
+  <div class="ch-meta"><span class="ch-num">VIII</span><span class="ch-tag">WYNIK 1 · GLOBALNE WIDMO</span></div>
+  <h2 class="ch-title">Trening silnie reorganizuje globalne widmo</h2>
+  <p class="ch-sub">Efekt występuje dla true i shuffled oraz pozostaje obecny przy wszystkich szerokościach</p>
+
+  <p class="lead">
+    Najbardziej stabilnym wynikiem całego eksperymentu jest silna koncentracja globalnego widma.
+    W każdej szerokości i obu warunkach treningowych stable rank względny do szerokości
+    gwałtownie maleje, podczas gdy norma spektralna, trace/width oraz udział największej
+    wartości własnej rosną względem inicjalizacji.
+  </p>
+
+  <div class="chartbox">
+    <div class="charthead">Epoch 50 · stable rank / width</div>
+    <div class="chartwrap">
+      <svg class="chart" viewBox="0 0 820 300" role="img" aria-label="Stable rank divided by width for true and shuffled conditions">
+        <line x1="70" y1="245" x2="780" y2="245" stroke="rgba(255,255,255,.12)"/>
+        <line x1="70" y1="40" x2="70" y2="245" stroke="rgba(255,255,255,.12)"/>
+        <g font-family="Space Mono" font-size="13" fill="#7a90b8">
+          <text x="130" y="270">96</text><text x="375" y="270">256</text><text x="630" y="270">512</text>
+          <text x="20" y="245">0.00</text><text x="20" y="194">0.01</text><text x="20" y="143">0.02</text><text x="20" y="92">0.03</text><text x="20" y="41">0.04</text>
+        </g>
+        <polyline points="140,49 385,116 640,140" fill="none" stroke="#2ee8c8" stroke-width="4"/>
+        <circle cx="140" cy="49" r="6" fill="#2ee8c8"/><circle cx="385" cy="116" r="6" fill="#2ee8c8"/><circle cx="640" cy="140" r="6" fill="#2ee8c8"/>
+        <polyline points="140,48 385,130 640,158" fill="none" stroke="#ffb43c" stroke-width="4"/>
+        <circle cx="140" cy="48" r="6" fill="#ffb43c"/><circle cx="385" cy="130" r="6" fill="#ffb43c"/><circle cx="640" cy="158" r="6" fill="#ffb43c"/>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><span class="dot true"></span>true</span>
+      <span><span class="dot shuf"></span>shuffled</span>
+      <span>dane: 0.0383→0.0252→0.0204 (true); 0.0384→0.0224→0.0169 (shuffled)</span>
+    </div>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>Width</th><th>Warunek</th><th>Δ stable rank/N</th><th>Δ max eig/trace</th><th>Δ trace/N</th><th>Δ ||W||₂</th></tr></thead>
+    <tbody>
+      <tr><td>96</td><td>true</td><td class="rose">−0.22499</td><td class="good">+0.23210</td><td class="good">+0.45026</td><td class="good">+4.21091</td></tr>
+      <tr><td>96</td><td>shuffled</td><td class="rose">−0.22490</td><td class="good">+0.23169</td><td class="good">+0.65162</td><td class="good">+4.61643</td></tr>
+      <tr><td>256</td><td>true</td><td class="rose">−0.23180</td><td class="good">+0.13991</td><td class="good">+0.32503</td><td class="good">+5.28425</td></tr>
+      <tr><td>256</td><td>shuffled</td><td class="rose">−0.23461</td><td class="good">+0.15939</td><td class="good">+0.44384</td><td class="good">+6.06350</td></tr>
+      <tr><td>512</td><td>true</td><td class="rose">−0.23203</td><td class="good">+0.08791</td><td class="good">+0.25258</td><td class="good">+5.84183</td></tr>
+      <tr><td>512</td><td>shuffled</td><td class="rose">−0.23554</td><td class="good">+0.10772</td><td class="good">+0.33500</td><td class="good">+6.89332</td></tr>
+    </tbody>
+  </table>
+
+  <div class="result">
+    <span class="box-label">[FAKT NUMERYCZNY] formalny wynik etapu A</span>
+    <p>
+      Wszystkie 24 porównania epoch 0→50 miały 95% CI wykluczające zero i wszystkie
+      przeszły korektę BH-FDR z q=0.001953. Globalna reorganizacja jest więc silna,
+      powtarzalna i niespecyficzna dla prawidłowych etykiet.
+    </p>
+  </div>
+</section><section class="chapter" id="local">
+  <div class="ch-meta"><span class="ch-num">IX</span><span class="ch-tag">WYNIK 2 · LOKALNE KORELACJE</span></div>
+  <h2 class="ch-title">Lokalna klasa β=1 pozostaje stabilna</h2>
+  <p class="ch-sub">Makrostruktura zmienia się dramatycznie, mikrostruktura odstępów pozostaje w tym samym reżimie</p>
+
+  <p>
+    Dla lokalnych korelacji kluczowa była statystyka consecutive gap ratio.
+    Wartości kontrolne real Wishart i GOE były praktycznie nierozróżnialne i
+    wraz ze wzrostem $N$ ich standaryzowana różnica jeszcze malała:
+  </p>
+
+  <div class="formula">
+    <span class="formula-lbl">Wishart kontra GOE · standaryzowana różnica mean $\tilde r$</span>
+    $$0.01667 \;\longrightarrow\; 0.01017 \;\longrightarrow\; 0.00596
+    \qquad (N=96\to256\to512).$$
+  </div>
+
+  <div class="chartbox">
+    <div class="charthead">Epoch 50 · mean r-tilde na tle β=1</div>
+    <div class="chartwrap">
+      <svg class="chart" viewBox="0 0 820 310" role="img" aria-label="Mean r tilde for true and shuffled vs beta 1 reference">
+        <line x1="70" y1="250" x2="780" y2="250" stroke="rgba(255,255,255,.12)"/>
+        <line x1="70" y1="40" x2="70" y2="250" stroke="rgba(255,255,255,.12)"/>
+        <g font-family="Space Mono" font-size="13" fill="#7a90b8">
+          <text x="130" y="276">96</text><text x="375" y="276">256</text><text x="630" y="276">512</text>
+          <text x="16" y="250">0.50</text><text x="16" y="198">0.52</text><text x="16" y="146">0.54</text><text x="16" y="94">0.56</text><text x="16" y="42">0.58</text>
+        </g>
+        <line x1="70" y1="171" x2="780" y2="171" stroke="#b088f8" stroke-width="3" stroke-dasharray="10 8"/>
+        <text x="605" y="160" font-family="Space Mono" font-size="12" fill="#b088f8">β=1 ≈ 0.530–0.531</text>
+        <polyline points="140,219 385,117 640,181" fill="none" stroke="#2ee8c8" stroke-width="4"/>
+        <circle cx="140" cy="219" r="6" fill="#2ee8c8"/><circle cx="385" cy="117" r="6" fill="#2ee8c8"/><circle cx="640" cy="181" r="6" fill="#2ee8c8"/>
+        <polyline points="140,153 385,210 640,142" fill="none" stroke="#ffb43c" stroke-width="4"/>
+        <circle cx="140" cy="153" r="6" fill="#ffb43c"/><circle cx="385" cy="210" r="6" fill="#ffb43c"/><circle cx="640" cy="142" r="6" fill="#ffb43c"/>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><span class="dot true"></span>true</span>
+      <span><span class="dot shuf"></span>shuffled</span>
+      <span><span class="dot ref"></span>real Wishart / GOE β=1</span>
+    </div>
+  </div>
+
+  <table class="map-table">
+    <thead><tr><th>N</th><th>True epoch 50</th><th>Shuffled epoch 50</th><th>Wishart mean</th><th>Wniosek lokalny</th></tr></thead>
+    <tbody>
+      <tr><td>96</td><td>0.5122</td><td>0.5376</td><td>0.5304</td><td>zgodne w skali finite-size</td></tr>
+      <tr><td>256</td><td>0.5509</td><td>0.5158</td><td>0.5302</td><td>brak stabilnego odchylenia po FDR</td></tr>
+      <tr><td>512</td><td>0.5262</td><td>0.5411</td><td>0.5308</td><td>zgodne z β=1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="result">
+    <span class="box-label">[FAKT NUMERYCZNY] formalny wynik etapu C</span>
+    <p>
+      Mean i median $\tilde r$ nie wykazały systematycznego odchylenia od width-matched
+      real Wishart po FDR dla żadnej z trzech szerokości. Odchylenia małych-ratio fractions
+      występowały przy width 96, ale nie replikowały się przy 256 ani 512.
+    </p>
+  </div>
+</section><section class="chapter" id="formal">
+  <div class="ch-meta"><span class="ch-num">X</span><span class="ch-tag">BOOTSTRAP · PERMUTACJE · FDR · TRUE VS SHUFFLED</span></div>
+  <h2 class="ch-title">Formalna analiza statystyczna</h2>
+  <p class="ch-sub">Efekt, przedział ufności i p-value — z seedem sieci jako jednostką replikacji</p>
+
+  <p>
+    Analiza końcowa używała parowanego bootstrapu z 20 000 replik, dokładnego testu
+    permutacyjnego przez wszystkie $2^{10}=1024$ odwrócenia znaków, efektu Cohena $d_z$
+    oraz korekty Benjamini–Hochberg. Nie poolowano pojedynczych spacingów.
+  </p>
+
+  <div class="cards">
+    <div class="card"><span class="k">Etap A</span><span class="v">24 / 24</span><div class="d">Globalne zmiany 0→50, wszystkie po FDR.</div></div>
+    <div class="card"><span class="k">Etap B</span><span class="v">12 + 12</span><div class="d">True–shuffled: osobno globalne i lokalne.</div></div>
+    <div class="card"><span class="k">Etap C</span><span class="v">72</span><div class="d">Zgodność lokalna z width-matched β=1.</div></div>
+  </div>
+
+  <div class="sec-title">True minus shuffled w epoch 50</div>
+  <p>
+    Globalnie różnice są wyraźne. Shuffled ma większe trace/width i normę spektralną
+    dla wszystkich trzech szerokości. Przy 256 i 512 ma również niższy stable rank/width
+    oraz większy udział największej wartości własnej. Lokalnie natomiast żadna z czterech
+    badanych miar nie przeszła FDR.
+  </p>
+
+  <table class="map-table">
+    <thead><tr><th>Width</th><th>Miara globalna</th><th>Δ true−shuffled</th><th>qBH</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>96</td><td>trace/width</td><td>−0.20136</td><td>0.00234</td><td class="good">silne</td></tr>
+      <tr><td>96</td><td>spectral norm</td><td>−0.40552</td><td>0.00234</td><td class="good">silne</td></tr>
+      <tr><td>256</td><td>stable rank/width</td><td>+0.00281</td><td>0.00234</td><td class="good">silne</td></tr>
+      <tr><td>256</td><td>max eig/trace</td><td>−0.01948</td><td>0.00234</td><td class="good">silne</td></tr>
+      <tr><td>512</td><td>stable rank/width</td><td>+0.00350</td><td>0.00234</td><td class="good">silne</td></tr>
+      <tr><td>512</td><td>max eig/trace</td><td>−0.01982</td><td>0.00234</td><td class="good">silne</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning">
+    <span class="box-label">lokalne true–shuffled</span>
+    <p>
+      Żadna lokalna różnica true–shuffled nie przeszła FDR. Dwa przedziały bootstrapowe
+      przy width 256 nie obejmowały zera, ale znak odwracał się przy 96 i 512, a qBH
+      pozostawało wysokie. Nie ma stabilnego efektu lokalnego zależnego od rodzaju etykiet.
+    </p>
+  </div>
+</section><section class="chapter" id="finite">
+  <div class="ch-meta"><span class="ch-num">XI</span><span class="ch-tag">FINITE-SIZE · CO PRZETRWAŁO SKALOWANIE</span></div>
+  <h2 class="ch-title">Co zmienia się wraz z szerokością</h2>
+  <p class="ch-sub">Trzy punkty nie dają prawa asymptotycznego, ale wystarczają do sprawdzenia stabilności jakościowej</p>
+
+  <table class="map-table">
+    <thead><tr><th>Warunek</th><th>Miara</th><th>96</th><th>256</th><th>512</th><th>Trend</th></tr></thead>
+    <tbody>
+      <tr><td>true</td><td>stable rank/width</td><td>.03835</td><td>.02519</td><td>.02043</td><td class="good">maleje monotonicznie</td></tr>
+      <tr><td>shuffled</td><td>stable rank/width</td><td>.03845</td><td>.02238</td><td>.01693</td><td class="good">maleje monotonicznie</td></tr>
+      <tr><td>true</td><td>max eig/trace</td><td>.27171</td><td>.15511</td><td>.09564</td><td class="good">maleje z width</td></tr>
+      <tr><td>shuffled</td><td>max eig/trace</td><td>.27130</td><td>.17459</td><td>.11546</td><td class="good">maleje z width</td></tr>
+      <tr><td>true</td><td>SD mean r-tilde</td><td>.04492</td><td>.02777</td><td>.01472</td><td class="amber">opisowo maleje</td></tr>
+      <tr><td>shuffled</td><td>SD mean r-tilde</td><td>.02840</td><td>.03689</td><td>.02778</td><td class="rose">niemonotoniczne</td></tr>
+    </tbody>
+  </table>
+
+  <div class="snote">
+    <span class="box-label">interpretacja finite-size</span>
+    <p>
+      Stable rank/width i max eig/trace mają sąsiednie CI wykluczające zero dla obu kroków
+      96→256 i 256→512. Spadek SD lokalnego mean r-tilde dla true jest jakościowo zgodny
+      z większą liczbą ratios, ale jego CI różnic nadal obejmują zero.
+    </p>
+  </div>
+</section><section class="chapter" id="conclusion">
+  <div class="ch-meta"><span class="ch-num">XII</span><span class="ch-tag">SYNTEZA · CO WIEMY · CZEGO NIE WIEMY</span></div>
+  <h2 class="ch-title">Wniosek: rozdzielenie skal</h2>
+  <p class="ch-sub">Globalna geometria widma i lokalna klasa korelacji nie odpowiadają na to samo pytanie</p>
+
+  <blockquote>
+    <p>
+      Optimization strongly reorganizes the macroscopic spectrum while preserving
+      the microscopic local-correlation class.
+    </p>
+  </blockquote>
+
+  <p>
+    To zdanie najkrócej opisuje wynik projektu. Globalna koncentracja jest silna,
+    powtarzalna i występuje zarówno przy uczeniu prawidłowej struktury etykiet,
+    jak i przy memorowaniu etykiet losowych. Jednocześnie lokalne statystyki odstępów
+    pozostają zgodne z finite-size klasą $\beta=1$, a true i shuffled nie dają
+    stabilnej separacji lokalnej po korekcie wielokrotnych porównań.
+  </p>
+
+  <div class="result">
+    <span class="box-label">silne i powtarzalne</span>
+    <p>
+      Globalna reorganizacja 0→50; większe trace/width i norma spektralna dla shuffled;
+      różnica kształtu true–shuffled przy width 256 i 512; brak formalnego lokalnego
+      efektu true–shuffled; zgodność mean/median r-tilde z width-matched β=1.
+    </p>
+  </div>
+
+  <div class="warning">
+    <span class="box-label">nierozstrzygnięte / ograniczenia</span>
+    <p>
+      Nie rozdzielamy formalnie Wishart od GOE tym zestawem lokalnych miar.
+      Nie wyprowadzamy prawa asymptotycznego z trzech szerokości. Nie wnioskujemy
+      o biologicznych sieciach neuronalnych ani o fizycznym związku z zerami Riemanna.
+    </p>
+  </div>
+
+  </section>
+</main>
+<footer>
+  <div class="mono">NEURAL SPECTRA · TERJ · PUBLIKACJA ZINTEGROWANA</div>
+  <p style="margin-top:.7rem">
+    Jedna strona łącząca genezę projektu, założenia metodologiczne, metody,
+    kontrole, wyniki formalne i ograniczenia interpretacyjne.
+  </p>
+</footer>
+
+<script>
+const progress=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h>0?(scrollY/h)*100:0)+'%'});
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.06});
+document.querySelectorAll('.chapter').forEach(x=>obs.observe(x));
+
+const canvas=document.getElementById('cosmos'),ctx=canvas.getContext('2d');let pts=[];
+function resize(){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  canvas.width=innerWidth*dpr; canvas.height=innerHeight*dpr;
+  canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  pts=Array.from({length:Math.min(80,Math.floor(innerWidth/16))},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:.45+Math.random()*1.2,
+    v:.05+Math.random()*.18,a:.07+Math.random()*.2
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const p of pts){
+    p.y-=p.v;
+    if(p.y<-4){p.y=innerHeight+4;p.x=Math.random()*innerWidth}
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(96,212,248,${p.a})`;ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+addEventListener('resize',resize); resize(); draw();
+</script>
+
+</body>
+</html>
